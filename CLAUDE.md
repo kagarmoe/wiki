@@ -325,6 +325,19 @@ Read/Write/Edit/Bash permissions within `~/repos/wiki/` and read-only
 access everywhere else. The LLM owns the wiki and can mutate it freely, but
 treats everything outside `~/repos/wiki/` as reference only.
 
+## Wiki-specific overrides to the Beads Integration block
+
+The auto-managed `<!-- BEGIN BEADS INTEGRATION -->` block below was
+dropped in by `bd init` and is written for generic Gas Town agent
+work. Its rules do not all apply here — the following override takes
+precedence over the boilerplate:
+
+**Markdown TODO lists are PERMITTED** for Kimberly's personal task
+tracking via the Obsidian Tasks plugin. The boilerplate rule "do NOT
+use … markdown TODO lists" is scoped to *agent* work (which lives in
+beads), not to human curation work in the vault. See the "Task
+tracking" section above for the wiki's full policy: bd for agents,
+Tasks plugin for Kimberly, with documented cross-tool handoff.
 
 <!-- BEGIN BEADS INTEGRATION v:1 profile:minimal hash:ca08a54f -->
 ## Beads Issue Tracker
