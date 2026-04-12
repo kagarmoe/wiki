@@ -56,7 +56,7 @@ this wiki's per-command page (stub if not yet written).
 
 | command        | var              | source                        | entity page |
 |----------------|------------------|-------------------------------|-------------|
-| `account`      | `accountCmd`     | `internal/cmd/account.go:520` | — stub      |
+| `account`      | `accountCmd`     | `internal/cmd/account.go:520` | [account.md](account.md) |
 | `activity`     | `activityCmd`    | `internal/cmd/activity.go:87` | [activity.md](activity.md) |
 | `agent-log` [?]| `agentLogCmd`    | `internal/cmd/agent_log.go:37`| — stub      |
 | `agents`       | `agentsCmd`      | `internal/cmd/agents.go:147`  | — stub      |
@@ -73,7 +73,7 @@ this wiki's per-command page (stub if not yet written).
 | `close`        | `closeCmd`       | `internal/cmd/close.go:44`    | — stub      |
 | `commit`       | `commitCmd`      | `internal/cmd/commit.go:45`   | — stub      |
 | `compact`      | `compactCmd`     | `internal/cmd/compact.go:83`  | — stub      |
-| `config`       | `configCmd`      | `internal/cmd/config.go:1290` | — stub      |
+| `config`       | `configCmd`      | `internal/cmd/config.go:1290` | [config.md](config.md) |
 | `convoy`       | `convoyCmd`      | `internal/cmd/convoy.go:426`  | — stub      |
 | `costs`        | `costsCmd`       | `internal/cmd/costs.go:111`   | [costs.md](costs.md) |
 | `crew`         | `crewCmd`        | `internal/cmd/crew.go:431`    | — stub      |
@@ -81,15 +81,15 @@ this wiki's per-command page (stub if not yet written).
 | `daemon`       | `daemonCmd`      | `internal/cmd/daemon.go:166`  | — stub      |
 | `dashboard`    | `dashboardCmd`   | `internal/cmd/dashboard.go:55`| [dashboard.md](dashboard.md) |
 | `deacon`       | `deaconCmd`      | `internal/cmd/deacon.go:467`  | — stub      |
-| `directive`    | `directiveCmd`   | `internal/cmd/directive.go:39`| — stub      |
-| `disable`      | `disableCmd`     | `internal/cmd/disable.go:41`  | — stub      |
+| `directive`    | `directiveCmd`   | `internal/cmd/directive.go:39`| [directive.md](directive.md) |
+| `disable`      | `disableCmd`     | `internal/cmd/disable.go:41`  | [disable.md](disable.md) |
 | `dnd`          | `dndCmd`         | `internal/cmd/dnd.go:41`      | — stub      |
 | `doctor`       | `doctorCmd`      | `internal/cmd/doctor.go:131`  | [doctor.md](doctor.md) |
 | `dog`          | `dogCmd`         | `internal/cmd/dog.go:298`     | — stub      |
 | `dolt`         | `doltCmd`        | `internal/cmd/dolt.go:389`    | — stub      |
 | `done`         | `doneCmd`        | `internal/cmd/done.go:88`     | — stub      |
 | `down`         | `downCmd`        | `internal/cmd/down.go:93`     | — stub      |
-| `enable`       | `enableCmd`      | `internal/cmd/enable.go:34`   | — stub      |
+| `enable`       | `enableCmd`      | `internal/cmd/enable.go:34`   | [enable.md](enable.md) |
 | `escalate`     | `escalateCmd`    | `internal/cmd/escalate.go:171`| — stub      |
 | `estop`        | `estopCmd`       | `internal/cmd/estop.go:71`    | — stub      |
 | `feed`         | `feedCmd`        | `internal/cmd/feed.go:31`     | [feed.md](feed.md) |
@@ -100,11 +100,11 @@ this wiki's per-command page (stub if not yet written).
 | `health`       | `healthCmd`      | `internal/cmd/health.go:104`  | — stub      |
 | `heartbeat`    | `heartbeatCmd`   | `internal/cmd/heartbeat.go:38`| [heartbeat.md](heartbeat.md) |
 | `hook`         | `hookCmd`        | `internal/cmd/hook.go:188`    | — stub      |
-| `hooks`        | `hooksCmd`       | `internal/cmd/hooks.go:43`    | — stub      |
+| `hooks`        | `hooksCmd`       | `internal/cmd/hooks.go:43`    | [hooks.md](hooks.md) |
 | `info`         | `infoCmd`        | `internal/cmd/info.go:482`    | [info.md](info.md) |
 | `init`         | `initCmd`        | `internal/cmd/init.go:37`     | — stub      |
 | `install`      | `installCmd`     | `internal/cmd/install.go:92`  | — stub      |
-| `issue`        | `issueCmd`       | `internal/cmd/issue.go:53`    | — stub      |
+| `issue`        | `issueCmd`       | `internal/cmd/issue.go:53`    | [issue.md](issue.md) |
 | `krc`          | `krcCmd`         | `internal/cmd/krc.go:139`     | — stub      |
 | `log`          | `logCmd`         | `internal/cmd/log.go:88`      | [log.md](log.md) |
 | `maintain`     | `maintainCmd`    | `internal/cmd/maintain.go:67` | — stub      |
@@ -122,7 +122,7 @@ this wiki's per-command page (stub if not yet written).
 | `orphans`      | `orphansCmd`     | `internal/cmd/orphans.go:181` | — stub      |
 | `patrol`       | `patrolCmd`      | `internal/cmd/patrol.go:62`   | [patrol.md](patrol.md) |
 | `peek`         | `peekCmd`        | `internal/cmd/peek.go:18`     | — stub      |
-| `plugin`       | `pluginCmd`      | `internal/cmd/plugin.go:165`  | — stub      |
+| `plugin`       | `pluginCmd`      | `internal/cmd/plugin.go:165`  | [plugin.md](plugin.md) |
 | `polecat`      | `polecatCmd`     | `internal/cmd/polecat.go:378` | — stub      |
 | `prime`        | `primeCmd`       | `internal/cmd/prime.go:109`   | [prime.md](prime.md) |
 | `proxy` [?]    | `proxySubcmdsCmd`| `internal/cmd/proxy_subcmds.go:48`| — stub  |
@@ -140,7 +140,7 @@ this wiki's per-command page (stub if not yet written).
 | `scheduler`    | `schedulerCmd`   | `internal/cmd/scheduler.go:117`| — stub     |
 | `seance`       | `seanceCmd`      | `internal/cmd/seance.go:74`   | [seance.md](seance.md) |
 | `session`      | `sessionCmd`     | `internal/cmd/session.go:206` | — stub      |
-| `shell`        | `shellCmd`       | `internal/cmd/shell.go:64`    | — stub      |
+| `shell`        | `shellCmd`       | `internal/cmd/shell.go:64`    | [shell.md](shell.md) |
 | `show`         | `showCmd`        | `internal/cmd/show.go:12`     | — stub      |
 | `shutdown`     | `shutdownCmd`    | `internal/cmd/start.go:164`   | — stub      |
 | `signal`       | `signalCmd`      | `internal/cmd/signal.go:8`    | — stub      |
@@ -153,10 +153,10 @@ this wiki's per-command page (stub if not yet written).
 | `tap`          | `tapCmd`         | `internal/cmd/tap.go:34`      | — stub      |
 | `thanks`       | `thanksCmd`      | `internal/cmd/thanks.go:238`  | [thanks.md](thanks.md) |
 | `thaw`         | `thawCmd`        | `internal/cmd/estop.go:72`    | — stub      |
-| `theme`        | `themeCmd`       | `internal/cmd/theme.go:79`    | — stub      |
+| `theme`        | `themeCmd`       | `internal/cmd/theme.go:79`    | [theme.md](theme.md) |
 | `town`         | `townCmd`        | `internal/cmd/town_cycle.go:33`| — stub     |
 | `trail`        | `trailCmd`       | `internal/cmd/trail.go:110`   | — stub      |
-| `uninstall`    | `uninstallCmd`   | `internal/cmd/uninstall.go:54`| — stub      |
+| `uninstall`    | `uninstallCmd`   | `internal/cmd/uninstall.go:54`| [uninstall.md](uninstall.md) |
 | `unsling`      | `unslingCmd`     | `internal/cmd/unsling.go:52`  | — stub      |
 | `up`           | `upCmd`          | `internal/cmd/up.go:158`      | — stub      |
 | `upgrade`      | `upgradeCmd`     | `internal/cmd/upgrade.go:55`  | [upgrade.md](upgrade.md) |
@@ -212,7 +212,7 @@ bead will track this.
 
 ## What's NOT yet in this index
 
-- **Mapped so far:** 22 of 111 top-level commands have entity pages — the full `GroupDiag` set (version, activity, audit, checkpoint, costs, dashboard, doctor, feed, heartbeat, info, log, metrics, patrol, prime, repair, seance, stale, status, thanks, upgrade, vitals, whoami). Remaining groups pending: Work, Agents, Comm, Services, Workspace, Config.
+- **Mapped so far:** 33 of 111 top-level commands have entity pages — the full `GroupDiag` set (22 commands) and the full `GroupConfig` set (11 commands: account, config, directive, disable, enable, hooks, issue, plugin, shell, theme, uninstall). Remaining groups pending: Work, Agents, Comm, Services, Workspace.
 - **`Use:` field verification per command.** Many entries have inferred
   command names flagged `[?]`.
 - **`GroupID` assignment per command.** Each command needs a quick read

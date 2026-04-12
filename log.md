@@ -498,3 +498,99 @@ closes when Batch 3 closes.
   [gastown/commands/whoami.md](gastown/commands/whoami.md),
   [gastown/README.md](gastown/README.md),
   [index.md](index.md)
+
+## [2026-04-11] ingest | Batch 3b (Layer c sub-batch: Configuration group — 11 top-level commands)
+
+Second sub-batch of Layer (c) command mapping. Read 11 Go files in
+`/home/kimberly/repos/gastown/internal/cmd/` and produced 11 new
+wiki entity pages under `gastown/commands/`. All 11 have
+`GroupID: GroupConfig`.
+
+**Cobra group progress:** 2 of 7 groups complete
+(Diag ✓, Config ✓; Work, Agents, Comm, Services, Workspace remaining).
+
+**Commands mapped:**
+
+- [account](gastown/commands/account.md) — multi-Claude-Code-account management with `accounts.json` + `~/.claude` symlink dance.
+- [config](gastown/commands/config.md) — town-settings manager: agent, cost-tier, default-agent, agent-email-domain, set, get subcommands covering CLITheme, scheduler, convoy, lifecycle, maintenance, dolt.port.
+- [directive](gastown/commands/directive.md) — parent-only stub for role directives; `Long` text advertises `show`/`edit`/`list` subcommands that are NOT wired in this file. See "Notes / open questions".
+- [disable](gastown/commands/disable.md) — flips `state.Disable()` global flag; optional `--clean` calls `shell.Remove()`.
+- [enable](gastown/commands/enable.md) — flips `state.Enable(Version)` global flag; no flags.
+- [hooks](gastown/commands/hooks.md) — parent-only stub for centralized Claude Code hooks management; advertises 8 subcommands (`base`/`override`/`sync`/`diff`/`list`/`scan`/`registry`/`install`) NOT wired in this file. See "Notes".
+- [issue](gastown/commands/issue.md) — sets/clears/shows the `GT_ISSUE` tmux session env var for status-line display. Despite the name, NOT a beads/issue-tracker wrapper.
+- [plugin](gastown/commands/plugin.md) — Deacon-patrol plugin manager: list/show/run/sync/history subcommands reading `<town>/plugins/` and `<rig>/plugins/`.
+- [shell](gastown/commands/shell.md) — installs/removes/shows Gas Town shell integration (`cd`-hook in RC file); `install` silently re-enables.
+- [theme](gastown/commands/theme.md) — two-surface theme manager: tmux rig theme (with `apply` subcommand) and `theme cli` CLI color-scheme setter.
+- [uninstall](gastown/commands/uninstall.md) — removes shell integration, wrappers, state/config/cache dirs; `--workspace` additionally nukes `~/gt`-style workspace only if it contains `mayor/`.
+
+**Neutral observations surfaced** (filed on individual pages, not as
+drift):
+
+- **`directive` and `hooks` are parent-only stubs.** Both advertise
+  subcommands in their `Long` text but wire none of them in their own
+  files. Either the subcommands are registered in other files not in
+  the batch, or they are unimplemented. Flagged as follow-up.
+- **`gt issue` is a misleading name.** It is NOT a beads/issue-tracker
+  wrapper — only sets the `GT_ISSUE` tmux session env var. It lives
+  in `GroupConfig` which further obscures the purpose.
+- **Dual writers to `townSettings.CLITheme`.** `config set cli_theme <mode>`
+  and `theme cli <mode>` both write the same field via different
+  validators. Values agree today; drift risk real.
+- **`shell install` silently re-enables.** `shell.go:72` calls
+  `state.Enable(Version)` as a side effect with no documentation in
+  the command's help text. `shell install` can resurrect Gas Town
+  from `disable`.
+- **`uninstall --workspace` detection is narrow.** Only finds `~/gt`
+  or `~/gastown` containing a `mayor/` subdir. Non-standard town
+  locations silently skipped with no warning.
+- **`gt plugin run` always records `ResultSuccess`.** Hardcoded at
+  `plugin.go:480` for manual runs; there is no feedback path from
+  printed-instructions execution back to the recorder. History is
+  falsely optimistic.
+- **Exempt-map asymmetry:** `config` and `install` are beads-exempt
+  but `uninstall` is not. Removing gastown goes through the beads
+  version check; installing it does not.
+- **`config.go` maintains its own agent registry load** via
+  `config.LoadAgentRegistry(DefaultAgentRegistryPath(townRoot))` —
+  a separate config surface from town settings.
+- **`directive` has a cobra alias `directives`** — the only command
+  in this batch with an alias.
+
+**Polecat-safe within Config group:** 0 of 11. Confirmed by direct
+grep of `AnnotationPolecatSafe` against each source file.
+
+**Beads-exempt within Config group:** 1 of 11 (`config`).
+
+**Branch-check-exempt within Config group:** 0 of 11.
+
+**Index updates:**
+
+- [gastown/commands/README.md](gastown/commands/README.md) —
+  entity-page column updated for 11 rows; progress bullet updated
+  to 33 of 111.
+- [gastown/README.md](gastown/README.md) — sub-index `### Commands`
+  expanded with Config-group line.
+- [index.md](index.md) — root gastown `### Commands` notes Batch 3b
+  completion.
+
+**Next sub-batch:** 3c — another cobra group. Five remaining:
+Work, Agents, Comm, Services, Workspace. Controller's call.
+
+**Beads status:** `wiki-3zo` (Batch 3 anchor) remains OPEN — Batch 3
+has 5 groups to go. `wiki-ef3` (systematic subcommand mapping)
+remains OPEN — equals Batch 3's completion.
+
+→ [gastown/commands/README.md](gastown/commands/README.md),
+  [gastown/commands/account.md](gastown/commands/account.md),
+  [gastown/commands/config.md](gastown/commands/config.md),
+  [gastown/commands/directive.md](gastown/commands/directive.md),
+  [gastown/commands/disable.md](gastown/commands/disable.md),
+  [gastown/commands/enable.md](gastown/commands/enable.md),
+  [gastown/commands/hooks.md](gastown/commands/hooks.md),
+  [gastown/commands/issue.md](gastown/commands/issue.md),
+  [gastown/commands/plugin.md](gastown/commands/plugin.md),
+  [gastown/commands/shell.md](gastown/commands/shell.md),
+  [gastown/commands/theme.md](gastown/commands/theme.md),
+  [gastown/commands/uninstall.md](gastown/commands/uninstall.md),
+  [gastown/README.md](gastown/README.md),
+  [index.md](index.md)

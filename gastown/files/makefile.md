@@ -206,9 +206,9 @@ Steps (`Makefile:95-119`):
    0, run `gt daemon stop`, sleep 1, `gt daemon start`. Warn on failure.
    Motivation in the Makefile comment: "A stale daemon is a recurring
    source of bugs (wrong session prefixes, etc.)".
-7. **Plugin sync** (`Makefile:118-119`): run `gt plugin sync --source
-   $(CURDIR)/plugins`. Silent failure allowed. Prevents plugin drift
-   between the build repo and the town runtime directories.
+7. **Plugin sync** (`Makefile:118-119`): run [`gt plugin`](../commands/plugin.md)
+   `sync --source $(CURDIR)/plugins`. Silent failure allowed. Prevents
+   plugin drift between the build repo and the town runtime directories.
 
 ### `safe-install` target
 

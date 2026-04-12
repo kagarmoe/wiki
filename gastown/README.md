@@ -94,6 +94,7 @@ the 12 layers):
 
 - [gt command tree](commands/README.md) — inventory of all 111 top-level `rootCmd.AddCommand` registrations + 495 total `cobra.Command` definitions
 - **Diagnostics group** (22 commands, fully mapped) — see the `entity page` column of [commands/README.md](commands/README.md) for individual links: [activity](commands/activity.md), [audit](commands/audit.md), [checkpoint](commands/checkpoint.md), [costs](commands/costs.md), [dashboard](commands/dashboard.md), [doctor](commands/doctor.md), [feed](commands/feed.md), [heartbeat](commands/heartbeat.md), [info](commands/info.md), [log](commands/log.md), [metrics](commands/metrics.md), [patrol](commands/patrol.md), [prime](commands/prime.md), [repair](commands/repair.md), [seance](commands/seance.md), [stale](commands/stale.md), [status](commands/status.md), [thanks](commands/thanks.md), [upgrade](commands/upgrade.md), [version](commands/version.md), [vitals](commands/vitals.md), [whoami](commands/whoami.md)
+- **Configuration group** (11 commands, fully mapped): [account](commands/account.md), [config](commands/config.md), [directive](commands/directive.md), [disable](commands/disable.md), [enable](commands/enable.md), [hooks](commands/hooks.md), [issue](commands/issue.md), [plugin](commands/plugin.md), [shell](commands/shell.md), [theme](commands/theme.md), [uninstall](commands/uninstall.md)
 
 ### Files
 
