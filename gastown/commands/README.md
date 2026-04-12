@@ -15,7 +15,7 @@ tags: [commands, cli, index, inventory]
 
 Authoritative index of every top-level `gt` subcommand registered in
 `internal/cmd/`. Drives the per-command entity pages under this
-directory and the coverage gap against the upstream README.
+directory.
 
 ## Methodology
 
@@ -221,12 +221,9 @@ bead will track this.
   total cobra.Command count minus 111 top-level ≈ 384 nested commands.
   A full subcommand inventory is a separate pass.
 - **Flag enumeration per command.** This index does not list flags.
-- **README coverage cross-check.** The README-claimed CLI surface needs
-  to be extracted and matched against this list to produce a concrete
-  "undocumented commands" gap.
 - **Polecat-safe annotations.** `internal/cmd/proxy_subcmds.go:15`
   defines `AnnotationPolecatSafe = "polecatSafe"` and `version.go:34`
-  uses it. How many commands are polecat-safe?
+  uses it. Which commands carry the annotation?
 
 ## See also
 

@@ -11,8 +11,7 @@ sources:
   - /home/kimberly/repos/gastown/internal/cmd/version.go
   - /home/kimberly/repos/gastown/internal/cli/name.go
   - /home/kimberly/repos/gastown/Makefile
-  - /home/kimberly/repos/gastown/README.md
-tags: [cli, build, self-kill, root-command]
+tags: [cli, build, root-command]
 ---
 
 # gt
@@ -198,63 +197,6 @@ version, help, completion, doctor, estop, thaw, install, git-init, upgrade
   `mayor start`, `convoy launch`, etc.).
 
 The canonical list is compiled in [../commands/README.md](../commands/README.md).
-
-## Docs claim
-
-### README.md (740 lines at `/home/kimberly/repos/gastown/README.md`)
-
-Main user-facing doc. Claims `gt` has a user-visible CLI surface of
-roughly a dozen subcommands (specific list pending — see bead for
-systematic README-claim extraction).
-
-### Installation section (`/home/kimberly/gt/GASTOWN-README.md:141`)
-
-> `$ go install github.com/steveyegge/gastown/cmd/gt@latest  # From source (macOS/Linux)`
-
-Implies `go install` produces a working binary.
-
-> `# If using go install, add Go binaries to PATH (add to ~/.zshrc or ~/.bashrc)`
-> `export PATH="$PATH:$HOME/go/bin"`
-
-Implies `$HOME/go/bin` is where the binary lives.
-
-### AGENTS.md (`/home/kimberly/repos/gastown/AGENTS.md`)
-
-Separate agent-facing doc (4334 bytes). Content not yet mapped — tracked
-in a follow-up bead.
-
-## Drift
-
-1. **`go install` is a broken install path.** The README tells users to
-   `go install github.com/steveyegge/gastown/cmd/gt@latest`. The
-   resulting binary self-kills on first run with:
-
-   > ERROR: This binary was built with 'go build' directly.
-   >        macOS will SIGKILL unsigned binaries. Use 'make build' instead.
-
-   No workaround is mentioned in the README. The binary works only if
-   built with `make build` or an equivalent `-ldflags "-X
-   ...BuiltProperly=1"`.
-
-2. **Error message misattributes the platform.** The message mentions
-   `macOS will SIGKILL unsigned binaries`, but the check is
-   unconditional — it fires on Linux (and presumably Windows, WSL, any
-   OS) even though macOS code signing has no relevance there.
-
-3. **Stale comment claims warning-only behavior.**
-   `/home/kimberly/repos/gastown/internal/cmd/root.go:97` comment reads
-   "Warning only - doesn't block execution." The code at line 106 calls
-   `os.Exit(1)` — it blocks. The comment was never updated when the
-   behavior changed.
-
-4. **`$HOME/go/bin` path is environment-specific.** README says binaries
-   land in `$HOME/go/bin`. In the upstream `golang:1.26-bookworm` Docker
-   image (a common container base), `GOPATH=/go`, so binaries land in
-   `/go/bin` instead. `~/gt/Dockerfile` was originally wrong about this
-   assumption.
-
-Items above are the four confirmed claim-vs-code mismatches carried
-over from the scaffolding session.
 
 ## Notes / open questions
 

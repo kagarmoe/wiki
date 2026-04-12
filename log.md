@@ -154,3 +154,65 @@ commands).
   [gastown/commands/README.md](gastown/commands/README.md),
   [gastown/commands/version.md](gastown/commands/version.md),
   [gastown/README.md](gastown/README.md), [index.md](index.md)
+
+## [2026-04-11] decision | scope reframed: current phase is mapping only (supersedes prior doc-rewrite framing)
+
+Earlier entries in this log (through "gastown top-level command tree
+mapped") were written under a framing in which the wiki's immediate
+deliverable was an authoritative rewrite of gastown's upstream
+documentation, with drift analysis as a first-class current-phase
+activity. That framing was over-scoped for the current phase.
+
+**Current plan** (`.claude/plans/2026-04-11-gastown-map.md`): the
+wiki's current phase produces only the **map** — every part of
+`~/repos/gastown/` represented at inventory level, every load-bearing
+part with a full entity page that accurately describes what the code
+actually does, read off source and cited with `file:line`. Cross-
+linking discipline is mandatory so the map can later answer multi-hop
+"is X correct?" queries by following backlinks.
+
+**Phases that are NOT in the current scope** (all deferred):
+
+- Drift analysis / claim-vs-code gap hunting
+- Audience classification (user / agent / dev / internal)
+- Gap analysis against upstream `README.md`, `docs/`, `AGENTS.md`
+- Upstream documentation rewrite
+
+**Pages dialed back** in this commit to remove drift/doc-rewrite
+framing from the current-phase representation of the wiki:
+
+- [gastown/README.md](gastown/README.md) — Mission rewritten as
+  "map the codebase"; `## Drift to resolve` section removed;
+  Working model no longer mentions "Docs claim" / "Drift" as
+  per-page sections.
+- [gastown/binaries/gt.md](gastown/binaries/gt.md) — `## Docs claim`
+  and `## Drift` sections removed; `README.md` removed from
+  frontmatter sources (was only cited in the removed sections).
+- [gastown/commands/version.md](gastown/commands/version.md) —
+  `## Docs claim` and `## Drift` sections removed; `Docs claim`
+  replaced with neutral `Inline help text` section transcribing the
+  cobra `Long` field.
+- [gastown/files/makefile.md](gastown/files/makefile.md) —
+  `## Docs claim` and `## Drift` sections removed.
+- [gastown/commands/README.md](gastown/commands/README.md) —
+  "coverage gap" language removed; "README coverage cross-check"
+  removed from the What's-NOT-here list.
+- [index.md](index.md) — entry descriptions neutralized (no
+  "README claims ~12", no "self-kill when built without ...");
+  Inventory section added.
+
+**Historical log entries above are preserved as written.** They
+describe what happened, including framing that has since been
+superseded. Earlier framings should be read as "what the session
+believed at the time," not as current representation.
+
+**Current bead queue will be aligned** with the mapping plan in a
+follow-up step (this commit): phase-3 beads closed, mapping beads
+kept, one bead per plan batch created as an anchor.
+
+→ [gastown/README.md](gastown/README.md),
+  [gastown/binaries/gt.md](gastown/binaries/gt.md),
+  [gastown/commands/README.md](gastown/commands/README.md),
+  [gastown/commands/version.md](gastown/commands/version.md),
+  [gastown/files/makefile.md](gastown/files/makefile.md),
+  [index.md](index.md)

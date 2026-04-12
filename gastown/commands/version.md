@@ -7,7 +7,6 @@ created: 2026-04-11
 updated: 2026-04-11
 sources:
   - /home/kimberly/repos/gastown/internal/cmd/version.go
-  - /home/kimberly/repos/gastown/internal/version/
 tags: [command, diagnostics, version, polecat-safe]
 ---
 
@@ -102,31 +101,15 @@ Importantly, this means **the version command's `init()` participates
 in bootstrapping the stale-binary-check machinery**, not just printing
 a version string.
 
-## Docs claim
+## Inline help text
 
-- The upstream `/home/kimberly/repos/gastown/README.md` — `version`
-  command coverage not yet extracted. Tracked via a bead.
-- `/home/kimberly/repos/gastown/internal/cmd/version.go:36-39` Long
-  description:
+`/home/kimberly/repos/gastown/internal/cmd/version.go:36-39` `Long`
+field (what `gt version --help` prints as the long description):
 
-  > Print the gt version, build type, git branch, and commit hash.
-  > Output includes the semantic version, whether this is a dev or
-  > release build, and the git revision the binary was built from (if
-  > available).
-
-## Drift
-
-None found yet for this specific command. The drift picture is on the
-parent [gt](../binaries/gt.md) page:
-
-- `version` is one of the commands that **does run correctly** in a
-  `go install` build as long as you accept the `Build=dev` stderr
-  prefix — actually no, the self-kill check in `persistentPreRun`
-  fires for `version` too. See drift item #1 on the parent page.
-- The `Build` variable is documented by the command as "build type",
-  but its runtime role is load-bearing: if `Build != "dev"`, the
-  self-kill check is bypassed entirely. That double meaning is not
-  called out in the command's Long description or help text.
+> Print the gt version, build type, git branch, and commit hash.
+> Output includes the semantic version, whether this is a dev or
+> release build, and the git revision the binary was built from (if
+> available).
 
 ## Notes / open questions
 

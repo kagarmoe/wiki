@@ -54,33 +54,6 @@ and libs. Not relevant on Linux — system ICU is on the default search path.
 `safe-install`, `check-forward-only`, `clean`, `test`, `test-e2e-container`,
 `check-up-to-date`. These have not been investigated yet.
 
-## Docs claim
-
-`/home/kimberly/gt/GASTOWN-README.md` Installation section promotes three
-install paths:
-
-1. `brew install gastown` (macOS, recommended)
-2. `npm install -g @gastown/gt`
-3. `go install github.com/steveyegge/gastown/cmd/gt@latest`
-
-None of these reference `make build`, the Makefile, or any required ldflags.
-The Makefile itself is undocumented in the user-facing README — its
-existence is only visible to someone who clones the repo.
-
-## Drift
-
-1. **README doesn't mention `make build`.** The canonical build recipe is
-   the Makefile, but the README only promotes `brew install`,
-   `npm install`, and `go install`. Users building from source (e.g., in a
-   container, on Windows, or anywhere Homebrew isn't available) hit the
-   [self-kill bug](../binaries/gt.md) unless they happen to know to use
-   `make build`. The Makefile is effectively hidden documentation.
-
-2. **Two undocumented sibling binaries.** The Makefile builds
-   `gt-proxy-server` and `gt-proxy-client` as first-class outputs of the
-   `build` target. README has no mention of either. Purpose, usage, and
-   runtime relationship to `gt` are unknown without further investigation.
-
 ## Notes / open questions
 
 - What do `gt-proxy-server` and `gt-proxy-client` actually do? Read
