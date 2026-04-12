@@ -15,6 +15,7 @@ Global catalog of all pages. Organized by topic, then category.
 - [gt command tree](gastown/commands/README.md) — inventory of all 111 top-level `rootCmd.AddCommand` registrations + 495 total `cobra.Command` definitions
 - **Diagnostics group (22 commands)** — fully mapped in Batch 3a.
 - **Configuration group (11 commands)** — fully mapped in Batch 3b.
+- **Work Management group (26 commands)** — fully mapped in Batch 3c.
 - Individual pages linked from [gastown/commands/README.md](gastown/commands/README.md) entity-page column.
 
 ### Files

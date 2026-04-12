@@ -84,7 +84,7 @@ gt prime [--hook] [--dry-run] [--state [--json]] [--explain]
    - Outputs session metadata (`outputSessionMetadata(ctx)`).
    - Prints "Continue your current task. If you've lost context,
      run `gt prime` for full reload."
-   - For `RolePolecat`, reminds the agent to run `gt done` when
+   - For `RolePolecat`, reminds the agent to run [`gt done`](done.md) when
      work is complete (comment at `prime.go:248-250` cites GH#1965).
    - **Skips** `setupPrimeSession`, `findAgentWork`, and the full
      role context rendering, keeping the hook under 1 s for

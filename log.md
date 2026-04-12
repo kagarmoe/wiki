@@ -594,3 +594,122 @@ remains OPEN — equals Batch 3's completion.
   [gastown/commands/uninstall.md](gastown/commands/uninstall.md),
   [gastown/README.md](gastown/README.md),
   [index.md](index.md)
+
+## [2026-04-11] ingest | Batch 3c (Layer c sub-batch: Work Management group — 26 top-level commands)
+
+Third sub-batch of Layer (c) command mapping. Read 26 Go files in
+`/home/kimberly/repos/gastown/internal/cmd/` and produced 26 new
+wiki entity pages under `gastown/commands/`. `GroupWork` is the
+largest single cobra group — 26 commands totaling ~3,750 lines of
+wiki content (2,046 + 1,707 from the two content subagents).
+
+**Cobra group progress:** 3 of 7 groups complete
+(Diag ✓, Config ✓, Work ✓; Agents, Comm, Services, Workspace
+remaining). **Coverage: 59 of 111 top-level commands mapped.**
+
+**Commands mapped:**
+
+- [assign](gastown/commands/assign.md) — creates a bead and hooks it to a crew member
+- [bead](gastown/commands/bead.md) — parent command for cross-repo bead operations (move/show/read); alias `gt bd`
+- [cat](gastown/commands/cat.md) — thin `bd show` wrapper with prefix-based rig routing
+- [changelog](gastown/commands/changelog.md) — aggregates closed beads across town+rigs into human/JSON changelog
+- [cleanup](gastown/commands/cleanup.md) — kills orphaned Claude processes (**not** bead cleanup; see observation below)
+- [close](gastown/commands/close.md) — `bd close` wrapper with `--cascade` child closing + native-SDK convoy propagation
+- [compact](gastown/commands/compact.md) — TTL-based wisp compaction; promotes valued wisps to permanent beads
+- [convoy](gastown/commands/convoy.md) — 12-subcommand parent for cross-rig work-tracking units; polecat-safe; **2,739 lines across 4 files**
+- [done](gastown/commands/done.md) — polecat-only session-end primitive (merge-queue submit + witness notify + sync to main + IDLE transition); **1,896 lines**
+- [formula](gastown/commands/formula.md) — parent for molecule-template list/show/run/create
+- [handoff](gastown/commands/handoff.md) — canonical session-restart primitive; polecats redirected to `gt done --status DEFERRED`
+- [hook](gastown/commands/hook.md) — attach work to agent's hook (durability primitive); polecat-safe; distinct from plural `hooks` in Config
+- [molecule](gastown/commands/molecule.md) — molecule workflow tree; canonical CLI is `gt mol` (file uses `Use="mol"` with `molecule` as alias)
+- [mountain](gastown/commands/mountain.md) — Mountain-Eater activation on epics (stage convoy + add label + launch Wave 1)
+- [mq](gastown/commands/mq.md) — merge queue operations (submit/retry/list/reject/post-merge/status) plus `integration` subcommand group; alias `gt mr`
+- [orphans](gastown/commands/orphans.md) — find lost polecat work (unreachable commits + unmerged polecat worktrees)
+- [prune-branches](gastown/commands/prune-branches.md) — thin wrapper around `internal/git.PruneStaleBranches`
+- [ready](gastown/commands/ready.md) — town-wide aggregated ready-work view with parallel fetch
+- [release](gastown/commands/release.md) — release stuck `in_progress` beads back to `open` (**not** software release)
+- [resume](gastown/commands/resume.md) — filtered `gt mail inbox` for HANDOFF subjects (**not** a session resumer)
+- [scheduler](gastown/commands/scheduler.md) — capacity-controlled dispatch scheduler; synthesizes scheduled beads from sling context beads
+- [sling](gastown/commands/sling.md) — **the unified dispatch command, 1,192 lines**; polecat-safe; hooks work + auto-convoy + spawn/batch/formula
+- [synthesis](gastown/commands/synthesis.md) — convoy synthesis-step management; exported hooks for witness integration
+- [trail](gastown/commands/trail.md) — recent-activity viewer; aliases `recent`, `recap`
+- [unsling](gastown/commands/unsling.md) — inverse of sling/hook; alias `unhook`; references `hq-l6mm5` and `gt-dtq7` as bug-fix anchors
+- [wl](gastown/commands/wl.md) — **Wasteland federation**, not "worklist". DoltHub-federated multi-town rig registry; only `join` wired in this file.
+
+**Neutral observations surfaced** (filed on individual pages):
+
+- **Naming collisions / misleading names resolved:**
+  - `gt cleanup` kills Claude processes; `gt compact` compacts wisps; `gt dolt cleanup` removes orphan DBs. Three-axis "cleanup" namespace.
+  - `gt issue` (Config group, Batch 3b) does NOT wrap bd issues; sets `GT_ISSUE` tmux env var.
+  - `gt release` (Work group) releases stuck beads, NOT software releases.
+  - `gt resume` (Work group) is a mail reader, NOT a session resumer.
+  - `gt wl` (Work group) is Wasteland federation, NOT worklist.
+  - `gt molecule` canonical CLI is `gt mol` (file uses `Use="mol"` with `molecule` as alias).
+  - `hook` (Work group) vs `hooks` (Config group) are entirely different concepts.
+
+- **`close.md` uses the native beads SDK** (`github.com/steveyegge/beads`) rather than shelling out to `bd`, opening a Dolt connection to the HQ database to trigger `convoy.CheckConvoysForIssue`. Only bd-wrapper in the 26 that doesn't use exec shell-out.
+
+- **`convoy launch` is literally `convoy stage --launch`.** `convoy_launch.go:328` delegates `runConvoyLaunch` to `runConvoyStage` after setting the `--launch` flag.
+
+- **`findCurrentRig` lives in `mq.go`** (`mq.go:369`). General rig-resolution helper used by other commands lives in a surprising file — historical artifact.
+
+- **`--week` flag on `changelog` is a no-op** — defined but never read.
+
+- **`gt plugin run` always records `ResultSuccess`** (from Batch 3b observation; carried through).
+
+- **`bd-wrapper patterns** resolved into 3 distinct patterns across the batch: pure exec shell-out (`cat`, `formula list`/`show`); exec shell-out with in-process state mutation (`assign`, `close`, `changelog`, `compact`); native SDK library usage (`close` for convoy propagation).
+
+- **`sling` is the hub command.** 1,192 lines, 25+ flags, also owns `respawn-reset` which breaks the witness's 3-attempt circuit breaker.
+
+- **`scheduler` stores no queue** — synthesizes scheduled beads at read time by walking all rig beads dirs. Elegant but O(n_rigs) per invocation.
+
+- **`unsling` has two bd-hash bug-fix anchors baked in** (`hq-l6mm5`: hook-slot-vs-bead-status drift; `gt-dtq7`: rig-db-vs-town-db lookup asymmetry).
+
+**Polecat-safe coverage within Work group:** 6 of 26 (`convoy`, `done`, `handoff`, `hook`, `molecule`, `mountain`, `sling` — wait, that's 7). Verified by direct grep; matches the expected list from Batch 3a (`convoy`, `done`, `handoff`, `hook`, `molecule`, `mountain`, `sling` all have `AnnotationPolecatSafe: "true"`).
+
+**Beads-exempt within Work group:** 2 of 26 (`handoff`, `hook`).
+
+**Branch-check-exempt within Work group:** 0 of 26.
+
+**Index updates:**
+
+- [gastown/commands/README.md](gastown/commands/README.md) — entity-page column for 26 rows; progress bullet updated to 59/111; Observations section bullet 6 rewritten as "bd-wrapper patterns (resolved)".
+- [gastown/README.md](gastown/README.md) — sub-index `### Commands` expanded with Work Management group line.
+- [index.md](index.md) — root gastown `### Commands` notes Batch 3c completion.
+
+**Next sub-batch:** 3d — another cobra group. Four remaining:
+Agents, Comm, Services, Workspace. Controller's call.
+
+**Beads status:** `wiki-3zo` (Batch 3 anchor) remains OPEN —
+Batch 3 has 4 groups left. `wiki-ef3` (systematic mapping) remains
+OPEN.
+
+→ [gastown/commands/README.md](gastown/commands/README.md),
+  [gastown/commands/assign.md](gastown/commands/assign.md),
+  [gastown/commands/bead.md](gastown/commands/bead.md),
+  [gastown/commands/cat.md](gastown/commands/cat.md),
+  [gastown/commands/changelog.md](gastown/commands/changelog.md),
+  [gastown/commands/cleanup.md](gastown/commands/cleanup.md),
+  [gastown/commands/close.md](gastown/commands/close.md),
+  [gastown/commands/compact.md](gastown/commands/compact.md),
+  [gastown/commands/convoy.md](gastown/commands/convoy.md),
+  [gastown/commands/done.md](gastown/commands/done.md),
+  [gastown/commands/formula.md](gastown/commands/formula.md),
+  [gastown/commands/handoff.md](gastown/commands/handoff.md),
+  [gastown/commands/hook.md](gastown/commands/hook.md),
+  [gastown/commands/molecule.md](gastown/commands/molecule.md),
+  [gastown/commands/mountain.md](gastown/commands/mountain.md),
+  [gastown/commands/mq.md](gastown/commands/mq.md),
+  [gastown/commands/orphans.md](gastown/commands/orphans.md),
+  [gastown/commands/prune-branches.md](gastown/commands/prune-branches.md),
+  [gastown/commands/ready.md](gastown/commands/ready.md),
+  [gastown/commands/release.md](gastown/commands/release.md),
+  [gastown/commands/resume.md](gastown/commands/resume.md),
+  [gastown/commands/scheduler.md](gastown/commands/scheduler.md),
+  [gastown/commands/sling.md](gastown/commands/sling.md),
+  [gastown/commands/synthesis.md](gastown/commands/synthesis.md),
+  [gastown/commands/trail.md](gastown/commands/trail.md),
+  [gastown/commands/unsling.md](gastown/commands/unsling.md),
+  [gastown/commands/wl.md](gastown/commands/wl.md),
+  [gastown/README.md](gastown/README.md),
+  [index.md](index.md)

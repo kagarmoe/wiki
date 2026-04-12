@@ -60,21 +60,21 @@ this wiki's per-command page (stub if not yet written).
 | `activity`     | `activityCmd`    | `internal/cmd/activity.go:87` | [activity.md](activity.md) |
 | `agent-log` [?]| `agentLogCmd`    | `internal/cmd/agent_log.go:37`| — stub      |
 | `agents`       | `agentsCmd`      | `internal/cmd/agents.go:147`  | — stub      |
-| `assign`       | `assignCmd`      | `internal/cmd/assign.go:64`   | — stub      |
+| `assign`       | `assignCmd`      | `internal/cmd/assign.go:64`   | [assign.md](assign.md) |
 | `audit`        | `auditCmd`       | `internal/cmd/audit.go:59`    | [audit.md](audit.md) |
-| `bead`         | `beadCmd`        | `internal/cmd/bead.go:94`     | — stub      |
+| `bead`         | `beadCmd`        | `internal/cmd/bead.go:94`     | [bead.md](bead.md) |
 | `boot`         | `bootCmd`        | `internal/cmd/boot.go:99`     | — stub      |
 | `broadcast`    | `broadcastCmd`   | `internal/cmd/broadcast.go:24`| — stub      |
 | `callbacks`    | `callbacksCmd`   | `internal/cmd/callbacks.go:117`| — stub     |
-| `cat`          | `catCmd`         | `internal/cmd/cat.go:33`      | — stub      |
-| `changelog`    | `changelogCmd`   | `internal/cmd/changelog.go:47`| — stub      |
+| `cat`          | `catCmd`         | `internal/cmd/cat.go:33`      | [cat.md](cat.md) |
+| `changelog`    | `changelogCmd`   | `internal/cmd/changelog.go:47`| [changelog.md](changelog.md) |
 | `checkpoint`   | `checkpointCmd`  | `internal/cmd/checkpoint_cmd.go:80` | [checkpoint.md](checkpoint.md) |
-| `cleanup`      | `cleanupCmd`     | `internal/cmd/cleanup.go:42`  | — stub      |
-| `close`        | `closeCmd`       | `internal/cmd/close.go:44`    | — stub      |
+| `cleanup`      | `cleanupCmd`     | `internal/cmd/cleanup.go:42`  | [cleanup.md](cleanup.md) |
+| `close`        | `closeCmd`       | `internal/cmd/close.go:44`    | [close.md](close.md) |
 | `commit`       | `commitCmd`      | `internal/cmd/commit.go:45`   | — stub      |
-| `compact`      | `compactCmd`     | `internal/cmd/compact.go:83`  | — stub      |
+| `compact`      | `compactCmd`     | `internal/cmd/compact.go:83`  | [compact.md](compact.md) |
 | `config`       | `configCmd`      | `internal/cmd/config.go:1290` | [config.md](config.md) |
-| `convoy`       | `convoyCmd`      | `internal/cmd/convoy.go:426`  | — stub      |
+| `convoy`       | `convoyCmd`      | `internal/cmd/convoy.go:426`  | [convoy.md](convoy.md) |
 | `costs`        | `costsCmd`       | `internal/cmd/costs.go:111`   | [costs.md](costs.md) |
 | `crew`         | `crewCmd`        | `internal/cmd/crew.go:431`    | — stub      |
 | `cycle`        | `cycleCmd`       | `internal/cmd/cycle.go:24`    | — stub      |
@@ -87,19 +87,19 @@ this wiki's per-command page (stub if not yet written).
 | `doctor`       | `doctorCmd`      | `internal/cmd/doctor.go:131`  | [doctor.md](doctor.md) |
 | `dog`          | `dogCmd`         | `internal/cmd/dog.go:298`     | — stub      |
 | `dolt`         | `doltCmd`        | `internal/cmd/dolt.go:389`    | — stub      |
-| `done`         | `doneCmd`        | `internal/cmd/done.go:88`     | — stub      |
+| `done`         | `doneCmd`        | `internal/cmd/done.go:88`     | [done.md](done.md) |
 | `down`         | `downCmd`        | `internal/cmd/down.go:93`     | — stub      |
 | `enable`       | `enableCmd`      | `internal/cmd/enable.go:34`   | [enable.md](enable.md) |
 | `escalate`     | `escalateCmd`    | `internal/cmd/escalate.go:171`| — stub      |
 | `estop`        | `estopCmd`       | `internal/cmd/estop.go:71`    | — stub      |
 | `feed`         | `feedCmd`        | `internal/cmd/feed.go:31`     | [feed.md](feed.md) |
 | `forget`       | `forgetCmd`      | `internal/cmd/forget.go:13`   | — stub      |
-| `formula`      | `formulaCmd`     | `internal/cmd/formula.go:184` | — stub      |
+| `formula`      | `formulaCmd`     | `internal/cmd/formula.go:184` | [formula.md](formula.md) |
 | `git-init` [?] | `gitInitCmd`     | `internal/cmd/gitinit.go:51`  | — stub      |
-| `handoff`      | `handoffCmd`     | `internal/cmd/handoff.go:95`  | — stub      |
+| `handoff`      | `handoffCmd`     | `internal/cmd/handoff.go:95`  | [handoff.md](handoff.md) |
 | `health`       | `healthCmd`      | `internal/cmd/health.go:104`  | — stub      |
 | `heartbeat`    | `heartbeatCmd`   | `internal/cmd/heartbeat.go:38`| [heartbeat.md](heartbeat.md) |
-| `hook`         | `hookCmd`        | `internal/cmd/hook.go:188`    | — stub      |
+| `hook`         | `hookCmd`        | `internal/cmd/hook.go:188`    | [hook.md](hook.md) |
 | `hooks`        | `hooksCmd`       | `internal/cmd/hooks.go:43`    | [hooks.md](hooks.md) |
 | `info`         | `infoCmd`        | `internal/cmd/info.go:482`    | [info.md](info.md) |
 | `init`         | `initCmd`        | `internal/cmd/init.go:37`     | — stub      |
@@ -112,52 +112,52 @@ this wiki's per-command page (stub if not yet written).
 | `mayor`        | `mayorCmd`       | `internal/cmd/mayor.go:136`   | — stub      |
 | `memories`     | `memoriesCmd`    | `internal/cmd/memories.go:17` | — stub      |
 | `metrics`      | `metricsCmd`     | `internal/cmd/metrics.go:26`  | [metrics.md](metrics.md) |
-| `molecule`     | `moleculeCmd`    | `internal/cmd/molecule.go:269`| — stub      |
-| `mountain`     | `mountainCmd`    | `internal/cmd/mountain.go:105`| — stub      |
-| `mq`           | `mqCmd`          | `internal/cmd/mq.go:364`      | — stub      |
+| `molecule`     | `moleculeCmd`    | `internal/cmd/molecule.go:269`| [molecule.md](molecule.md) |
+| `mountain`     | `mountainCmd`    | `internal/cmd/mountain.go:105`| [mountain.md](mountain.md) |
+| `mq`           | `mqCmd`          | `internal/cmd/mq.go:364`      | [mq.md](mq.md) |
 | `namepool`     | `namepoolCmd`    | `internal/cmd/namepool.go:111`| — stub      |
 | `notify`       | `notifyCmd`      | `internal/cmd/notify.go:38`   | — stub      |
 | `nudge`        | `nudgeCmd`       | `internal/cmd/nudge.go:62`    | — stub      |
 | `nudge-poller` [?]| `nudgePollerCmd` | `internal/cmd/nudge_poller.go:23` | — stub |
-| `orphans`      | `orphansCmd`     | `internal/cmd/orphans.go:181` | — stub      |
+| `orphans`      | `orphansCmd`     | `internal/cmd/orphans.go:181` | [orphans.md](orphans.md) |
 | `patrol`       | `patrolCmd`      | `internal/cmd/patrol.go:62`   | [patrol.md](patrol.md) |
 | `peek`         | `peekCmd`        | `internal/cmd/peek.go:18`     | — stub      |
 | `plugin`       | `pluginCmd`      | `internal/cmd/plugin.go:165`  | [plugin.md](plugin.md) |
 | `polecat`      | `polecatCmd`     | `internal/cmd/polecat.go:378` | — stub      |
 | `prime`        | `primeCmd`       | `internal/cmd/prime.go:109`   | [prime.md](prime.md) |
 | `proxy` [?]    | `proxySubcmdsCmd`| `internal/cmd/proxy_subcmds.go:48`| — stub  |
-| `prune-branches` [?]| `pruneBranchesCmd`| `internal/cmd/prune_branches.go:46`| — stub |
+| `prune-branches`| `pruneBranchesCmd`| `internal/cmd/prune_branches.go:46`| [prune-branches.md](prune-branches.md) |
 | `quota`        | `quotaCmd`       | `internal/cmd/quota.go:980`   | — stub      |
-| `ready`        | `readyCmd`       | `internal/cmd/ready.go:49`    | — stub      |
+| `ready`        | `readyCmd`       | `internal/cmd/ready.go:49`    | [ready.md](ready.md) |
 | `reaper`       | `reaperCmd`      | `internal/cmd/reaper.go:573`  | — stub      |
 | `refinery`     | `refineryCmd`    | `internal/cmd/refinery.go:269`| — stub      |
-| `release`      | `releaseCmd`     | `internal/cmd/release.go:37`  | — stub      |
+| `release`      | `releaseCmd`     | `internal/cmd/release.go:37`  | [release.md](release.md) |
 | `remember`     | `rememberCmd`    | `internal/cmd/remember.go:40` | — stub      |
 | `repair`       | `repairCmd`      | `internal/cmd/repair.go:36`   | [repair.md](repair.md) |
-| `resume`       | `resumeCmd`      | `internal/cmd/resume.go:30`   | — stub      |
+| `resume`       | `resumeCmd`      | `internal/cmd/resume.go:30`   | [resume.md](resume.md) |
 | `rig`          | `rigCmd`         | `internal/cmd/rig.go:343`     | — stub      |
 | `role`         | `roleCmd`        | `internal/cmd/role.go:139`    | — stub      |
-| `scheduler`    | `schedulerCmd`   | `internal/cmd/scheduler.go:117`| — stub     |
+| `scheduler`    | `schedulerCmd`   | `internal/cmd/scheduler.go:117`| [scheduler.md](scheduler.md) |
 | `seance`       | `seanceCmd`      | `internal/cmd/seance.go:74`   | [seance.md](seance.md) |
 | `session`      | `sessionCmd`     | `internal/cmd/session.go:206` | — stub      |
 | `shell`        | `shellCmd`       | `internal/cmd/shell.go:64`    | [shell.md](shell.md) |
 | `show`         | `showCmd`        | `internal/cmd/show.go:12`     | — stub      |
 | `shutdown`     | `shutdownCmd`    | `internal/cmd/start.go:164`   | — stub      |
 | `signal`       | `signalCmd`      | `internal/cmd/signal.go:8`    | — stub      |
-| `sling`        | `slingCmd`       | `internal/cmd/sling.go:168`   | — stub      |
+| `sling`        | `slingCmd`       | `internal/cmd/sling.go:168`   | [sling.md](sling.md) |
 | `stale`        | `staleCmd`       | `internal/cmd/stale.go:40`    | [stale.md](stale.md) |
 | `start`        | `startCmd`       | `internal/cmd/start.go:163`   | — stub      |
 | `status`       | `statusCmd`      | `internal/cmd/status.go:61`   | [status.md](status.md) |
 | `statusline`   | `statusLineCmd`  | `internal/cmd/statusline.go:37`| — stub     |
-| `synthesis`    | `synthesisCmd`   | `internal/cmd/synthesis.go:106`| — stub     |
+| `synthesis`    | `synthesisCmd`   | `internal/cmd/synthesis.go:106`| [synthesis.md](synthesis.md) |
 | `tap`          | `tapCmd`         | `internal/cmd/tap.go:34`      | — stub      |
 | `thanks`       | `thanksCmd`      | `internal/cmd/thanks.go:238`  | [thanks.md](thanks.md) |
 | `thaw`         | `thawCmd`        | `internal/cmd/estop.go:72`    | — stub      |
 | `theme`        | `themeCmd`       | `internal/cmd/theme.go:79`    | [theme.md](theme.md) |
 | `town`         | `townCmd`        | `internal/cmd/town_cycle.go:33`| — stub     |
-| `trail`        | `trailCmd`       | `internal/cmd/trail.go:110`   | — stub      |
+| `trail`        | `trailCmd`       | `internal/cmd/trail.go:110`   | [trail.md](trail.md) |
 | `uninstall`    | `uninstallCmd`   | `internal/cmd/uninstall.go:54`| [uninstall.md](uninstall.md) |
-| `unsling`      | `unslingCmd`     | `internal/cmd/unsling.go:52`  | — stub      |
+| `unsling`      | `unslingCmd`     | `internal/cmd/unsling.go:52`  | [unsling.md](unsling.md) |
 | `up`           | `upCmd`          | `internal/cmd/up.go:158`      | — stub      |
 | `upgrade`      | `upgradeCmd`     | `internal/cmd/upgrade.go:55`  | [upgrade.md](upgrade.md) |
 | `version`      | `versionCmd`     | `internal/cmd/version.go:65`  | [version.md](version.md) |
@@ -165,7 +165,7 @@ this wiki's per-command page (stub if not yet written).
 | `warrant`      | `warrantCmd`     | `internal/cmd/warrant.go:119` | — stub      |
 | `whoami`       | `whoamiCmd`      | `internal/cmd/whoami.go:33`   | [whoami.md](whoami.md) |
 | `witness`      | `witnessCmd`     | `internal/cmd/witness.go:142` | — stub      |
-| `wl`           | `wlCmd`          | `internal/cmd/wl.go:70`       | — stub      |
+| `wl`           | `wlCmd`          | `internal/cmd/wl.go:70`       | [wl.md](wl.md) |
 | `worktree`     | `worktreeCmd`    | `internal/cmd/worktree.go:94` | — stub      |
 
 **[?] = inferred command name; `Use:` field not yet verified.**
@@ -205,14 +205,11 @@ bead will track this.
    auto-injected `AGENTS.md` from `bd init` as the agent memory
    primitive; these `gt` commands may be a parallel or wrapper
    system. Needs verification.
-6. **`bead`, `issue`, `ready`, `close`, `done`** — five commands that
-   look like alternate-syntax wrappers around `bd` operations. If so,
-   `gt` may be re-exposing `bd` under its own noun (`gt issue ready`
-   ≈ `bd ready`). Tracked as a follow-up.
+6. **bd-wrapper patterns (resolved in Batch 3c).** Five top-level commands are alternate entry points to bd: [`cat`](cat.md) is a thin `bd show` wrapper with prefix-based rig routing; [`close`](close.md) wraps `bd close` with gt-specific `--cascade` child closing and native-SDK convoy propagation; [`done`](done.md) is a polecat-only session-end primitive with extensive side effects (not merely `bd done`); [`ready`](ready.md) is a town-wide aggregated ready view; [`bead`](bead.md) is a parent command for cross-repo bead operations (`move`/`show`/`read`). `gt issue` is NOT a bd-wrapper despite the name — it sets `GT_ISSUE` tmux env var; see [`issue.md`](issue.md).
 
 ## What's NOT yet in this index
 
-- **Mapped so far:** 33 of 111 top-level commands have entity pages — the full `GroupDiag` set (22 commands) and the full `GroupConfig` set (11 commands: account, config, directive, disable, enable, hooks, issue, plugin, shell, theme, uninstall). Remaining groups pending: Work, Agents, Comm, Services, Workspace.
+- **Mapped so far:** 59 of 111 top-level commands have entity pages — the full `GroupDiag` set (22), the full `GroupConfig` set (11), and the full `GroupWork` set (26: assign, bead, cat, changelog, cleanup, close, compact, convoy, done, formula, handoff, hook, molecule, mountain, mq, orphans, prune-branches, ready, release, resume, scheduler, sling, synthesis, trail, unsling, wl). Remaining groups pending: Agents, Comm, Services, Workspace.
 - **`Use:` field verification per command.** Many entries have inferred
   command names flagged `[?]`.
 - **`GroupID` assignment per command.** Each command needs a quick read

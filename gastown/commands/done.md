@@ -1,0 +1,156 @@
+---
+title: gt done
+type: command
+status: partial
+topic: gastown
+created: 2026-04-11
+updated: 2026-04-11
+sources:
+  - /home/kimberly/repos/gastown/internal/cmd/done.go
+  - /home/kimberly/repos/gastown/internal/cmd/root.go
+tags: [command, work, polecat-safe, polecat, merge-queue, handoff]
+---
+
+# gt done
+
+Signal that a polecat's work is complete and ready for the merge
+queue. The canonical way a polecat ends a work cycle — submits the
+branch to MQ, notifies the Witness, and transitions the polecat to
+IDLE with sandbox preserved.
+
+**Parent:** [gt](../binaries/gt.md) (root command)
+**Group:** `GroupWork` ("Work Management") (`done.go:33`)
+**Polecat-safe:** yes (`AnnotationPolecatSafe: "true"` on
+`done.go:34`)
+**Beads-exempt:** no
+**Branch-check-exempt:** no
+**`SilenceUsage: true`** (`done.go:59`) — operational errors don't
+print the usage blurb, which "confuses agents" per the inline
+comment.
+
+## What it actually does
+
+Source: `/home/kimberly/repos/gastown/internal/cmd/done.go:31-89` for
+the cobra surface; the full `runDone` implementation is 1896 lines
+and encodes the entire polecat end-of-work dance.
+
+**Critical role guard** at `done.go:91-100`: `gt done` is for
+polecats only. If `BD_ACTOR` is set and `!isPolecatActor(actor)`, the
+command refuses with a message explaining the asymmetry — polecats
+end sessions with `gt done`, other roles persist across tasks and
+don't use it. See the related guard in [prime](prime.md) that warns
+**agents not to run `gt done` at all** unless they are a polecat.
+
+### Invocation
+
+```
+gt done [--issue <id>] [--status <STATUS>] [--pre-verified] [--target <branch>] [--priority <N>] [--cleanup-status <state>] [--resume]
+```
+
+### Exit statuses (`done.go:73-77`)
+
+```go
+ExitCompleted = "COMPLETED"
+ExitEscalated = "ESCALATED"
+ExitDeferred  = "DEFERRED"
+```
+
+From the `Long` help (`done.go:45-49`):
+
+- `COMPLETED` — work done, MR submitted (default).
+- `ESCALATED` — hit a blocker, needs human intervention; skips MR.
+- `DEFERRED` — work paused, issue still open; skips MR.
+
+### Behavior outline
+
+Based on the first ~200 lines of `runDone` (`done.go:91-200`) and
+the top-level help:
+
+1. **Record telemetry on exit** via
+   `telemetry.RecordDone(context.Background(), status, retErr)` in a
+   defer (`done.go:92`).
+2. **Validate role** — block non-polecats as described above.
+3. **Validate exit status** — must be one of the three constants
+   (`done.go:102-106`).
+4. **Find workspace with fallback** — `workspace.FindFromCwdWithFallback`
+   (`done.go:115-118`). The fallback exists because the Witness may
+   have deleted the polecat's worktree before `gt done` finishes
+   (referenced bead `hq-3xaxy`). If cwd is unavailable, fall back to
+   `GT_POLECAT_PATH`.
+5. **Determine current rig** — walk the rel-path from town root to
+   cwd for the first component, then override with `GT_RIG` env var
+   if set (`done.go:132-151`). The env var is more reliable than
+   cwd-derived rig name because Claude Code's Bash tool may have
+   reset cwd to `mayor/rig`.
+6. **Normalize cwd to polecat worktree** — if cwd is not inside
+   `polecats/`, reconstruct the expected polecat clone path using
+   `GT_POLECAT` or `GT_CREW` env vars (`done.go:161-179`). Then walk
+   up from cwd to the git repo root stopping if we leave the
+   polecats area (`done.go:185-198`).
+7. **Git init + further work** — initializes
+   `internal/git`, `internal/polecat`, session, mail, events,
+   telemetry, templates, townlog, rig, beads, config. The full flow
+   (branch detection, MR submission, worktree sync to main, Witness
+   notification, IDLE transition) spans the remaining 1700 lines.
+
+The surface-level help text (`done.go:36-57`) summarizes the
+downstream steps as:
+
+1. Submits the current branch to the merge queue.
+2. Auto-detects issue ID from branch name.
+3. Notifies the Witness with the exit outcome.
+4. Syncs worktree to main and transitions polecat to IDLE (sandbox
+   preserved, session stays alive for reuse).
+
+### Subcommands
+
+None. `grep doneCmd.AddCommand ... done.go` returns no hits.
+
+### Flags
+
+Defined in `init()` at `done.go:79-89`:
+
+| flag | short | type | default | description |
+|------|-------|------|---------|-------------|
+| `--issue` | — | string | `""` | Source issue ID (default: parse from branch name) |
+| `--priority` | `-p` | int | `-1` | Override priority (0-4, default: inherit from issue) |
+| `--status` | — | string | `COMPLETED` | Exit status: COMPLETED, ESCALATED, or DEFERRED |
+| `--cleanup-status` | — | string | `""` | Git cleanup status: clean, uncommitted, unpushed, stash, unknown (ZFC: agent-observed) |
+| `--resume` | — | bool | `false` | Resume from last checkpoint (auto-detected, for Witness recovery) |
+| `--pre-verified` | — | bool | `false` | Mark MR as pre-verified (polecat ran gates after rebasing onto target) |
+| `--target` | — | string | `""` | Explicit MR target branch (overrides formula_vars and auto-detection) |
+
+### Related commands
+
+- [handoff](handoff.md) — the sister command. Polecats running
+  `gt handoff` are silently redirected to `gt done --status
+  DEFERRED` (`handoff.go:152-161`). Non-polecats use `gt handoff`
+  directly.
+- [hook](hook.md) — refuses polecat access entirely
+  (`hook.go:224-231`) — polecats cannot hook work because their
+  session lifecycle is driven by `gt done`.
+- [mq](mq.md) — the merge queue that `gt done` submits into (via
+  the underlying refinery / `bd mq` path).
+- [convoy](convoy.md) — convoys that tracked the closed issue get
+  checked via [close](close.md)'s `checkConvoyCompletion`.
+- [../binaries/gt.md](../binaries/gt.md) — root.
+
+## Notes / open questions
+
+- **1896-line command.** The bulk of the logic is a linear script
+  handling edge cases: deleted worktrees, cwd resets by Claude Code's
+  Bash tool, polecat-not-polecat role drift, and Witness-mediated
+  cleanup. Each edge-case patch has a bead reference in comments
+  (e.g. `hq-3xaxy`, `gt-hdf8`). Worth a dedicated concept page on
+  "polecat lifecycle" rather than forcing it into a command page.
+- **Telemetry hook** uses `strings.ToUpper(doneStatus)` for the
+  status label (`done.go:92`). So `--status completed` works just
+  as well as `COMPLETED`.
+- **Persistent polecat model** — comment at `done.go:108-110`
+  references bead `gt-hdf8`: "sessions stay alive after gt done. No
+  deferred session kill — the polecat transitions to IDLE with
+  sandbox preserved." The sandbox-preservation design is worth a
+  concept page.
+- **`BD_ACTOR` vs `GT_ROLE`** — the role guard checks `BD_ACTOR` not
+  `GT_ROLE`. Both are polecat identity indicators but come from
+  different layers; confirm whether they're kept in sync.
