@@ -13,8 +13,11 @@ tags: [file, build, ldflags, makefile]
 # Makefile
 
 Canonical build recipe for the gastown project. Lives at
-`/home/kimberly/repos/gastown/Makefile`. Produces the `gt`, `gt-proxy-server`,
-and `gt-proxy-client` binaries used by every non-release build path (native
+`/home/kimberly/repos/gastown/Makefile`. Produces the
+[gt](../binaries/gt.md),
+[gt-proxy-server](../binaries/gt-proxy-server.md),
+and [gt-proxy-client](../binaries/gt-proxy-client.md)
+binaries used by every non-release build path (native
 dev on Linux/macOS, `make install` to `~/.local/bin`, container builds via
 the [Dockerfile](dockerfile.md)).
 
@@ -297,9 +300,9 @@ way to run" the e2e tests.
 
 ## Notes / open questions
 
-- What do `gt-proxy-server` and `gt-proxy-client` actually do? Read
-  `/home/kimberly/repos/gastown/cmd/gt-proxy-server/` and
-  `/home/kimberly/repos/gastown/cmd/gt-proxy-client/`.
+- What [gt-proxy-server](../binaries/gt-proxy-server.md) and
+  [gt-proxy-client](../binaries/gt-proxy-client.md) actually do — now
+  mapped as entity pages.
 - The `desktop-build` / `desktop-run` targets reference `./cmd/gt-desktop`,
   but the `inventory/go-packages.md` enumeration of `cmd/` only lists
   `gt`, `gt-proxy-client`, `gt-proxy-server`. Does `cmd/gt-desktop` exist

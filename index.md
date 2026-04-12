@@ -7,6 +7,8 @@ Global catalog of all pages. Organized by topic, then category.
 ### Binaries
 
 - [gt](gastown/binaries/gt.md) — main CLI (entry point, ldflags, startup sequence, command groups)
+- [gt-proxy-server](gastown/binaries/gt-proxy-server.md) — long-lived host-side mTLS proxy server for polecat containers
+- [gt-proxy-client](gastown/binaries/gt-proxy-client.md) — container-side shim that forwards `gt`/`bd` calls to the proxy server
 
 ### Commands
 

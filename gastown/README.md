@@ -87,6 +87,8 @@ the 12 layers):
 ### Binaries
 
 - [gt](binaries/gt.md) — main CLI; entry point, ldflags, startup sequence, command groups, exempt-command maps
+- [gt-proxy-server](binaries/gt-proxy-server.md) — long-lived host-side mTLS proxy server for polecat containers
+- [gt-proxy-client](binaries/gt-proxy-client.md) — container-side shim that forwards `gt`/`bd` calls to the proxy server (or execs the real binary)
 
 ### Commands
 

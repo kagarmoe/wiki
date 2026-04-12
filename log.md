@@ -310,3 +310,63 @@ the relevant pages, not as drift):
   [gastown/inventory/repo-root.md](gastown/inventory/repo-root.md),
   [gastown/README.md](gastown/README.md),
   [index.md](index.md)
+
+## [2026-04-11] ingest | Batch 2 (Layer b: Binaries & entry points)
+
+Read `cmd/gt-proxy-server/` and `cmd/gt-proxy-client/` source, plus
+selected parts of `internal/proxy/` for characterization context, and
+produced two new binary entity pages. Cross-linked back to
+[gastown/binaries/gt.md](gastown/binaries/gt.md), added forward links
+from [gastown/files/makefile.md](gastown/files/makefile.md) and
+[gastown/files/flake-nix.md](gastown/files/flake-nix.md) where the
+proxy binaries were mentioned as bare text.
+
+**Sources read:**
+
+- `/home/kimberly/repos/gastown/cmd/gt-proxy-server/main.go`
+- `/home/kimberly/repos/gastown/cmd/gt-proxy-server/config.go`
+- `/home/kimberly/repos/gastown/cmd/gt-proxy-client/main.go`
+- `/home/kimberly/repos/gastown/cmd/gt/main.go` (re-read for cross-ref)
+- `/home/kimberly/repos/gastown/internal/proxy/server.go`
+- `/home/kimberly/repos/gastown/internal/proxy/exec.go` (partial — first ~200 lines)
+- `/home/kimberly/repos/gastown/internal/proxy/git.go` (header comment only)
+- `/home/kimberly/repos/gastown/Makefile` (re-read build target)
+
+**Pages created:**
+
+- [gastown/binaries/gt-proxy-server.md](gastown/binaries/gt-proxy-server.md) — 306 lines; covers mTLS termination, per-identity rate limiting, `/v1/exec` endpoint with 13-step subprocess execution, `/v1/git/` smart-HTTP bridge, plain-HTTP admin server on `127.0.0.1:9877`, config merge, subcommand allowlist discovery via `exec.LookPath("gt")`.
+- [gastown/binaries/gt-proxy-client.md](gastown/binaries/gt-proxy-client.md) — 232 lines; covers the stdlib-only 137-line binary, its two-mode dispatch (mTLS forward to proxy vs `syscall.Exec` to `/usr/local/bin/gt.real`), the `GT_PROXY_*` env var quartet, and the installation pattern (shadowing `gt` and `bd` inside polecat containers).
+
+**Pages expanded:**
+
+- [gastown/binaries/gt.md](gastown/binaries/gt.md) — added `### Sibling binaries` subsection linking both proxy pages + noting that the `BuiltProperly` self-kill gate is `gt`-only (neither proxy binary imports `internal/cmd`).
+- [gastown/files/makefile.md](gastown/files/makefile.md) — linked the proxy binaries in the opening paragraph and in a "Notes / open questions" item that previously read as a to-read note.
+- [gastown/files/flake-nix.md](gastown/files/flake-nix.md) — linked the proxy binaries in the Cross-references section.
+
+**Index updates:**
+
+- [gastown/README.md](gastown/README.md) — `### Binaries` sub-index expanded.
+- [index.md](index.md) — gastown `### Binaries` expanded to match.
+
+**Cross-linking outcome:** gt-proxy-server page has 11 outbound links; gt-proxy-client page has 12. All resolved. Grep for `gt-proxy-server|gt-proxy-client` across the wiki found 17 pre-existing mentions; 6 were converted to links (in makefile.md and flake-nix.md). Mentions inside `gastown/inventory/*.md` table cells, `log.md` historical entries, `index.md`, `gastown/README.md`, and `CLAUDE.md` left bare (touch-list).
+
+**Neutral observations surfaced** (filed on the relevant pages, not as drift):
+
+- Both proxy binaries receive the `BuiltProperly=1` ldflag via `make build` LDFLAGS, but neither imports `internal/cmd`, so the ldflag is silently a no-op for them. The self-kill gate is `gt`-only.
+- `cmd/gt-proxy-server/main.go` calls `exec.LookPath("gt")` at startup to auto-discover the subcommand allowlist — a circular dependency between the proxy binary and the `gt` binary it protects. A baked-in fallback list covers the case when `gt` isn't on PATH.
+- `gt-proxy-client` HTTP client timeout (5m), proxy-server `WriteTimeout` (5m), and server per-command `ExecTimeout` (60s) are not coordinated. The 60s cap is tighter than either transport timeout.
+- `gt-proxy-client`'s `GT_REAL_BIN` fallback is hardcoded to `gt.real` regardless of whether the binary was invoked as `gt` or `bd`.
+- `MaxConcurrentExec`, `ExecRateLimit`, `ExecRateBurst`, `ExecTimeout` have no CLI-flag or config-file surface — only settable from code.
+- Proxy server's `rateLimiters` `sync.Map` has no eviction; in-source comment says "acceptable for dozens of polecats, not thousands."
+- Proxy server's admin HTTP surface on `127.0.0.1:9877` is plain HTTP with no authentication; in-source comment frames this as the intended local-operator access model.
+- `internal/proxy/` is referenced but not yet mapped as its own wiki page. Pending the Agent-runtime / Platform-services batch where it lands.
+
+**Next batch:** Batch 3 — Layer (c) Command layer. 111 top-level cobra commands in `internal/cmd/`, walked by cobra group. Tracked in bead `wiki-3zo`. Absorbs the narrow investigation bead `wiki-ef3`.
+
+→ [gastown/binaries/gt-proxy-server.md](gastown/binaries/gt-proxy-server.md),
+  [gastown/binaries/gt-proxy-client.md](gastown/binaries/gt-proxy-client.md),
+  [gastown/binaries/gt.md](gastown/binaries/gt.md),
+  [gastown/files/makefile.md](gastown/files/makefile.md),
+  [gastown/files/flake-nix.md](gastown/files/flake-nix.md),
+  [gastown/README.md](gastown/README.md),
+  [index.md](index.md)

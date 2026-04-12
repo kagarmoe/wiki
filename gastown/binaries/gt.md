@@ -198,6 +198,27 @@ version, help, completion, doctor, estop, thaw, install, git-init, upgrade
 
 The canonical list is compiled in [../commands/README.md](../commands/README.md).
 
+### Sibling binaries
+
+`gt` is one of three binaries produced by
+[`make build`](../files/makefile.md). The other two are thin,
+purpose-built shims around the `internal/proxy/` package with no
+overlap in Go dependencies with `gt`:
+
+- [gt-proxy-server](gt-proxy-server.md) — long-lived mTLS proxy server
+  that runs on the host and accepts `gt`/`bd` invocations from
+  polecat containers over an authenticated HTTP endpoint.
+- [gt-proxy-client](gt-proxy-client.md) — container-side shim
+  installed as both `gt` and `bd` inside polecat containers.
+  Forwards `argv[1:]` to the proxy server when
+  `GT_PROXY_URL`/`GT_PROXY_CERT`/`GT_PROXY_KEY`/`GT_PROXY_CA` are
+  set, otherwise `execve`s the real `gt`/`bd` binary at
+  `/usr/local/bin/gt.real` (or `$GT_REAL_BIN`).
+
+Neither proxy binary imports `internal/cmd`, so the `BuiltProperly`
+self-kill gate described above does NOT apply to them — it's a
+`gt`-only mechanism.
+
 ## Notes / open questions
 
 - `internal/cli/name.go`: `gt` reads `GT_COMMAND` env var at startup

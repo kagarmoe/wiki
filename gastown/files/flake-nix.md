@@ -215,7 +215,9 @@ pulls its own `nixpkgs` at `nixos-25.11` (rev
   builds; the `Build=nix` ldflag is one of the gate-bypass paths
   documented there.
 - [Makefile](makefile.md) — sibling build path. Produces all three
-  binaries (`gt`, `gt-proxy-server`, `gt-proxy-client`); flake
+  binaries ([gt](../binaries/gt.md),
+  [gt-proxy-server](../binaries/gt-proxy-server.md),
+  [gt-proxy-client](../binaries/gt-proxy-client.md)); flake
   produces only `gt`.
 - [Dockerfile](dockerfile.md) — sibling build path via container.
 - [.goreleaser.yml](goreleaser-yml.md) — sibling build path for
