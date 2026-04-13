@@ -1029,3 +1029,79 @@ name column (removing `[?]` flags and updating to canonical forms).
   [gastown/commands/warrant.md](gastown/commands/warrant.md),
   [gastown/README.md](gastown/README.md),
   [index.md](index.md)
+
+## [2026-04-11] ingest | Batch 4 (Layer d: Platform services — 9 package pages)
+
+First batch of the package layer. Created a new category folder
+`gastown/packages/` and produced 9 entity pages for the platform
+service packages under `/home/kimberly/repos/gastown/internal/`.
+
+**Packages mapped:**
+
+- [cli](gastown/packages/cli.md) — single `Name()` function reading `GT_COMMAND`; used by root command's init
+- [config](gastown/packages/config.md) — 9 files covering town settings, agent registry (10 built-in presets), load/save for every persisted JSON shape (town, mayor, rigs, settings, daemon, accounts, messaging, escalation, merge queues), `Resolve*Agent*` family, `AgentEnv`, `BuildStartupCommand*` family, `IdentityEnvVars` list (GH#3006), cost-tier system, role definitions via embedded `roles/*.toml`, directive loader, overseer detection
+- [session](gastown/packages/session.md) — 11 files; tmux session substrate for ALL agent roles (not just polecats); identity parsing, canonical session-name factories, `PrefixRegistry`, unified `StartSession`/`StopSession`, `TrackPID` with start-time fingerprinting, stale detection, beacon/startup prompt rendering, town-wide session bulk ops, window tints
+- [style](gastown/packages/style.md) — thin lipgloss wrapper; Success/Warning/Error/Info/Dim/Bold styles + icon prefixes; `PrintWarning` (stderr-only, doesn't corrupt JSON stdout); ANSI-aware `Table` renderer
+- [telemetry](gastown/packages/telemetry.md) — **strictly opt-in OTEL provider**. `telemetry.Init` returns `(nil, nil)` if neither `GT_OTEL_METRICS_URL` nor `GT_OTEL_LOGS_URL` is set. Default endpoints point at localhost VictoriaMetrics/VictoriaLogs — never off-box. 23 metric counters + 1 histogram; log events via `emit(...)`. Subprocess env propagation via `OTEL_RESOURCE_ATTRIBUTES` for `gt.*` labels. Every PII-adjacent field (bd output, prompt keys, mail body, prime context, pane output, agent output) is gated behind its own explicit `GT_LOG_*` env var, all off by default.
+- [ui](gastown/packages/ui.md) — Ayu palette (always-on, adaptive light/dark); semantic status/priority/type colours; `InitTheme`/`ApplyThemeMode`; `NO_COLOR`/`CLICOLOR`/`GT_NO_EMOJI`/`GT_AGENT_MODE`/`CLAUDE_CODE` capability detection; `RenderMarkdown` (glamour); `ToPager` with `less -RFX`; canonical `Render*` functions for beads metadata
+- [util](gastown/packages/util.md) — atomic JSON/file write; `FirstLine`/`ExecWithOutput`/`ExecRun`; `SetProcessGroup`/`SetDetachedProcessGroup` (Windows no-flash, Unix kill-tree); `ExpandHome`; slice helpers; `RedactURL`; and `orphan.go`'s ~1000-line orphan/zombie Claude cleanup with multi-layer safety guards, ACP protection, TOCTOU re-verification, and SIGTERM→SIGKILL→UNKILLABLE escalation state machine
+- [version](gastown/packages/version.md) — build-time `Commit` var + `CheckStaleBinary` which compares binary commit to repo HEAD with false-positive guards: different-clone object-store verification, `.beads/`-only-change suppression (GH#2596), forward-only ancestor gate, branch allowlist (`main`/`master`/`carry/*`)
+- [workspace](gastown/packages/workspace.md) — `Find*` family walking up to `mayor/town.json`; `GT_TOWN_ROOT`/`GT_ROOT` env-var fallbacks; "cwd-deleted" survivor variant; `GetTownName` reading town.json via `config.LoadTownConfig`
+
+**Bead `wiki-9u4` answered:**
+
+Telemetry is strictly opt-in. Full answer:
+
+- **Endpoints:** `GT_OTEL_METRICS_URL` and `GT_OTEL_LOGS_URL` env vars. No default endpoint. If neither is set, `telemetry.Init` returns `(nil, nil)` — no-op.
+- **Hardcoded defaults (only when at least one var is set and the other is empty):** localhost VictoriaMetrics (`http://localhost:8428/...`) and VictoriaLogs (`http://localhost:9428/...`). Never off-box by default.
+- **Opt-out:** unset both env vars. No explicit kill-switch env var.
+- **Data exported (when active):** 23 metric counters (`gastown.*.total`) + 1 histogram (`gastown.bd.duration_ms`) + log events via `emit(...)`. Resource attributes include hostname, OS info, service name, service version. `SetProcessOTELAttrs` additionally sets `gt.role`, `gt.rig`, `gt.actor`, `gt.agent`, `gt.session`, `gt.run_id`, `gt.work_rig`, `gt.work_bead`, `gt.work_mol` on child `bd` processes via `OTEL_RESOURCE_ATTRIBUTES`.
+- **Secret/PII fields are separately gated:** `GT_LOG_BD_OUTPUT` (2048 bytes), `GT_LOG_PROMPT_KEYS` (256 bytes), `GT_LOG_MAIL_BODY` (256 bytes), `GT_LOG_PRIME_CONTEXT` (untruncated), `GT_LOG_PANE_OUTPUT` (8192 bytes), `GT_LOG_AGENT_OUTPUT` (512 bytes) — all off by default with inline warnings about tokens/PII.
+- **Main always-on identifiable fields when active:** hostname, `town_root` path on `agent.instantiate` events, `BD_ACTOR` → `gt.actor` label.
+- **Windows:** agent conversation streaming is Unix-only (`agent_logging_windows.go` is a no-op stub).
+
+Bead closed.
+
+**Bead `wiki-2g3` answered:** (was pending from Batch 3)
+
+`AnnotationPolecatSafe = "polecatSafe"` is defined in
+`/home/kimberly/repos/gastown/internal/cmd/proxy_subcmds.go:15`. It is
+read by `discoverAllowedSubcmds` in the same file, which iterates
+`rootCmd.Commands()` and emits a sorted `gt:...;bd:...` allowlist
+string. The allowlist is consumed by `gt-proxy-server` at startup
+via `exec.LookPath("gt") && gt proxy-subcmds` to configure its
+subcommand allowlist for polecat containers. The `bd` half of the
+allowlist is a hardcoded string constant (`bdSafeSubcmds` in the same
+file), which can drift silently relative to what `bd` actually allows.
+
+13 top-level commands carry the annotation: `version`, `status`,
+`sling`, `prime`, `proxy-subcmds` (NOT itself annotated), `mountain`,
+`nudge`, `molecule`, `mail`, `hook`, `handoff`, `done`, `convoy`.
+
+Bead closed.
+
+**Surprises:**
+
+- **`orphan.go` protects ALL tmux sockets on the machine**, not just this town's. Explicit in-source comment prevents cross-town kills when multiple Gas Towns coexist.
+- **`types.go` in `internal/config` is ~67 KB** — catalogs every persisted JSON shape in one file. Natural split candidate.
+- **Crew and polecat session names are structurally identical** (`<prefix>-<name>`). Disambiguation relies on agent identity lookup, not name parsing.
+- **Stale-binary check has two explicit false-positive guards**: different-clone object-store verification and `.beads/`-only-change suppression (GH#2596).
+- **`resolveConfigMu` in config/loader.go** is a global mutex serializing agent config resolution across all callers — load-bearing, potential bottleneck under heavy rig concurrency.
+- **Agent logging is Unix-only.** Windows agents get zero conversation streaming to VictoriaLogs even with `GT_LOG_AGENT_OUTPUT=true`. Cross-platform drift.
+- **`pidtrack` tests cannot use `t.Parallel()`** due to package-level `pidStartTimeFunc` variable.
+
+**Next batch:** **STOP HERE.** Per the plan's autonomous-mode stop conditions, Batch 4 is the natural checkpoint before the data layer (Batch 5), agent runtime / domain layer (Batch 6), and the rest of the infrastructure batches. Controller will review Batch 4 before the autonomous loop resumes.
+
+**Beads closed in this commit:** `wiki-58n` (Batch 4 anchor), `wiki-9u4` (OTEL telemetry trace, answered by telemetry.md), `wiki-2g3` (AnnotationPolecatSafe trace, answered by Batch 3h's proxy-subcmds.md + reflected in telemetry context).
+
+→ [gastown/packages/cli.md](gastown/packages/cli.md),
+  [gastown/packages/config.md](gastown/packages/config.md),
+  [gastown/packages/session.md](gastown/packages/session.md),
+  [gastown/packages/style.md](gastown/packages/style.md),
+  [gastown/packages/telemetry.md](gastown/packages/telemetry.md),
+  [gastown/packages/ui.md](gastown/packages/ui.md),
+  [gastown/packages/util.md](gastown/packages/util.md),
+  [gastown/packages/version.md](gastown/packages/version.md),
+  [gastown/packages/workspace.md](gastown/packages/workspace.md),
+  [gastown/README.md](gastown/README.md),
+  [index.md](index.md)

@@ -236,8 +236,9 @@ No flags on the other subcommands.
   depend on `parseAddress` / `ActorString` conventions defined
   in this file.
 - [config.md](config.md) — `config.LoadRoleDefinition` and
-  `config.AgentEnv` are implemented in `internal/config/`; the
-  shape of `<town>/roles/<role>.toml` lives there.
+  `config.AgentEnv` are implemented in
+  [internal/config](../packages/config.md); the shape of
+  `<town>/roles/<role>.toml` lives there.
 
 ## Notes / open questions
 

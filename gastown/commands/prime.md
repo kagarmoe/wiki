@@ -47,7 +47,9 @@ gt prime [--hook] [--dry-run] [--state [--json]] [--explain]
 ### Top-level flow
 
 `runPrime` (`prime.go:116-219`). Wrapped in
-`telemetry.RecordPrime(... retErr)` via a deferred closure.
+`telemetry.RecordPrime(... retErr)` via a deferred closure — the
+telemetry call is a no-op unless OTEL endpoints are configured (see
+[internal/telemetry](../packages/telemetry.md)).
 
 1. `validatePrimeFlags()` — rejects illegal combinations
    (`prime.go:256-264`). `--state` can't combine with

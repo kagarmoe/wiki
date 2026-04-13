@@ -176,8 +176,8 @@ Defined in `init()` (`seance.go:66-75`):
   `sessions-index.json` files. For multi-account installs this can
   be slow.
 - `config.ListAgentPresets` and `SupportsForkSession` flag live in
-  `internal/config/`. Today only Claude-family presets support
-  fork-session; pi/opencode presets do not.
+  [internal/config](../packages/config.md). Today only Claude-family
+  presets support fork-session; pi/opencode presets do not.
 - The `[GAS TOWN]` beacon string mentioned in the `Long` text
   (`seance.go:62`) is emitted by the session-start hook (`gt prime
   --hook`) so predecessor sessions are discoverable via Claude's

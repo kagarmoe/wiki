@@ -43,8 +43,8 @@ gt cleanup [--dry-run] [--force|-f]
    (`cleanup.go:47-50`). The help text claims this uses "aggressive
    tmux session verification to detect ALL orphaned processes, not
    just those with PPID=1" (`cleanup.go:28-29`). The real
-   implementation lives in `internal/util` and is out of scope for
-   this page.
+   implementation lives in [internal/util](../packages/util.md) and
+   is out of scope for this page.
 2. **Return early** with `✓ No orphaned Claude processes found` if
    none (`cleanup.go:52-55`).
 3. **Print the zombie table** — PID, command, age (formatted via

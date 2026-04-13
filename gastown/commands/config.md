@@ -81,9 +81,10 @@ vars.
 
 Everything in this command reads/writes town-level settings via
 `config.TownSettingsPath(townRoot)` →
-`config.LoadOrCreateTownSettings` / `config.SaveTownSettings`. Every
-subcommand begins with `workspace.FindFromCwd()` to resolve
-`townRoot`. Exceptions:
+`config.LoadOrCreateTownSettings` / `config.SaveTownSettings` (see
+[internal/config](../packages/config.md)). Every subcommand begins
+with `workspace.FindFromCwd()` to resolve `townRoot` (see
+[internal/workspace](../packages/workspace.md)). Exceptions:
 
 - `dolt.port` under `config set` routes to a separate
   `daemon.DaemonPatrolConfig` file via `daemon.LoadPatrolConfig` and

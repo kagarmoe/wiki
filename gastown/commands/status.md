@@ -64,10 +64,12 @@ Source: `status.go:607-948`. This is the work unit that the watch
 loop re-runs on each tick.
 
 1. **Resolve town root** via `workspace.FindFromCwdOrError`
-   (`status.go:609-612`).
+   (`status.go:609-612`) — see
+   [internal/workspace](../packages/workspace.md).
 2. **Load town config**: `config.LoadTownConfig(MayorTownPath)` with
    a fallback to `filepath.Base(townRoot)` on error
-   (`status.go:615-620`).
+   (`status.go:615-620`) — see
+   [internal/config](../packages/config.md).
 3. **Load rigs config**: `config.LoadRigsConfig(MayorRigsPath)`
    with an empty fallback (`status.go:623-628`).
 4. **Load town settings**: `config.LoadOrCreateTownSettings` for

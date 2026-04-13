@@ -94,9 +94,10 @@ Only short commits are printed — the full hash is truncated via
 
 `version.go:69-72` — in `init()`, if the build-time `Commit` ldflag is
 non-empty, the version subcommand calls `version.SetCommit(Commit)` to
-pass the value to the `internal/version` package. This is used by the
-stale-binary-check logic in `persistentPreRun` — see
-[../binaries/gt.md](../binaries/gt.md) "persistentPreRun sequence".
+pass the value to the [internal/version](../packages/version.md)
+package. This is used by the stale-binary-check logic in
+`persistentPreRun` — see [../binaries/gt.md](../binaries/gt.md)
+"persistentPreRun sequence".
 Importantly, this means **the version command's `init()` participates
 in bootstrapping the stale-binary-check machinery**, not just printing
 a version string.

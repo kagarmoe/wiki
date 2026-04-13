@@ -102,6 +102,20 @@ the 12 layers):
 - **Workspace group** (7 commands, fully mapped): [crew](commands/crew.md), [git-init](commands/git-init.md), [init](commands/init.md), [install](commands/install.md), [namepool](commands/namepool.md), [rig](commands/rig.md), [worktree](commands/worktree.md)
 - **Ungrouped** (commands with no `GroupID`, mapped in Batch 3h): [agent-log](commands/agent-log.md), [commit](commands/commit.md), [cycle](commands/cycle.md), [forget](commands/forget.md), [health](commands/health.md), [krc](commands/krc.md), [memories](commands/memories.md), [nudge-poller](commands/nudge-poller.md), [proxy-subcmds](commands/proxy-subcmds.md), [remember](commands/remember.md), [show](commands/show.md), [status-line](commands/status-line.md), [tap](commands/tap.md), [town](commands/town.md), [warrant](commands/warrant.md) — **all 111 top-level commands now mapped**
 
+### Packages
+
+Platform service packages under `internal/` (Batch 4 — Layer d):
+
+- [cli](packages/cli.md) — `cli.Name()` for `GT_COMMAND` binary-name override
+- [config](packages/config.md) — town settings, agent registry, startup command builders, cost-tier system
+- [session](packages/session.md) — tmux session substrate for every agent role
+- [style](packages/style.md) — lipgloss style wrappers + icon prefixes + small table renderer
+- [telemetry](packages/telemetry.md) — OTEL provider (**strictly opt-in**; defaults to localhost VictoriaMetrics/VictoriaLogs; no off-box leakage)
+- [ui](packages/ui.md) — Ayu palette, theme init, capability detection, glamour markdown rendering
+- [util](packages/util.md) — atomic file writes, exec helpers, process-group management, orphan Claude cleanup
+- [version](packages/version.md) — build-time Commit var + `CheckStaleBinary` with false-positive guards
+- [workspace](packages/workspace.md) — town-root discovery walks with env-var fallbacks
+
 ### Files
 
 - [Makefile](files/makefile.md) — canonical build recipe; produces `gt`, `gt-proxy-server`, `gt-proxy-client` with the `BuiltProperly` ldflag

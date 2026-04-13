@@ -149,9 +149,9 @@ allowed to run `make build && make install` without human review.
 ## Notes / open questions
 
 - `version.CheckStaleBinary` and `version.GetRepoRoot` live in
-  `internal/version/`. A dedicated package page would document how
+  [internal/version](../packages/version.md), which documents how
   the binary commit is embedded at build time and how repo HEAD is
-  resolved (git subprocess? pure-Go?).
+  resolved (git subprocess vs. pure-Go).
 - The inverted exit codes in `--quiet` mode (0=stale, 1=fresh) are
   non-obvious and surprising for shell scripts; the `Long` text calls
   this out explicitly. Scripts commonly expect 0 for success, so a

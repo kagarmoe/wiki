@@ -22,6 +22,18 @@ Global catalog of all pages. Organized by topic, then category.
 - **Workspace group (7 commands)** — fully mapped in Batch 3g. All 7 cobra groups complete.
 - **Ungrouped (15 commands)** — mapped in Batch 3h. **All 111 top-level commands now mapped.** Individual pages linked from [gastown/commands/README.md](gastown/commands/README.md) entity-page column.
 
+### Packages
+
+- [cli](gastown/packages/cli.md) — CLI binary-name override (`cli.Name()`)
+- [config](gastown/packages/config.md) — town settings, agent registry, startup commands
+- [session](gastown/packages/session.md) — tmux session substrate for all agent roles
+- [style](gastown/packages/style.md) — lipgloss style wrappers
+- [telemetry](gastown/packages/telemetry.md) — OTEL provider (opt-in only)
+- [ui](gastown/packages/ui.md) — Ayu palette, theme init, capability detection
+- [util](gastown/packages/util.md) — atomic file writes, exec, orphan cleanup
+- [version](gastown/packages/version.md) — build commit + stale binary detection
+- [workspace](gastown/packages/workspace.md) — town-root discovery
+
 ### Files
 
 - [Makefile](gastown/files/makefile.md) — canonical build recipe; produces `gt`, `gt-proxy-server`, `gt-proxy-client` with the `BuiltProperly` ldflag

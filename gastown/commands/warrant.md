@@ -197,8 +197,9 @@ Maps target paths to tmux session names via five cases:
   `--all` hides them, but the files stay. A rolling `--older-than`
   or `prune` subcommand may be worth adding.
 - **`targetToSessionName` is the wrong abstraction boundary.** It's
-  a private helper here but duplicates logic from `internal/session`.
-  A future refactor should push this into `session` itself.
+  a private helper here but duplicates logic from
+  [internal/session](../packages/session.md). A future refactor
+  should push this into `session` itself.
 - **Boot-triage coupling is informal.** The help text declares that
   Boot executes warrants, but this file contains no pointer to the
   consumer. A `seance`/`reaper`/`boot` page should list this as a
