@@ -202,7 +202,7 @@ Steps (`Makefile:95-119`):
    exist (`Makefile:99-104`) — prevents stale `go install` binaries
    from shadowing the canonical `~/.local/bin/gt` on `$PATH`.
 5. Print `"Installed gt to $INSTALL_DIR/gt"`.
-6. **Daemon restart** (`Makefile:108-115`): if `gt daemon status` returns
+6. **Daemon restart** (`Makefile:108-115`): if [`gt daemon`](../commands/daemon.md) `status` returns
    0, run `gt daemon stop`, sleep 1, `gt daemon start`. Warn on failure.
    Motivation in the Makefile comment: "A stale daemon is a recurring
    source of bugs (wrong session prefixes, etc.)".

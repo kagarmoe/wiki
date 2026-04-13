@@ -832,3 +832,68 @@ Workspace remaining). **Coverage: 78 of 111 top-level commands.**
   [gastown/commands/peek.md](gastown/commands/peek.md),
   [gastown/README.md](gastown/README.md),
   [index.md](index.md)
+
+## [2026-04-11] ingest | Batch 3f (Layer c sub-batch: Services group — 11 top-level commands)
+
+Sixth sub-batch of Layer (c) command mapping. Read 9 Go files
+(2 files each declare 2 top-level commands: `start.go` for
+`start`+`shutdown`, `estop.go` for `estop`+`thaw`) in
+`/home/kimberly/repos/gastown/internal/cmd/` and produced 11 new
+wiki entity pages under `gastown/commands/`.
+
+**Cobra group progress:** 6 of 7 groups complete
+(Diag ✓, Config ✓, Work ✓, Agents ✓, Comm ✓, Services ✓; Workspace
+remaining). **Coverage: 89 of 111 top-level commands.**
+
+**Commands mapped:**
+
+- [daemon](gastown/commands/daemon.md) — parent with 8 subcommands; `run` is the hidden re-exec target that becomes the actual Go daemon process.
+- [dolt](gastown/commands/dolt.md) — 19-subcommand parent wrapping a per-town Dolt SQL server on port 3307; lifecycle, imposter killing, SQL shell, backup/sync, recovery, migration, cleanup, rollback.
+- [down](gastown/commands/down.md) — phase-ordered town shutdown (lock → sentinel → polecats/crew → refineries → witnesses → sessions → daemon → idle-monitors → Dolt → imposters → orphans → sockets → optional `--nuke`).
+- [estop](gastown/commands/estop.md) — emergency SIGTSTP freeze with sentinel-file-first semantics; Mayor and Overseer exempt; manual-only after PR #3237 stripped daemon auto-trigger.
+- [maintain](gastown/commands/maintain.md) — single-command Dolt maintenance pipeline (backup → reap wisps → flatten → gc) running SQL-only on a live server.
+- [quota](gastown/commands/quota.md) — 5-subcommand parent including `rotate` which swaps macOS Keychain OAuth tokens into the same config dir so `/resume` works after rotation; tracks `GT_QUOTA_ACCOUNT` as a shadow identity.
+- [reaper](gastown/commands/reaper.md) — parent with `databases`/`scan`/`reap`/`purge`/`auto-close`/`run` subcommands executing Dolt SQL operations on behalf of the `mol-dog-reaper` formula.
+- [shutdown](gastown/commands/shutdown.md) — destructive "done for the day" with polecat worktree/branch cleanup + zombie Claude processes + orphaned daemon PID sweep. Narrower than `down`.
+- [start](gastown/commands/start.md) — older, simpler boot (Mayor + Deacon + optional `--all`). Does NOT launch the daemon.
+- [thaw](gastown/commands/thaw.md) — resumes estop-frozen sessions via `SIGCONT` and removes the ESTOP sentinel.
+- [up](gastown/commands/up.md) — idempotent boot with parallel Dolt/daemon/deacon/mayor/rig-prefetch, Dolt-readiness gate, orphaned-bead recovery, opt-in `--restore`; supersedes `start`.
+
+**Neutral observations surfaced:**
+
+- **Two boot commands with drift.** `gt start` and `gt up` both "boot Gas Town" but diverge: `up` has a Dolt-readiness gate, orphaned-bead recovery, 300ms/2s daemon startup verify, `--json` output, a worker-pool for witnesses/refineries, richer crew-startup grammar. `start` has a `/crew/` path shortcut and uses `config.EnsureDaemonPatrolConfig` where `up` uses `daemon.EnsureLifecycleConfigFile`.
+- **`gt start` doesn't launch the daemon** — no `ensureDaemon` call in `runStart`.
+- **`gt daemon run` is `Hidden: true`** but is the actual daemon process; nothing prevents direct user invocation.
+- **`gt quota rotate` deliberately does NOT persist scan-detected limits during planning** to avoid poisoning the pool with stale rate-limit messages from parked rigs.
+- **`gt maintain` explicitly cites Tim Sehn 2026-02-28** as authority for running on a live Dolt server without stopping it.
+- **`gt down` writes a `daemon/shutting-down` sentinel** that `ensureDaemon` checks to prevent agents from restarting the daemon mid-teardown (GH#2656).
+- **`gt dolt` beads-exempt is semantically necessary**: it's the bootstrap path that creates the bead store.
+- **`gt down` flock comment at `down.go:114-120`** explains why the lock file is never removed (flock operates on inodes).
+- **`quotaJSON` is a shared package var** bound to `--json` on 3 different subcommands.
+- **`gt reaper reap` hard-codes a 500-open-wisps alert threshold** inline.
+- **`gt reaper run` has no `--json` flag**, breaking machine-parsability for the full-cycle invocation while subcommands have it.
+- **`gt up`'s `ensureDaemon` has a shorter verification window** (300ms/2s) than `gt daemon start`'s 3-second polling — false negatives possible under load.
+- **`shutdown` is narrower than `down`** — doesn't sweep legacy tmux sockets or `.beads/dolt` directories.
+
+**Polecat-safe within Services:** 0 of 11.
+**Beads-exempt within Services:** 3 of 11 (`dolt`, `estop`, `thaw`).
+**Branch-check-exempt within Services:** 2 of 11 (`estop`, `thaw`).
+
+**Next sub-batch:** 3g — Workspace group (final cobra group). Then any ungrouped commands, then Batch 3 closes.
+
+**Beads status:** `wiki-3zo` and `wiki-ef3` remain open.
+
+→ [gastown/commands/README.md](gastown/commands/README.md),
+  [gastown/commands/daemon.md](gastown/commands/daemon.md),
+  [gastown/commands/dolt.md](gastown/commands/dolt.md),
+  [gastown/commands/down.md](gastown/commands/down.md),
+  [gastown/commands/estop.md](gastown/commands/estop.md),
+  [gastown/commands/maintain.md](gastown/commands/maintain.md),
+  [gastown/commands/quota.md](gastown/commands/quota.md),
+  [gastown/commands/reaper.md](gastown/commands/reaper.md),
+  [gastown/commands/shutdown.md](gastown/commands/shutdown.md),
+  [gastown/commands/start.md](gastown/commands/start.md),
+  [gastown/commands/thaw.md](gastown/commands/thaw.md),
+  [gastown/commands/up.md](gastown/commands/up.md),
+  [gastown/README.md](gastown/README.md),
+  [index.md](index.md)

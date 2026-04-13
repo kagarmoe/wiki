@@ -87,7 +87,7 @@ RUN apk add --no-cache \
 Comments at lines 17-18 explain two non-obvious additions: CGO build
 requirements (`build-base`, `zstd-dev`, `icu-dev`) are needed for the
 beads daemon build, and `procps`/`lsof` are required by
-`gt dolt start` for process verification.
+[`gt dolt`](../commands/dolt.md) `start` for process verification.
 
 ### Beads daemon install
 

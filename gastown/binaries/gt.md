@@ -187,8 +187,8 @@ version, help, completion, doctor, estop, thaw, install, git-init, upgrade
 
 - **111 `rootCmd.AddCommand` invocations** across 109 files in
   `/home/kimberly/repos/gastown/internal/cmd/` (two files register two
-  top-level commands each: `estop.go` adds `estop` + `thaw`, `start.go`
-  adds `start` + `shutdown`).
+  top-level commands each: `estop.go` adds [`estop`](../commands/estop.md) + [`thaw`](../commands/thaw.md), `start.go`
+  adds [`start`](../commands/start.md) + [`shutdown`](../commands/shutdown.md)).
 - **~107 unique top-level subcommands** (the gap is because some files
   register the same command via different code paths; exact unique
   count pending a verification pass).
@@ -250,7 +250,7 @@ self-kill gate described above does NOT apply to them — it's a
 - `CheckBeadsVersion` — what version constraint does it enforce? The
   wiki's own embedded `bd` may or may not satisfy it.
 - The `beadsExemptCommands` list has 32 entries but the grep shows some
-  duplication patterns (e.g., `estop`/`thaw` listed both here and in
+  duplication patterns (e.g., [`estop`](../commands/estop.md)/[`thaw`](../commands/thaw.md) listed both here and in
   `branchCheckExemptCommands`). Verify no typos/dead entries.
 - `internal/cmd/proxy_subcmds.go:15` defines
   `AnnotationPolecatSafe = "polecatSafe"` — a cobra annotation tagging

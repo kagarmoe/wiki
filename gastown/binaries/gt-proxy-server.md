@@ -247,7 +247,7 @@ without `make build`, unlike `gt` which will self-kill. See
 
 Long-lived server. Started how? The binary has no `daemonize` flag; it
 runs in the foreground and exits on SIGINT/SIGTERM. The expected
-supervision mechanism (systemd unit, `gt daemon`, a shell wrapper,
+supervision mechanism (systemd unit, [`gt daemon`](../commands/daemon.md), a shell wrapper,
 manual `nohup`) is not visible from the sources read in this layer and
 is deferred to a later mapping pass.
 
