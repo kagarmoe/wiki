@@ -57,7 +57,7 @@ Package-level file comment (`cmd/gt-proxy-server/main.go:1-3`):
 | `-admin-listen`    | `127.0.0.1:9877`                              | Local-only admin HTTP server (no TLS); empty string disables        |
 | `-ca-dir`          | `~/gt/.runtime/ca`                            | Directory holding `ca.crt` / `ca.key`                               |
 | `-allowed-cmds`    | `gt,bd`                                       | Comma-separated binary names polecats may execute                   |
-| `-allowed-subcmds` | auto-discovered via `gt proxy-subcmds`        | Semicolon-separated `cmd:sub1,sub2` allowlist (see below)           |
+| `-allowed-subcmds` | auto-discovered via [`gt proxy-subcmds`](../commands/proxy-subcmds.md) | Semicolon-separated `cmd:sub1,sub2` allowlist (see below)           |
 | `-town-root`       | `$GT_TOWN` or `~/gt`                          | Gas Town root directory passed to `proxy.Config`                    |
 
 Flag/config merge rule (`cmd/gt-proxy-server/main.go:59-80`): explicitly
@@ -67,7 +67,7 @@ file value is used if present; otherwise the hardcoded default.
 ### Subcommand allowlist discovery
 
 `cmd/gt-proxy-server/main.go:158-171` — `discoverAllowedSubcmds()` shells
-out to `gt proxy-subcmds` at flag-parse time to auto-discover the allowed
+out to [`gt proxy-subcmds`](../commands/proxy-subcmds.md) at flag-parse time to auto-discover the allowed
 subcommand list. Falls back to `defaultAllowedSubcmds`
 (`main.go:24-26`) if the command is missing or returns empty:
 
@@ -213,7 +213,7 @@ mapped in this layer).
 ```
 
 The `util` import is used only for `util.SetDetachedProcessGroup` on the
-`gt proxy-subcmds` discovery exec (`main.go:160`). Everything else is
+[`gt proxy-subcmds`](../commands/proxy-subcmds.md) discovery exec (`main.go:160`). Everything else is
 stdlib: `flag`, `log/slog`, `net`, `os`, `os/exec`, `os/signal`,
 `path/filepath`, `strings`, `syscall`, `context`.
 
@@ -279,9 +279,9 @@ is not yet mapped as a wiki entity page.
 - The default config path is `~/gt/.runtime/proxy/config.json`. That
   directory shape (and who writes the file) is not mapped yet — likely
   provisioned by [`gt polecat`](../commands/polecat.md) / [`gt rig`](../commands/rig.md) / a setup workflow.
-- `discoverAllowedSubcmds` runs `gt proxy-subcmds` at startup. That
-  subcommand isn't yet mapped — lives at
-  `/home/kimberly/repos/gastown/internal/cmd/proxy_subcmds.go`.
+- `discoverAllowedSubcmds` runs [`gt proxy-subcmds`](../commands/proxy-subcmds.md) at startup
+  (mapped in Batch 3h; lives at
+  `/home/kimberly/repos/gastown/internal/cmd/proxy_subcmds.go`).
 - The CA files in `~/gt/.runtime/ca/` are the root of trust for both
   server and client certs. `proxy.LoadOrGenerateCA` will create them on
   first run — silent first-time bootstrap. Rotation strategy not

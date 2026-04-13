@@ -100,6 +100,7 @@ the 12 layers):
 - **Communication group** (7 commands, fully mapped): [broadcast](commands/broadcast.md), [dnd](commands/dnd.md), [escalate](commands/escalate.md), [mail](commands/mail.md), [notify](commands/notify.md), [nudge](commands/nudge.md), [peek](commands/peek.md)
 - **Services group** (11 commands, fully mapped): [daemon](commands/daemon.md), [dolt](commands/dolt.md), [down](commands/down.md), [estop](commands/estop.md), [maintain](commands/maintain.md), [quota](commands/quota.md), [reaper](commands/reaper.md), [shutdown](commands/shutdown.md), [start](commands/start.md), [thaw](commands/thaw.md), [up](commands/up.md)
 - **Workspace group** (7 commands, fully mapped): [crew](commands/crew.md), [git-init](commands/git-init.md), [init](commands/init.md), [install](commands/install.md), [namepool](commands/namepool.md), [rig](commands/rig.md), [worktree](commands/worktree.md)
+- **Ungrouped** (commands with no `GroupID`, mapped in Batch 3h): [agent-log](commands/agent-log.md), [commit](commands/commit.md), [cycle](commands/cycle.md), [forget](commands/forget.md), [health](commands/health.md), [krc](commands/krc.md), [memories](commands/memories.md), [nudge-poller](commands/nudge-poller.md), [proxy-subcmds](commands/proxy-subcmds.md), [remember](commands/remember.md), [show](commands/show.md), [status-line](commands/status-line.md), [tap](commands/tap.md), [town](commands/town.md), [warrant](commands/warrant.md) — **all 111 top-level commands now mapped**
 
 ### Files
 

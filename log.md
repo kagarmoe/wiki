@@ -945,3 +945,87 @@ produced 7 new wiki entity pages under `gastown/commands/`.
   [gastown/commands/worktree.md](gastown/commands/worktree.md),
   [gastown/README.md](gastown/README.md),
   [index.md](index.md)
+
+## [2026-04-11] ingest | Batch 3h (Layer c final sub-batch: ungrouped commands — 15 pages; Batch 3 complete)
+
+Final sub-batch of Layer (c) command mapping. Read 15 Go files in
+`/home/kimberly/repos/gastown/internal/cmd/` and produced 15 new
+wiki entity pages under `gastown/commands/`. **All 111 top-level
+commands are now mapped.**
+
+**Coverage:** 111 of 111 top-level commands. **Cobra-group coverage
+re-verified in this batch:** direct `grep -n "GroupID:"` on
+`commit.go`, `forget.go`, `memories.go`, `remember.go`, `show.go`
+confirmed NONE of them have a `GroupID` assignment. They are
+genuinely ungrouped, matching the original Batch 3h plan. The
+prior Batch 3c enumeration of 26 `GroupWork` members stands.
+
+**Filename corrections applied in this batch:**
+
+- `proxy` [?] → `proxy-subcmds` (actual `Use:` field is `proxy-subcmds`)
+- `statusline` → `status-line` (actual `Use:` field is `status-line`
+  despite the Go file being `statusline.go`)
+
+These corrections are reflected in both the entity-page column
+(linking to `proxy-subcmds.md` / `status-line.md`) and the command
+name column (removing `[?]` flags and updating to canonical forms).
+
+**Commands mapped in Batch 3h:**
+
+- [agent-log](gastown/commands/agent-log.md) — Hidden internal daemon streaming Claude/OpenCode conversation events to OTLP for a tmux session's lifetime.
+- [commit](gastown/commands/commit.md) — Wrapper around `git commit` injecting agent git author identity via `detectSender()`.
+- [cycle](gastown/commands/cycle.md) — `next`/`prev` tmux session cycling with auto-detected scope.
+- [forget](gastown/commands/forget.md) — Deletes a memory from the bd kv store.
+- [health](gastown/commands/health.md) — Comprehensive data-plane health report (6 sections); beads-exempt.
+- [krc](gastown/commands/krc.md) — Key Record Chronicle: 7 subcommands for TTL lifecycle of Level 0 ephemeral event files; beads-exempt.
+- [memories](gastown/commands/memories.md) — Lists or searches stored memories; sort order matches `gt prime` injection priority.
+- [nudge-poller](gastown/commands/nudge-poller.md) — Hidden background daemon (one per non-Claude tmux session) draining the nudge queue on idle.
+- [proxy-subcmds](gastown/commands/proxy-subcmds.md) — Hidden command scanning `rootCmd.Commands()` for `AnnotationPolecatSafe` and emitting a sorted allowlist for `gt-proxy-server` startup. Defines the `AnnotationPolecatSafe = "polecatSafe"` constant itself.
+- [remember](gastown/commands/remember.md) — Writes a memory to bd kv; owns the shared memory registry consumed by `memories`/`forget`.
+- [show](gastown/commands/show.md) — Thin `DisableFlagParsing` wrapper around `bd show` with auto-routing across hq/gt/mo beads databases via bead-ID prefix.
+- [status-line](gastown/commands/status-line.md) — Hidden tmux `status-right` renderer; five per-role renderers plus E-stop prefix.
+- [tap](gastown/commands/tap.md) — Parent group for Claude Code PreToolUse/PostToolUse hook handlers; only `guard` is implemented; beads-exempt.
+- [town](gastown/commands/town.md) — Town-level `next`/`prev` session cycling (forces town semantics, unlike the auto-detecting `cycle`).
+- [warrant](gastown/commands/warrant.md) — File/list/execute "death warrants" for stuck agents; Boot picks them up during triage.
+
+**Observations surfaced:**
+
+- **4 commands are `Hidden: true`:** `agent-log`, `nudge-poller`, `proxy-subcmds`, `status-line`. These are internal helpers never intended for direct user invocation — only surfaced here because they register with `rootCmd.AddCommand`.
+- **`tap` is a parent-only stub** like `directive`/`hooks` from Batch 3b. Advertises `audit`/`inject`/`check` subcommands in Long help but only `guard` is actually wired.
+- **`health` is ungrouped but beads-exempt**, while `doctor`/`vitals`/`repair` are all in `GroupDiag`. Group assignment drift vs neighboring commands.
+- **`warrant` help text drift**: `Long` claims warrants live in `~/gt/warrants/` but `getWarrantDir()` returns `<townRoot>/warrants/`. Minor doc drift in source.
+- **`proxy-subcmds` discovery is dynamic** (`rootCmd.Commands()` iteration + sort) but the `bd` half of the allowlist (`bdSafeSubcmds`) is a hardcoded string constant that can drift silently.
+- **`status-line` file-vs-command mismatch**: file is `statusline.go`, command is `status-line`.
+- **Memory-trio coupling**: `remember.go` owns `memoryKeyPrefix`, `validMemoryTypes`, `memoryTypeOrder`, `parseMemoryKey`, `autoKey`, `sanitizeKey`, and the four `bdKv*` helpers. `memories.go` and `forget.go` import these — tightly coupled on purpose.
+- **`cycle` vs `town`**: `cycle next` auto-detects scope (town / crew / rig-ops), while `town next` forces town semantics. They share helpers (`cycleTownSession`, `cycleInGroup`).
+
+**Polecat-safe in Batch 3h:** 0 of 15 (none of the 15 source files define `AnnotationPolecatSafe: "true"` on their cobra.Command; the constant is defined in `proxy_subcmds.go` but that file's own command is NOT annotated).
+
+**Beads-exempt in Batch 3h:** 3 of 15 (`health`, `krc`, `tap`).
+
+**Branch-check-exempt in Batch 3h:** 0 of 15.
+
+**Batch 3 status:** COMPLETE. All 111 top-level cobra commands in `internal/cmd/` have entity pages under `gastown/commands/`. Nested subcommand mapping (~384 additional `cobra.Command` definitions) is NOT included in Batch 3 — that's a future pass if warranted.
+
+**Beads closed as part of this commit:**
+- `wiki-3zo` (Batch 3 anchor) — Layer (c) Command layer fully mapped
+- `wiki-ef3` (systematic 107-subcommand mapping) — effectively equal to Batch 3 scope; closes with it
+
+→ [gastown/commands/README.md](gastown/commands/README.md),
+  [gastown/commands/agent-log.md](gastown/commands/agent-log.md),
+  [gastown/commands/commit.md](gastown/commands/commit.md),
+  [gastown/commands/cycle.md](gastown/commands/cycle.md),
+  [gastown/commands/forget.md](gastown/commands/forget.md),
+  [gastown/commands/health.md](gastown/commands/health.md),
+  [gastown/commands/krc.md](gastown/commands/krc.md),
+  [gastown/commands/memories.md](gastown/commands/memories.md),
+  [gastown/commands/nudge-poller.md](gastown/commands/nudge-poller.md),
+  [gastown/commands/proxy-subcmds.md](gastown/commands/proxy-subcmds.md),
+  [gastown/commands/remember.md](gastown/commands/remember.md),
+  [gastown/commands/show.md](gastown/commands/show.md),
+  [gastown/commands/status-line.md](gastown/commands/status-line.md),
+  [gastown/commands/tap.md](gastown/commands/tap.md),
+  [gastown/commands/town.md](gastown/commands/town.md),
+  [gastown/commands/warrant.md](gastown/commands/warrant.md),
+  [gastown/README.md](gastown/README.md),
+  [index.md](index.md)

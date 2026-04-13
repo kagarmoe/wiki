@@ -20,7 +20,7 @@ Global catalog of all pages. Organized by topic, then category.
 - **Communication group (7 commands)** — fully mapped in Batch 3e.
 - **Services group (11 commands)** — fully mapped in Batch 3f.
 - **Workspace group (7 commands)** — fully mapped in Batch 3g. All 7 cobra groups complete.
-- Individual pages linked from [gastown/commands/README.md](gastown/commands/README.md) entity-page column.
+- **Ungrouped (15 commands)** — mapped in Batch 3h. **All 111 top-level commands now mapped.** Individual pages linked from [gastown/commands/README.md](gastown/commands/README.md) entity-page column.
 
 ### Files
 

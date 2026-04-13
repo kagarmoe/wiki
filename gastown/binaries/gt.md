@@ -98,7 +98,7 @@ steps in order for every `gt` invocation:
    function below; telemetry is actually initialized in `Execute`, not
    `persistentPreRun`, but the effect is observable before subcommand
    bodies run).
-4. **Command usage logging** — fire-and-forget; excludes `tap` and
+4. **Command usage logging** — fire-and-forget; excludes [`tap`](../commands/tap.md) and
    [`signal`](../commands/signal.md) commands.
 5. **Session registry init** — discovers the town root (CWD walk with
    `GT_TOWN_ROOT`/`GT_ROOT` env-var fallback) and initializes the
