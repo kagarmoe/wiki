@@ -135,6 +135,14 @@ Defined in `init()` at `done.go:79-89`:
   checked via [close](close.md)'s `checkConvoyCompletion`.
 - [../binaries/gt.md](../binaries/gt.md) — root.
 
+## Docs claim
+
+[docs/CLEANUP.md](https://github.com/gastownhall/gastown/blob/main/docs/CLEANUP.md) claims: "Polecat self-cleaning: pushes branch, submits MR (by default), self-nukes worktree, kills own session. MR skipped for `--status ESCALATED\|DEFERRED` or `no_merge` paths"
+
+## Drift
+
+Code post-gt-4ac/gt-hdf8 no longer self-nukes; transitions to IDLE with sandbox preserved. Nuke is explicit via `gt polecat nuke`.
+
 ## Notes / open questions
 
 - **1896-line command.** The bulk of the logic is a linear script
