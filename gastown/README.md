@@ -227,6 +227,13 @@ Multi-step flows that cross packages and roles.
 - [.golangci.yml](files/golangci-yml.md) — golangci-lint configuration
 - [go.mod](files/go-mod.md) — Go module manifest
 
+### Plugins (Batch 10 — Layer j)
+
+Declarative Deacon-patrol plugins at `plugins/` in the gastown repo root. 14 plugin directories; 13 are declarative (shell + TOML), 1 has Go source.
+
+- [Plugin inventory](plugins/README.md) — all 14 plugins with one-line descriptions, gate types, and observations
+- [dolt-snapshots](plugins/dolt-snapshots.md) — the only plugin with Go source code; creates immutable Dolt tags (and branches) at convoy lifecycle boundaries for audit, diff, and rollback
+
 ### Inventory
 
 - [inventory/README.md](inventory/README.md) — neutral A-level enumeration of repo contents

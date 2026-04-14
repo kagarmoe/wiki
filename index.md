@@ -125,6 +125,11 @@ Multi-step flows:
 - [.golangci.yml](gastown/files/golangci-yml.md) — golangci-lint configuration
 - [go.mod](gastown/files/go-mod.md) — Go module manifest
 
+### Plugins (Batch 10)
+
+- [Plugin inventory](gastown/plugins/README.md) — 14 plugin directories; 13 declarative (shell + TOML), 1 with Go source
+- [dolt-snapshots](gastown/plugins/dolt-snapshots.md) — Dolt snapshot plugin (the only Go-based plugin); tags production databases at convoy lifecycle boundaries
+
 ### Inventory
 
 - [gastown/inventory/README.md](gastown/inventory/README.md) — A-level enumeration index for the gastown topic

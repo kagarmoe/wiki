@@ -1333,3 +1333,56 @@ Largest batch by package count. 24 small-to-medium packages mapped across three 
 **Next batch:** Batch 10 — Layer (j) Plugins (`plugins/*`, 14 dirs mostly empty).
 
 → 24 package pages — see F1/F2 index updates for full list.
+
+## [2026-04-11] ingest | Batch 10 (Layer j: Plugins — 2 pages)
+
+Mapped the Deacon-patrol plugin catalog. `plugins/` at the
+gastown repo root contains 14 plugin directories. 13 are
+declarative (shell scripts + TOML-frontmatter `plugin.md`); only
+`dolt-snapshots` has Go source code — a standalone binary
+compiled on first run by `run.sh`, connecting to the per-town
+Dolt MySQL server via `go-sql-driver/mysql` with parameterized
+SQL.
+
+**Pages created:**
+
+- [gastown/plugins/README.md](gastown/plugins/README.md) — inventory index of all 14 plugins with one-line descriptions, gate types, and observations
+- [gastown/plugins/dolt-snapshots.md](gastown/plugins/dolt-snapshots.md) — C-level entity page for the Go-based plugin (665-line `main.go` + 418-line tests)
+
+**Per-plugin one-liners (from the inventory page):**
+
+- **compactor-dog** — monitors Dolt commit growth across production DBs and escalates when compaction is needed (agent judgment; not a hard threshold)
+- **dolt-archive** — offsite backup: JSONL snapshots to git, dolt push to GitHub/DoltHub (three-layer: JSONL → git → dolt push)
+- **dolt-backup** — smart Dolt database backup with change detection (skips unchanged DBs; only escalates when actual sync fails)
+- **dolt-log-rotate** — rotates `daemon/dolt.log` when it exceeds size threshold (100 MB default), keeps 3 gzipped copies
+- **dolt-snapshots** — tags Dolt databases at convoy boundaries for audit, diff, and rollback (the only Go-based plugin; event-gated, not cooldown)
+- **github-sheriff** — polls GitHub for open PRs, categorizes as easy-win / needs-review, creates beads for CI failures
+- **git-hygiene** — cleans stale branches, stashes, and loose objects across all rig repos (merged locals, orphan agent branches, merged remotes via gh api, stash clear, `git gc --prune=now`)
+- **gitignore-reconcile** — auto-untracks files that are tracked but match an active `.gitignore` rule (only on clean main; otherwise files a chore bead)
+- **quality-review** — analyzes per-worker merge quality trends (computed from result wisps recorded separately by the Refinery); alerts on BREACH when avg < 0.45
+- **rate-limit-watchdog** — shell-only: probes the Anthropic API, auto-`estop` on 429, auto-`thaw` when clear; 3-minute cadence
+- **rebuild-gt** — rebuilds stale `gt` binary from source; post-incident safety gate requires `gt stale --json` to report `safe_to_rebuild: true` and main branch; uses `make safe-install`
+- **stuck-agent-dog** — context-aware restart decisions for polecats and `hq-deacon` (inspects tmux pane output before killing); hard-coded out-of-scope list for crew, mayor, witness, refinery
+- **submodule-commit** — opt-in per rig; auto-commits accumulated changes inside git submodules and updates the parent pointer (current enabled: `lilypad_chat`)
+- **tool-updater** — weekly Homebrew bump for `beads` and `dolt` (gt rebuilds from source via rebuild-gt; not Homebrew)
+
+**Neutral observations surfaced:**
+
+- **Only two plugins have no `run.sh`.** `github-sheriff` and `quality-review` are agent-interpreted — their markdown bodies ARE the dog task prompts. The other 12 have `HasRunScript=true` and dogs are told to run the script without interpreting the markdown.
+- **Gate distribution:** 13 cooldown gates (3 min to 168 h, six orders of magnitude), 1 event gate (`dolt-snapshots` on `convoy.created`). Zero cron, condition, or manual gates in the built-in set.
+- **Three plugins share one Go binary — except two directories are missing.** `dolt-snapshots/plugin.md` documents `dolt-snapshots`, `dolt-snapshots-staged`, and `dolt-snapshots-launched` all sharing `main.go`. Only `dolt-snapshots/` exists in the inventory. Either the siblings are runtime-only (created at town init) or the docs are aspirational.
+- **The dolt-snapshots watcher launch is in the wrong place.** The long-lived `--watch` daemon is launched by a bash block inside `plugin.md` — but `HasRunScript=true` means the scanner tells dogs NOT to interpret the markdown. So the Step 1 block is reference-only when a dog dispatches; `run.sh` itself does not background the watcher. How the watcher gets its initial launch in practice is unclear.
+- **`escalateStale` only prints.** Despite the name, the Go function at `main.go:560-572` just prints stale branches and a note. No `gt escalate` call. The name is aspirational.
+- **`stuck-agent-dog` has an explicit scope-safety list.** Hard-coded enumeration of which tmux session types it may touch (polecats, `hq-deacon`) and which it must never touch (crew, mayor, witness, refinery). Killing a crew session is documented as a critical incident.
+- **`tool-updater` has a hard-coded dev machine path.** Its "Run" section says `cd /Users/jeremy/gt/plugins/tool-updater && bash run.sh`. Doc-only drift; the actual `run.sh` uses relative paths.
+- **`rebuild-gt` has a post-incident preamble.** The plugin docs call out a specific past crash loop caused by rebuilding backwards and mandate a `gt stale --json` pre-flight check that refuses when `safe_to_rebuild: false`.
+- **PR #2324 review drove the Go rewrite of `dolt-snapshots`.** The package comment at `main.go:1-9` enumerates three specific bugs fixed: shell interpolation / SQL injection, subshell counter bugs, and auto-commit of dirty state. Prior bash-based implementation presumably had all three.
+- **`dolt-snapshots` uses dedicated pool connections for `USE <db>; CALL DOLT_TAG/BRANCH(...)`.** Comments at `main.go:458-459` and `main.go:491-492` explicitly call out that the shared pool can't be trusted for sequences where the second statement depends on session state from the first. Worth remembering for other Dolt-using Go code.
+- **`dolt-snapshots` tests cover only pure helpers.** `sanitizeName`, `sanitizeDBName`, `isSystemDB`, `loadRoutes`, `resolveDependencyDB`, `resolveHost/Port/RoutesFile`, and the `ConvoyRow_SnapshotLogic` truth table. The DB-touching code (`snapshotConvoys`, `createTag`, `createBranch`, `watchEvents`) has zero test coverage.
+- **Routes file `path="."` entries are silently skipped by `loadRoutes`.** This is why `hq-` and `hq-cv-` prefixes aren't in the route map — HQ is always tagged explicitly regardless of the routes file.
+
+**Bead `wiki-s4h` closed.**
+
+**Next batch:** Batch 11 — Layer (k) Auxiliary trees.
+
+→ [gastown/plugins/README.md](gastown/plugins/README.md), [dolt-snapshots](gastown/plugins/dolt-snapshots.md), [gastown/README.md](gastown/README.md), [index.md](index.md)
