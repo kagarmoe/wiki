@@ -63,6 +63,13 @@ Agent runtime (Batch 6):
 - [formula](gastown/packages/formula.md) — formula template loader
 - [plugin](gastown/packages/plugin.md) — Deacon patrol plugin loader
 
+Diagnostics & health (Batch 7):
+
+- [doctor](gastown/packages/doctor.md) — health-check registry and fix engine (70+ files)
+- [health](gastown/packages/health.md) — Dolt data-plane health primitives
+- [keepalive](gastown/packages/keepalive.md) — agent-activity signaling
+- [deps](gastown/packages/deps.md) — external binary prerequisites (bd + dolt)
+
 ### Roles (Batch 6)
 
 Gas Town agent personas:

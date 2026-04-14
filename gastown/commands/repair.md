@@ -15,7 +15,9 @@ tags: [command, diagnostics, dolt, identity, config, repair]
 
 Runs a narrow subset of `gt doctor --fix` checks targeted at the most
 common post-crash failure mode: `metadata.json` pointing at the wrong
-Dolt database and related identity/config drift.
+Dolt database and related identity/config drift. Built on the
+[doctor package](../packages/doctor.md)'s `Check` / `FixStreaming`
+machinery, just with a curated subset of the registered checks.
 
 **Parent:** [gt](../binaries/gt.md) (root command)
 **Group:** `GroupDiag` ("Diagnostics")

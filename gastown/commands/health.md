@@ -14,7 +14,10 @@ tags: [command, ungrouped, diagnostics, dolt, beads-exempt, health]
 
 Comprehensive health report for the Gas Town data plane — Dolt server,
 production databases, pollution scan, backup freshness, zombie
-processes, and orphan databases — in human or JSON form.
+processes, and orphan databases — in human or JSON form. The reusable
+probe primitives (TCP, latency, database count, zombie scan, backup
+freshness) live in the [health package](../packages/health.md); this
+command is the package's only in-tree importer.
 
 **Parent:** [gt](../binaries/gt.md) (root command)
 **Group:** (none — no `GroupID` set on the cobra.Command definition)

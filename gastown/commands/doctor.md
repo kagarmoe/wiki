@@ -15,7 +15,10 @@ tags: [command, diagnostics, health-checks, beads-exempt, branch-check-exempt]
 
 Runs a registered suite of diagnostic checks against the Gas Town
 workspace and prints a streaming report with an optional `--fix` mode.
-The single largest catalog of health checks in the binary.
+The single largest catalog of health checks in the binary. Backed by
+the [doctor package](../packages/doctor.md), which implements the
+`Check` interface, the registration model, and the streaming execution
+engine.
 
 **Parent:** [gt](../binaries/gt.md) (root command)
 **Group:** `GroupDiag` ("Diagnostics")

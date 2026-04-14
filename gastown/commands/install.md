@@ -68,7 +68,9 @@ Ordered, in `runInstall` (`install.go:95-202`):
    the binary? Run 'make install' in the gastown repo."` unless
    `--force`.
 5. **Ensure `bd` (beads) is available** via `deps.EnsureBeads(true)`
-   (`install.go:144-149`), skipped if `--no-beads`.
+   (`install.go:144-149`), skipped if `--no-beads`. See
+   [deps package](../packages/deps.md) for the version pinning and
+   `GOBIN=~/.local/bin` auto-install semantics.
 6. **Dolt preflight** (`install.go:151-202`), skipped if
    `--no-beads`:
     - Verify `dolt` is on `PATH` (soft — if absent, the whole

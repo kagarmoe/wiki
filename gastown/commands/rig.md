@@ -162,7 +162,10 @@ From the `rigCmd` Long help (`rig.go:41-49`) and `rigAddCmd`
 `gt rig add` also seeds patrol molecules for Deacon, Witness, and
 Refinery (`rig.go:68`), and creates both a town-level
 `~/gt/plugins/` (if missing) and a rig-level `<rig>/plugins/`
-directory.
+directory. Before doing any of that, it calls `deps.EnsureBeads(true)`
+(`rig.go:497`) to guarantee a compatible `bd` binary — see the
+[deps package](../packages/deps.md) for the version-pinning and
+auto-install contract.
 
 ### `rig add` flags (`rig.go:361-370`)
 

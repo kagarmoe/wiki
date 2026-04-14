@@ -143,6 +143,13 @@ Agent runtime packages (Batch 6 — Layer f):
 - [formula](packages/formula.md) — formula/molecule template loader
 - [plugin](packages/plugin.md) — Deacon-patrol plugin loader
 
+Diagnostics & health packages (Batch 7 — Layer g):
+
+- [doctor](packages/doctor.md) — Gas Town's health-check registry and fix engine. Largest package in the codebase (70+ non-test files); powers `gt doctor`, `gt repair`, and parts of `gt upgrade`.
+- [health](packages/health.md) — reusable Dolt-data-plane health-check primitives (TCP, latency, database count, zombie servers, backup freshness)
+- [keepalive](packages/keepalive.md) — best-effort agent-activity signaling via `<townRoot>/.runtime/keepalive.json`; nil-sentinel design
+- [deps](packages/deps.md) — external binary prerequisites (`bd` + `dolt`) with version pinning; feeds `gt doctor` prereq checks
+
 ### Roles (Batch 6 — Layer f)
 
 Gas Town agent personas — the "characters" with identity, decisions, and autonomy. Each role has a dedicated persona page + a code-side package page.

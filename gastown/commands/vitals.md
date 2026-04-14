@@ -15,7 +15,9 @@ tags: [command, diagnostics, dolt, databases, backups, health-dashboard]
 
 Unified health dashboard for the Dolt data plane: prints Dolt server
 status, per-database issue stats, and backup freshness in a single
-text-only report.
+text-only report. Calls `doltserver` directly rather than going through
+the reusable [health package](../packages/health.md) primitives that
+back [gt health](health.md).
 
 **Parent:** [gt](../binaries/gt.md) (root command)
 **Group:** `GroupDiag` ("Diagnostics")

@@ -14,7 +14,8 @@ tags: [command, diagnostics, migration, post-install, claude-md, daemon, formula
 # gt upgrade
 
 Post-install migration orchestrator: runs `doctor --fix` over a
-subset of workspace-structural checks, syncs `CLAUDE.md` from an
+subset of workspace-structural checks (driven by the
+[doctor package](../packages/doctor.md)), syncs `CLAUDE.md` from an
 embedded template, ensures daemon lifecycle defaults, syncs the hook
 registry into `settings.json` files, and updates formulas from
 embedded copies.

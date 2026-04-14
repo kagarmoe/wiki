@@ -1220,3 +1220,37 @@ Eight agents with identity, decisions, and autonomy:
 **Next batch (not started by this commit):** Batch 7 — Layer (g) Diagnostics & health (`internal/doctor` with 120 files, `internal/health`, `internal/keepalive`, `internal/deps`). Per plan autonomous-mode, remaining batches (7-12) are simpler infrastructure mapping with no first-class domain entities, so they can proceed without per-batch controller approval.
 
 → 30 pages — see the F1 sub-index updates and F2 root index updates for the complete list
+
+## [2026-04-11] ingest | Batch 7 (Layer g: Diagnostics & health — 4 package pages)
+
+Mapped the diagnostics and health infrastructure. Notable: `internal/doctor`
+is the largest package in the codebase (70+ non-test Go files) and
+required focused reading strategy rather than full coverage.
+
+**Packages mapped:**
+
+- [doctor](gastown/packages/doctor.md) — **632-line package page** covering the Check framework, registration model, execution semantics, Fix mode, 12-area categorical file inventory, ordering constraints, and 5 representative check spot-checks. The `Check` interface at `internal/doctor/types.go:94-110` exposes `Name()`, `Description()`, `Run(*CheckContext)`, `Fix(*CheckContext)`, `CanFix()`. Registration is a plain ordered slice (`doctor.go:13-16`) via `Register`/`RegisterAll`. No dependency graph, no topological sort — **ordering = call order in `internal/cmd/doctor.go:154-275`**. Execution is strictly sequential, streaming. `FixStreaming` re-runs each check after a successful fix to verify. `safeFixCheck` recovers from Dolt panics (GH#1769).
+- [health](gastown/packages/health.md) — reusable Dolt-data-plane primitives: `TCPCheck`, `LatencyCheck`, `DatabaseCount`, `FindZombieServers` (lsof-based), `BackupFreshness`, `JSONLGitFreshness`, `DirSize`. Backs `gt health` only. Package doc claims Doctor Dog uses it, but grep confirms only `internal/cmd/health.go` imports it — **doc-drift noted**.
+- [keepalive](gastown/packages/keepalive.md) — best-effort agent-activity signaling via `<townRoot>/.runtime/keepalive.json`. **Nil-sentinel pattern**: `Read` returns `nil` on any failure, `(*State).Age()` is nil-receiver-safe returning `24h*365` as "maximally stale". Writer paths silently swallow all errors. **Only in-tree importer is `internal/web/api.go`** — the design expects root-`gt` `PersistentPreRun` integration ("every gt invocation touches") but the wire-up isn't in the import graph.
+- [deps](gastown/packages/deps.md) — external binary prerequisites. `MinBeadsVersion = "0.57.0"`, `MinDoltVersion = "1.82.4"`. 3-component semver comparator. `CheckBeads`/`CheckDolt` run respective `version` subcommands under 10s context timeouts. `EnsureBeads` auto-installs via `go install` forcing `GOBIN=~/.local/bin` to avoid the `~/go/bin/` stale-shadow problem. **Asymmetric**: beads auto-installs; dolt does not (large binary via GitHub releases, not go-installable). `BeadsTooOld` returns an error even with `autoInstall=true` — silent minor-version upgrades risk breaking existing beads DBs. Feeds `gt doctor` prereq checks via `beads_binary_check.go` + `dolt_binary_check.go`.
+
+**Neutral observations surfaced:**
+
+- **Doctor has no dependency graph**. Ordering is implicit in `Register` call order. The `ClaudeSettingsCheck before DaemonCheck` constraint is enforced only by a comment at `internal/cmd/doctor.go:173-177` — integration tests are the only safety net.
+- **State-on-struct pattern is common in doctor checks** (not safe for concurrent use). `ClaudeSettingsCheck`, `RigsRegistryValidCheck`, `ZombieSessionCheck`, `OrphanSessionCheck` all cache results between Run and Fix. This is another reason execution is strictly sequential.
+- **Panic recovery is only on Fix, not Run**. A Run panic crashes `gt doctor`.
+- **No short-circuit between doctor checks**: `DoltServerReachableCheck` failing doesn't stop downstream Dolt-dependent checks.
+- **`FixHint` is always shown even for non-fixable checks** — it's a human-readable hint orthogonal to the auto-fix pathway.
+- **`ClaudeSettingsCheck` is 805 lines** — flagship check. Shells out to `git ls-files`/`check-ignore`/`diff --quiet` to classify files as untracked/tracked-clean/tracked-modified/ignored. **Skips tracked-clean files** to avoid modifying customer repos. Gates live tmux session kills behind `ctx.RestartSessions` to avoid a Deacon restart loop.
+- **`Category` / `CategoryOrder` on check results are mostly vestigial under streaming mode** — streaming output is in registration order, summary is bucketed by status (FAILURES/WARNINGS/FIXED) not category.
+- **`health` package doc drift**: claims Doctor Dog uses it; grep confirms only `gt health` imports it.
+- **`keepalive` is underused relative to design intent**: only `internal/web/api.go` imports it, not root `gt`.
+- **`deps.BeadsTooOld` refuses to auto-upgrade** even with `autoInstall=true`; deliberate safety for existing DBs across minor version boundaries.
+- **`migration_check.go` in doctor has a misleading filename**: contains `NewDoltMetadataCheck`, `NewDoltServerReachableCheck`, `NewDoltOrphanedDatabaseCheck` — all live-state Dolt checks, not migration runners.
+- **`precheckout_hook_check.go` exposes both `NewPreCheckoutHookCheck()` and `NewBranchProtectionCheck()` as aliases for the same check.**
+
+**Bead `wiki-chx` closed.**
+
+**Next batch:** Batch 8 — Layer (h) Long-running processes (`internal/daemon` ~33 files, `internal/tmux`, `internal/runtime`).
+
+→ [gastown/packages/doctor.md](gastown/packages/doctor.md), [health](gastown/packages/health.md), [keepalive](gastown/packages/keepalive.md), [deps](gastown/packages/deps.md), [gastown/README.md](gastown/README.md), [index.md](index.md)
