@@ -124,6 +124,9 @@ Multi-step flows:
 - [.goreleaser.yml](gastown/files/goreleaser-yml.md) — GoReleaser release-pipeline build config
 - [.golangci.yml](gastown/files/golangci-yml.md) — golangci-lint configuration
 - [go.mod](gastown/files/go-mod.md) — Go module manifest
+- [.claude/ directory](gastown/files/claude-dir.md) — Claude Code agent-facing surface (Batch 11)
+- [.opencode/ directory](gastown/files/opencode-dir.md) — OpenCode agent-facing surface (Batch 11)
+- [templates/agents/ directory](gastown/files/templates-agents.md) — agent-runtime templates (Batch 11)
 
 ### Plugins (Batch 10)
 
@@ -136,3 +139,4 @@ Multi-step flows:
   - [repo-root](gastown/inventory/repo-root.md) — top-level files and directories at `/home/kimberly/repos/gastown/`
   - [docs-tree](gastown/inventory/docs-tree.md) — every file under `docs/` with line counts
   - [go-packages](gastown/inventory/go-packages.md) — every Go package under `cmd/`, `internal/`, `plugins/` with file counts
+  - [auxiliary](gastown/inventory/auxiliary.md) — 9 auxiliary top-level directories (scripts/, templates/, gt-model-eval/, npm-package/, .github/, .githooks/, .claude/, .opencode/, .runtime/) — Batch 11

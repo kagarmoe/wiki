@@ -1386,3 +1386,33 @@ SQL.
 **Next batch:** Batch 11 — Layer (k) Auxiliary trees.
 
 → [gastown/plugins/README.md](gastown/plugins/README.md), [dolt-snapshots](gastown/plugins/dolt-snapshots.md), [gastown/README.md](gastown/README.md), [index.md](index.md)
+
+## [2026-04-11] ingest | Batch 11 (Layer k: Auxiliary trees — 4 pages)
+
+Mapped the 9 top-level auxiliary directories: `scripts/`, `templates/`,
+`gt-model-eval/`, `npm-package/`, `.github/`, `.githooks/`, `.claude/`,
+`.opencode/`, `.runtime/`.
+
+**Pages created:**
+
+- [gastown/inventory/auxiliary.md](gastown/inventory/auxiliary.md) — A-level inventory covering all 9 directories (~175 lines)
+- [gastown/files/claude-dir.md](gastown/files/claude-dir.md) — `.claude/commands/` (3 slash commands) + `.claude/skills/` (4 skills); Claude Code agent-facing surface (~210 lines)
+- [gastown/files/opencode-dir.md](gastown/files/opencode-dir.md) — `.opencode/commands/handoff.md` + `.opencode/plugins/gastown.js`; the OpenCode session integration (`gt prime` injection, cost accounting) (~200 lines)
+- [gastown/files/templates-agents.md](gastown/files/templates-agents.md) — `templates/agents/opencode.json.tmpl` + `opencode-models.json`; agent-runtime manifest templates with delay-based ready detection (~230 lines)
+
+**Key findings:**
+
+- **`.opencode/plugins/gastown.js` is the load-bearing Gas Town ↔ OpenCode integration.** It hooks `session.created` / `session.compacted` / `session.deleted` events, runs `gt prime` (plus `gt mail check --inject` for autonomous roles polecat/witness/refinery/deacon), and pushes captured context into `experimental.chat.system.transform`. A historical source comment notes that a previous `session-started` nudge to the Deacon was removed because it interrupted the Deacon's await-signal backoff.
+- **Opencode ready detection is delay-based, not prompt-matching.** `opencode.json.tmpl` sets `ready_prompt_prefix: ""` and relies on `ready_delay_ms` because "OpenCode TUI uses box-drawing characters that break prompt prefix matching." Per-model delays in `opencode-models.json` range from 4s (Grok) to 15s (GLM 4.7 Free tier).
+- **The `.claude/commands/{backup,patrol,reaper}.md` slash commands duplicate autonomous-patrol logic from the role formulas** (`mol-witness-patrol`, `mol-deacon-patrol`, `mol-refinery-patrol`, `mol-dog-backup`, `mol-dog-reaper`). They're agent-facing prose renditions of what the formulas do declaratively — drift risk between the two.
+- **`scripts/guards/context-budget-guard.sh` is a standalone Claude Code hook guard** that reads the active session transcript and enforces warn/soft/hard thresholds (0.75/0.85/0.92). Hard-gate roles default to `mayor,deacon,witness,refinery`. Fails open on any error. 7995 bytes.
+- **`.githooks/pre-push` enforces two invariants**: branches must be `main` / `polecat/*` / `integration/*` / `beads-sync` (or the repo has an `upstream` remote signalling fork workflow), and pushes to the default branch that introduce integration-branch content are blocked unless `GT_INTEGRATION_LAND=1` is set — which only `gt mq integration land` sets.
+- **`gt-model-eval` has 94 total test cases** (82 Class B directive + 12 Class A reasoning) across 4 patrol roles (deacon/witness/refinery/dog), comparing Opus 4.6 vs Sonnet 4.5 vs Haiku 4.5 at temperature 0. Grading uses Opus 4.6. The framework exists to generate **evidence for safely downgrading role assignments** off Opus — linked in Discussion #1542 and Issue #1545.
+- **`npm-package/scripts/postinstall.js` skips binary download in CI** (`if (!process.env.CI)`) — a gotcha worth remembering for testing harnesses. Downloads `gastown_<version>_<platform>_<arch>.(tar.gz|zip)` from GitHub Releases and extracts via native `tar` or PowerShell `Expand-Archive`.
+- **Inconsistent skill filename casing** in `.claude/skills/`: three use `SKILL.md`, one (`pr-sheriff`) uses `skill.md`. Latent portability bug on case-sensitive filesystems.
+
+**Bead `wiki-5d6` closed.**
+
+**Next batch:** Batch 12 — Layer (l) Documentation tree (inventory-only enrichment of the 60-file `docs/` tree).
+
+→ [gastown/inventory/auxiliary.md](gastown/inventory/auxiliary.md), [gastown/files/claude-dir.md](gastown/files/claude-dir.md), [gastown/files/opencode-dir.md](gastown/files/opencode-dir.md), [gastown/files/templates-agents.md](gastown/files/templates-agents.md), [gastown/README.md](gastown/README.md), [gastown/inventory/README.md](gastown/inventory/README.md), [index.md](index.md)

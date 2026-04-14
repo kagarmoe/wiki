@@ -226,6 +226,9 @@ Multi-step flows that cross packages and roles.
 - [.goreleaser.yml](files/goreleaser-yml.md) — GoReleaser release-pipeline build config
 - [.golangci.yml](files/golangci-yml.md) — golangci-lint configuration
 - [go.mod](files/go-mod.md) — Go module manifest
+- [.claude/ directory](files/claude-dir.md) — Claude Code agent-facing surface: 3 slash commands (`/backup`, `/patrol`, `/reaper`) + 4 skills (crew-commit, ghi-list, pr-list, pr-sheriff) — Batch 11 — Layer k
+- [.opencode/ directory](files/opencode-dir.md) — OpenCode agent-facing surface: `/handoff` slash command + `gastown.js` plugin (injects `gt prime` into session system prompt, records cost on session.deleted) — Batch 11 — Layer k
+- [templates/agents/ directory](files/templates-agents.md) — agent-runtime templates: `opencode.json.tmpl` + `opencode-models.json` (per-model `ready_delay_ms` presets). Consumed by the templates package at agent-spawn time — Batch 11 — Layer k
 
 ### Plugins (Batch 10 — Layer j)
 
@@ -240,3 +243,4 @@ Declarative Deacon-patrol plugins at `plugins/` in the gastown repo root. 14 plu
   - [repo-root](inventory/repo-root.md) — top-level files and directories at `/home/kimberly/repos/gastown/`
   - [docs-tree](inventory/docs-tree.md) — every file under `docs/` with line counts
   - [go-packages](inventory/go-packages.md) — every Go package under `cmd/`, `internal/`, `plugins/` with file counts
+  - [auxiliary](inventory/auxiliary.md) — 9 top-level auxiliary directories: `scripts/`, `templates/`, `gt-model-eval/`, `npm-package/`, `.github/`, `.githooks/`, `.claude/`, `.opencode/`, `.runtime/` — Batch 11 — Layer k

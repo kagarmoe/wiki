@@ -26,15 +26,13 @@ per-entity wiki pages.
   count and path.
 - [go-packages.md](go-packages.md) — every Go package under `cmd/`,
   `internal/`, and `plugins/` with Go file and test file counts.
+- [auxiliary.md](auxiliary.md) — the 9 auxiliary top-level directories
+  (`scripts/`, `templates/`, `gt-model-eval/`, `npm-package/`,
+  `.github/`, `.githooks/`, `.claude/`, `.opencode/`, `.runtime/`).
+  Added in Batch 11.
 
 ## What is NOT here
 
-- **Scripts in `scripts/`.** Pending a separate enumeration pass.
-- **Templates in `templates/` and `gt-model-eval/`.** Pending.
-- **The contents of `npm-package/`.** Pending.
-- **Hidden config directories** (`.beads/`, `.claude/`, `.github/`,
-  `.githooks/`, `.opencode/`, `.runtime/`) except as listed at the
-  repo root level. Their contents are not enumerated here.
 - **Nested subcommand tree.** The 111 top-level commands are listed
   in [../commands/README.md](../commands/README.md). The ~384 nested
   subcommands that make up the remaining 495 − 111 ≈ 384 total
