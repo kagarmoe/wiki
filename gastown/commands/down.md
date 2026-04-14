@@ -168,6 +168,7 @@ Defined at `down.go:86-94`:
 ## Related
 
 - [daemon](./daemon.md) — Phase 4 stops the Go daemon process
+- [internal/daemon package](../packages/daemon.md) — the `shutdown.lock`/`shutting-down` sentinel + `daemon.IsRunning`/`daemon.StopDaemon` live here; flock-on-inode rationale at `daemon.go:1972-1976`
 - [dolt](./dolt.md) — Phases 4b-i through 4b-iv handle Dolt teardown
 - [estop](./estop.md) — emergency freeze (different shape; uses
   SIGTSTP and preserves context, does not stop services)

@@ -172,6 +172,7 @@ Defined at `start.go:144-161`:
   worktrees)
 - [up](./up.md) — boot command; complement of `down`
 - [daemon](./daemon.md) — stopped explicitly in Phase 7
+- [internal/daemon package](../packages/daemon.md) — `FindOrphanedDaemons` / `KillOrphanedDaemons` fallback sweep lives in this package alongside the main heartbeat loop
 - [estop](./estop.md) — emergency freeze (SIGTSTP) rather than kill
 - [polecat](./polecat.md) — target of the destructive cleanup phase
 - [mayor](./mayor.md), [deacon](./deacon.md), [boot](./boot.md) —

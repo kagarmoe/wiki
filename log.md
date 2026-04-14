@@ -1254,3 +1254,38 @@ required focused reading strategy rather than full coverage.
 **Next batch:** Batch 8 — Layer (h) Long-running processes (`internal/daemon` ~33 files, `internal/tmux`, `internal/runtime`).
 
 → [gastown/packages/doctor.md](gastown/packages/doctor.md), [health](gastown/packages/health.md), [keepalive](gastown/packages/keepalive.md), [deps](gastown/packages/deps.md), [gastown/README.md](gastown/README.md), [index.md](index.md)
+
+## [2026-04-11] ingest | Batch 8 (Layer h: Long-running processes — 3 package pages)
+
+Mapped the process infrastructure that keeps Gas Town running.
+
+**Packages mapped:**
+
+- [daemon](gastown/packages/daemon.md) — **639-line page** covering the per-town daemon singleton. Single-process via `gofrs/flock` on `<townRoot>/daemon/daemon.lock` for its lifetime. Entry point `daemon.New(DefaultConfig) + d.Run()` invoked by hidden `gt daemon run`. Main heartbeat loop at `daemon.go:724-879` runs 15 ordered steps every 3 minutes (not 5: `Config.HeartbeatInterval=5m` is dead code; live interval comes from operational config). Pressure-gated: refinery/dog/polecat spawns throttle under load; infrastructure agents (Deacon/Witness/Mayor) are exempt. **State files:** `daemon.lock` (flock), `daemon.pid` (`"PID\nNONCE"` format, gt-utuk ZFC fix), `daemon.log` (lumberjack 100MB/3 backups), `state.json`, `shutdown.lock` (GH#2656, never removed because flock works on inodes), `restart_state.json`. 33 files grouped into 11 categories: main loop (3), state management (3), signal/OS portability (8), Dolt infra (3), backup (1), maintenance dogs (4: checkpoint/compactor/doctor/quota), scheduled ops (2), cleanup (2), handlers (2), observability (3), misc (2).
+
+- [tmux](gastown/packages/tmux.md) — **509-line page** covering the tmux wrapper library. 11 files; core is `tmux.go` (3,857 lines, ~150 methods) with 2 theme files + 8 paired Unix/Windows platform shims. `Tmux` struct holds just a `socketName` string; no cache, no internal lock; concurrency control is inside tmux itself or in the package-level `sessionNudgeLocks sync.Map`. Shells out for every operation via `run()` then parses stdout. Socket abstraction: package-level `defaultSocket` set at gt root init + per-Tmux socketName; `SocketFromEnv` reads `GT_TOWN_SOCKET`; sentinel `noTownSocket = "gt-no-town-socket"` when no town configured. **Cross-platform:** Unix (POSIX pgid) + Windows (psmux, `tasklist`, Toolhelp32 snapshot API for descendants, `CREATE_NO_WINDOW` flag).
+
+- [runtime](gastown/packages/runtime.md) — **324-line page.** Thin package (1 file, 272 lines) smoothing agent-runtime capability differences during session startup. Four concerns: per-provider hook settings install (`EnsureSettingsForRole`, respecting settingsDir vs workDir distinction so gastown doesn't write provider settings into customer repos), session-ID env-var resolution (`SessionIDFromEnv`), startup fallback matrix (`StartupFallbackInfo` 2x2 cross-product of hooks?/prompt? capability flags), and `RuntimeConfigWithMinDelay` (clears `ReadyPromptPrefix` to force delay-based readiness).
+
+**Neutral observations surfaced:**
+
+- **`Config.HeartbeatInterval=5m` in `daemon/types.go:41` is dead code.** Live interval comes from `operational.daemon.recovery_heartbeat_interval` (default 3 min).
+- **`shutdown.lock` is never removed** — `flock` works on inodes not paths (documented at `daemon.go:1972-1976`).
+- **Daemon relies on single-threaded main-loop discipline** instead of mutexes. Many struct fields are marked "no sync needed, only accessed from heartbeat goroutine". Only `deathsMu` exists.
+- **`EnsureLifecycleConfigFile` is called from THREE places** (`gt init`, `gt up`, `daemon.New`) — deliberately defensive, any path into the daemon patches the config file.
+- **Nonce-based PID-file ownership verification** (`"PID\nNONCE"` format) replaces `ps` string matching per ZFC fix gt-utuk.
+- **`GT_DOLT_PORT`/`BEADS_DOLT_PORT` are `os.Setenv`d at daemon startup** (GH#2412) so every spawned session inherits them without per-`Manager.Start` plumbing.
+- **Tmux identity vars are explicitly unset at daemon startup** (GH#3006). Only `GT_TOWN_ROOT` leaks globally.
+- **`descendants_stub.go` naming is backwards** — the "stub" file has build tag `!windows`; it's stubbed for *non-Windows*, not Windows. The real implementation is in `descendants_windows.go` using Toolhelp32.
+- **`tmux.NewSessionWithCommand` does `new-session -d <shell>` + `set-option remain-on-exit on` + `respawn-pane -k <command>`**, not `new-session -d '<command>'`. Eliminates a race where fast-failing commands exit before the health check runs.
+- **`CLAUDECODE` is unset on every session create**, defending against nested-session detection failures when the tmux server itself was started inside a Claude Code session.
+- **`sessionNudgeLocks` `sync.Map` is a slow memory leak** — per-session locks never evicted when sessions die.
+- **`MayorTheme()` returns `bg=default,fg=default`** — the mayor session is specifically configured to blend into the user's terminal.
+- **PowerShell `$env:KEY='val'` prefix handling exists** in `validateCommandBinary`, proving Windows/psmux is a real supported platform, not an afterthought.
+- **`runtime.go:99-102` documents a removed session-started nudge** to deacon — it interrupted the deacon's `await-signal` backoff sleep.
+
+**Bead `wiki-75z` closed.**
+
+**Next batch:** Batch 9 — Layer (i) Supporting libraries (~24 small packages).
+
+→ [gastown/packages/daemon.md](gastown/packages/daemon.md), [tmux](gastown/packages/tmux.md), [runtime](gastown/packages/runtime.md), [gastown/README.md](gastown/README.md), [index.md](index.md)

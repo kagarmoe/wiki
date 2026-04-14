@@ -70,6 +70,12 @@ Diagnostics & health (Batch 7):
 - [keepalive](gastown/packages/keepalive.md) — agent-activity signaling
 - [deps](gastown/packages/deps.md) — external binary prerequisites (bd + dolt)
 
+Long-running processes (Batch 8):
+
+- [daemon](gastown/packages/daemon.md) — per-town singleton; main heartbeat loop
+- [tmux](gastown/packages/tmux.md) — tmux wrapper library (~150 methods)
+- [runtime](gastown/packages/runtime.md) — agent-runtime integration helpers
+
 ### Roles (Batch 6)
 
 Gas Town agent personas:

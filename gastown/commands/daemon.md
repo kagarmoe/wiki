@@ -123,6 +123,7 @@ Subcommand-scoped (`daemon.go:152-165`):
 
 ## Related
 
+- [internal/daemon package](../packages/daemon.md) — the Go implementation this command front-ends; main heartbeat loop, state-file layout, lock discipline, restart tracker
 - [boot](./boot.md) — deacon's watchdog, separate from this Go daemon
 - [deacon](./deacon.md) — health orchestrator agent
 - [doctor](./doctor.md) — diagnostic command that inspects daemon state

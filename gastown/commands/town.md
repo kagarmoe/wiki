@@ -132,6 +132,7 @@ town-level.
   sessions this command cycles between.
 - [up](up.md), [down](down.md), [boot](boot.md) — lifecycle commands
   that create the sessions this one navigates between.
+- [internal/tmux package](../packages/tmux.md) — `listTmuxSessions` / `switch-client` / `resolveCurrentSession` bottom out in this package; the `hq-` prefix convention interacts with the package-level `defaultSocket` discipline
 - [status-line](status-line.md) — renders the tmux status right of the
   same mayor/deacon panes.
 - [../binaries/gt.md](../binaries/gt.md) — root.

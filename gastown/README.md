@@ -150,6 +150,12 @@ Diagnostics & health packages (Batch 7 — Layer g):
 - [keepalive](packages/keepalive.md) — best-effort agent-activity signaling via `<townRoot>/.runtime/keepalive.json`; nil-sentinel design
 - [deps](packages/deps.md) — external binary prerequisites (`bd` + `dolt`) with version pinning; feeds `gt doctor` prereq checks
 
+Long-running processes (Batch 8 — Layer h):
+
+- [daemon](packages/daemon.md) — per-town daemon singleton; main heartbeat loop driving patrol cycles; owns Dolt server lifecycle + backup + restart-tracker exponential backoff
+- [tmux](packages/tmux.md) — wrapper library for driving tmux under automation; ~150 methods on one `Tmux` struct; cross-platform (Unix + Windows/psmux support)
+- [runtime](packages/runtime.md) — agent-runtime integration helpers (Claude Code, Codex, Copilot, Gemini); per-provider hook settings + startup fallback matrix
+
 ### Roles (Batch 6 — Layer f)
 
 Gas Town agent personas — the "characters" with identity, decisions, and autonomy. Each role has a dedicated persona page + a code-side package page.

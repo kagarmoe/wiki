@@ -149,7 +149,7 @@ supports it) or drop to `gt session capture`.
 - **No `--json` output.** Raw terminal content only. If the
   target was running a TUI with ANSI escapes, they'll come
   through as-is (or be stripped by `CapturePane` — verify in
-  `internal/tmux`).
+  [internal/tmux](../packages/tmux.md)).
 - **No way to peek historical output.** Whatever's no longer in
   the pane's scrollback buffer is gone. Compare with
   [feed](feed.md) which reads a persistent JSONL log.

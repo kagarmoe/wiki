@@ -131,6 +131,7 @@ Runs `tmux list-sessions -F #{session_name}` and splits output by lines.
   cycled by `cycleTownSession`.
 - [boot](boot.md), [up](up.md), [down](down.md) — bring-up / tear-down
   lifecycle commands that create the sessions this one navigates between.
+- [internal/tmux package](../packages/tmux.md) — `SocketFromEnv` / `SetDefaultSocket` / `NewTmux` + the underlying `switch-client` wrappers all live here; the socket override rationale at `cycle.go:95-97` pairs with the package-level `defaultSocket` design
 - [../binaries/gt.md](../binaries/gt.md) — root.
 
 ## Notes / open questions

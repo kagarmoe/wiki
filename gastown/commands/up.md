@@ -184,6 +184,7 @@ Defined at `up.go:148-158`:
 - [start](./start.md) — legacy-flavored start that uses a different
   mutex pattern; overlaps with `gt up` but still shipped
 - [daemon](./daemon.md) — `ensureDaemon` re-execs `gt daemon run`
+- [internal/daemon package](../packages/daemon.md) — the Go implementation of the daemon process that `ensureDaemon` re-execs; lock discipline, `EnsureLifecycleConfigFile` call site
 - [dolt](./dolt.md) — Dolt server lifecycle
 - [doctor](./doctor.md) — diagnose what `gt up` may not have been able
   to bring online
