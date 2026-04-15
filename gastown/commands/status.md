@@ -4,11 +4,15 @@ type: command
 status: verified
 topic: gastown
 created: 2026-04-11
-updated: 2026-04-11
+updated: 2026-04-15
 sources:
   - /home/kimberly/repos/gastown/internal/cmd/status.go
   - /home/kimberly/repos/gastown/internal/cmd/root.go
 tags: [command, diagnostics, rigs, agents, dolt, tmux, polecat-safe, watch-mode]
+phase3_audited: 2026-04-15
+phase3_findings: [cobra-drift]
+phase3_severities: [wrong]
+phase3_findings_post_release: false
 ---
 
 # gt status
@@ -205,6 +209,41 @@ Skips in the interest of latency:
 Hook info in `--fast` is populated from pre-fetched agent beads
 instead of the expensive handoff bead lookup path.
 
+## Docs claim
+
+### Source
+- `/home/kimberly/repos/gastown/internal/cmd/status.go:46-51` — Cobra `Long` text on `statusCmd`.
+- `/home/kimberly/repos/gastown/internal/cmd/status.go:57` — Flag description for `--fast` in `init()`.
+
+### Verbatim
+
+Cobra `Long` text (`status.go:46-51`):
+
+> Display the current status of the Gas Town workspace.
+>
+> Shows town name, registered rigs, polecats, and witness status.
+>
+> Use --fast to skip mail lookups for faster execution.
+> Use --watch to continuously refresh status at regular intervals.
+
+`--fast` flag description (`status.go:57`):
+
+> "Skip mail lookups for faster execution"
+
+## Drift
+
+See forward-link: [../drift/README.md](../drift/README.md).
+
+### `--fast` help text understates what it skips
+
+- **Claim source:** Cobra `Long` text at `/home/kimberly/repos/gastown/internal/cmd/status.go:50` ("Use --fast to skip mail lookups for faster execution") and the flag description at `/home/kimberly/repos/gastown/internal/cmd/status.go:57` ("Skip mail lookups for faster execution").
+- **Docs claim:** `--fast` only skips mail lookups.
+- **Code does:** `--fast` gates four distinct skips inside `gatherStatus`: overseer mail count (`/home/kimberly/repos/gastown/internal/cmd/status.go:776-781` — `if !statusFast { ... GetMailbox ... }`), per-agent mail counts inside `discoverGlobalAgents`/`discoverRigAgents`, per-rig hook discovery (`status.go:891-893`), and per-rig merge-queue summary (`status.go:907-909`). The hook and MQ skips change the reported data shape — not just latency — because `--fast` falls back to agent-bead-derived hook info instead of the live handoff-bead lookup.
+- **Category:** `cobra drift`
+- **Severity:** `wrong`
+- **Fix tier:** `code` — revise the `Long` text and the `--fast` flag description in `status.go` to list all four skipped lookups (mail, MQ, hooks, per-agent mail) and call out that hook info switches to a lighter-weight source rather than disappearing entirely.
+- **Release position:** `in-release` (identical `Long` text and flag description at `v1.0.0:internal/cmd/status.go:40-61`).
+
 ## Related
 
 - [doctor](doctor.md) — doctor runs deep health checks; status is
@@ -245,3 +284,4 @@ instead of the expensive handoff bead lookup path.
 - The `--fast` mode docs on the cobra `Long` (`status.go:46-51`)
   only mention skipping mail lookups, but the code additionally
   skips MQ and hook lookups. The help text understates the tradeoff.
+  → promoted to `## Drift` (2026-04-15, Phase 3 Batch 1a).

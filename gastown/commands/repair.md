@@ -4,11 +4,15 @@ type: command
 status: verified
 topic: gastown
 created: 2026-04-11
-updated: 2026-04-11
+updated: 2026-04-15
 sources:
   - /home/kimberly/repos/gastown/internal/cmd/repair.go
   - /home/kimberly/repos/gastown/internal/cmd/root.go
 tags: [command, diagnostics, dolt, identity, config, repair]
+phase3_audited: 2026-04-15
+phase3_findings: [cobra-drift]
+phase3_severities: [wrong]
+phase3_findings_post_release: false
 ---
 
 # gt repair
@@ -80,21 +84,9 @@ counterpart to `gt doctor --fix`:
 > common failure mode: `metadata.json` pointing to the wrong Dolt
 > database after a crash, rig addition, or bd init conflict.
 
-Items the `Long` lists as "what it repairs":
-
-- `metadata.json` `dolt_database` pointing to wrong database
-- Missing `config.json` for registered rigs
-- Prefix mismatches between `config.json` and `rigs.json`
-- Missing Dolt databases
-- Missing rig identity beads
-- Stale Dolt port in `metadata.json`
-
-**Drift risk:** the `Long` text lists six repair targets, but the
-registered check suite has only two constructors:
-`NewRigConfigSyncCheck` and `NewStaleDoltPortCheck`. The other
-"repairs" happen only if they are side-effects of the two registered
-checks' `Fix` methods in `internal/doctor/`. This is a neutral
-observation — not filed as drift per phase scoping.
+See the `## Drift` section below for the relationship between the six
+repair targets the `Long` lists and the two checks `runRepair` actually
+registers.
 
 ### Subcommands
 
@@ -104,6 +96,44 @@ None (terminal command).
 
 None defined in `init()` (`repair.go:35-37`) — only command
 registration on `rootCmd`.
+
+## Docs claim
+
+### Source
+- `/home/kimberly/repos/gastown/internal/cmd/repair.go:16-31` — Cobra `Long` text on `repairCmd`.
+
+### Verbatim
+
+> Repair common database identity mismatches and configuration issues.
+>
+> This is a focused version of 'gt doctor --fix' that targets the most common
+> failure mode: metadata.json pointing to the wrong Dolt database after a crash,
+> rig addition, or bd init conflict.
+>
+> What it repairs:
+>   - metadata.json dolt_database pointing to wrong database
+>   - Missing config.json for registered rigs
+>   - Prefix mismatches between config.json and rigs.json
+>   - Missing Dolt databases
+>   - Missing rig identity beads
+>   - Stale Dolt port in metadata.json
+>
+> For a full diagnostic, use 'gt doctor' instead.
+> For a full diagnostic with auto-fix, use 'gt doctor --fix'.
+
+## Drift
+
+See forward-link: [../drift/README.md](../drift/README.md).
+
+### Cobra `Long` text lists six repair targets; `runRepair` registers two checks
+
+- **Claim source:** Cobra `Long` text at `/home/kimberly/repos/gastown/internal/cmd/repair.go:22-28` (the "What it repairs" bullet list).
+- **Docs claim:** the `Long` text enumerates six repair targets — `metadata.json dolt_database` pointing to wrong database, missing `config.json` for registered rigs, prefix mismatches between `config.json` and `rigs.json`, missing Dolt databases, missing rig identity beads, stale Dolt port in `metadata.json`.
+- **Code does:** `runRepair` constructs a fixed two-check suite at `/home/kimberly/repos/gastown/internal/cmd/repair.go:51-54` — `doctor.NewRigConfigSyncCheck()` and `doctor.NewStaleDoltPortCheck()`. Notably absent from the registered set: no `NewRigBeadsCheck`/`NewAgentBeadsCheck`/`NewRoleBeadsCheck` (identity bead repair), no `NewDoltOrphanedDatabasesCheck`, no `NewDatabasePrefixCheck`. Any coverage of the other four advertised targets would have to be a side-effect inside the two registered checks' `Fix` methods in `internal/doctor/`. Whether those side-effects exist is unverified by this audit and, per the authority hierarchy, is irrelevant: the code at the cited line registers two checks, the `Long` text claims six, and the disagreement stands.
+- **Category:** `cobra drift`
+- **Severity:** `wrong`
+- **Fix tier:** `code` — either (a) register the missing checks in the `checks` slice, or (b) rewrite the `Long` text to accurately describe what the two registered checks actually cover.
+- **Release position:** `in-release` (identical text and registration at `v1.0.0:internal/cmd/repair.go`).
 
 ## Related
 

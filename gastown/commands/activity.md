@@ -4,11 +4,16 @@ type: command
 status: partial
 topic: gastown
 created: 2026-04-11
-updated: 2026-04-11
+updated: 2026-04-15
 sources:
   - /home/kimberly/repos/gastown/internal/cmd/activity.go
   - /home/kimberly/repos/gastown/internal/cmd/root.go
+  - /home/kimberly/repos/gastown/internal/events/events.go
 tags: [command, diagnostics, events, activity-feed]
+phase3_audited: 2026-04-15
+phase3_findings: [cobra-drift]
+phase3_severities: [wrong]
+phase3_findings_post_release: false
 ---
 
 # gt activity
@@ -100,6 +105,42 @@ All flags are defined on `activity emit` (`activity.go:75-85`), not on
 | `--issue`   | string | `""`    | Issue ID (for `polecat_checked`)                            |
 | `--to`      | string | `""`    | Escalation target (mayor/deacon) for `escalation_sent`      |
 | `--count`   | int    | `0`     | Polecat count (for patrol events)                           |
+
+## Docs claim
+
+### Source
+- `/home/kimberly/repos/gastown/internal/cmd/activity.go:43-68` — Cobra `Long` text on `activityEmitCmd`.
+
+### Verbatim
+
+> Emit an activity event to the Gas Town activity feed.
+>
+> Supported event types for witness patrol:
+>   patrol_started   - When witness begins patrol cycle
+>   polecat_checked  - When witness checks a polecat
+>   polecat_nudged   - When witness nudges a stuck polecat
+>   escalation_sent  - When witness escalates to Mayor/Deacon
+>   patrol_complete  - When patrol cycle finishes
+>
+> Supported event types for refinery:
+>   merge_started    - When refinery starts a merge
+>   merge_complete   - When merge succeeds
+>   merge_failed     - When merge fails
+>   queue_processed  - When refinery finishes processing queue
+
+## Drift
+
+See forward-link: [../drift/README.md](../drift/README.md).
+
+### Refinery event type names in Cobra `Long` don't match event constants
+
+- **Claim source:** Cobra `Long` text at `/home/kimberly/repos/gastown/internal/cmd/activity.go:52-56`.
+- **Docs claim:** the `Long` text advertises refinery event types `merge_started`, `merge_complete`, `merge_failed`, and `queue_processed` as the supported set.
+- **Code does:** `runActivityEmit` switches on `events.TypeMergeStarted`, `events.TypeMerged`, `events.TypeMergeFailed`, `events.TypeMergeSkipped` at `/home/kimberly/repos/gastown/internal/cmd/activity.go:136`. The constants resolve to the string values `"merge_started"`, `"merged"`, `"merge_failed"`, `"merge_skipped"` at `/home/kimberly/repos/gastown/internal/events/events.go:67-70`. Users who type `merge_complete` or `queue_processed` fall through to the generic-event default branch (`activity.go:152`) — the event is still emitted but without the refinery-specific payload shape, and the documented names never produce a refinery-typed payload.
+- **Category:** `cobra drift`
+- **Severity:** `wrong`
+- **Fix tier:** `code` — edit the `Long` text in `activity.go` to name the actual constants (`merged` and `merge_skipped`; drop `queue_processed` or document what constant it would map to if added).
+- **Release position:** `in-release` (text identical at `v1.0.0:internal/cmd/activity.go`).
 
 ## Related
 

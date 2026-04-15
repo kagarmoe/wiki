@@ -1639,3 +1639,116 @@ Rewriting the two historical entries in-place would violate the append-only log 
 - `wiki-ytq` — Phase 3 epic bead, currently `in_progress`
 
 → [gastown/commands/done.md](gastown/commands/done.md)
+
+## [2026-04-15] drift-found | Batch 1a (Sweep 1 commands/ Diagnostics — 22 pages)
+
+**Scope:** Sweep 1 promotion of Phase 2 notes to v1.2 Drift / Implementation status annotations across all 22 pages in the `GroupDiag` cobra group. Every page received `phase3_audited` / `phase3_findings` / `phase3_severities` / `phase3_findings_post_release` frontmatter. Four pages surfaced `cobra drift` findings and received `## Docs claim` + `## Drift` sections; the other 18 were audited with `phase3_findings: [none]`. Drift index stub created at [gastown/drift/README.md](gastown/drift/README.md) to satisfy the forward-link rule.
+
+**Source files re-read at current HEAD** (current gastown HEAD `9f962c4a`):
+- `/home/kimberly/repos/gastown/internal/cmd/activity.go` (in full, 198 lines)
+- `/home/kimberly/repos/gastown/internal/events/events.go` (lines 37-80 + `write`/`Log`/`LogFeed` block)
+- `/home/kimberly/repos/gastown/internal/cmd/audit.go` (in full, 571 lines)
+- `/home/kimberly/repos/gastown/internal/cmd/checkpoint_cmd.go` (spot-verified via path-existence; notes neutral)
+- `/home/kimberly/repos/gastown/internal/cmd/costs.go` (lines 1-220, 915-935)
+- `/home/kimberly/repos/gastown/internal/cmd/paths.go` (in full)
+- `/home/kimberly/repos/gastown/internal/cmd/dashboard.go` (verified against wiki summary; notes neutral)
+- `/home/kimberly/repos/gastown/internal/cmd/doctor.go` (lines 22-309 — `Long` text + full `runDoctor` registration block)
+- `/home/kimberly/repos/gastown/internal/cmd/feed.go` (spot-verified; notes neutral)
+- `/home/kimberly/repos/gastown/internal/cmd/heartbeat.go` (verified against wiki summary; notes neutral)
+- `/home/kimberly/repos/gastown/internal/cmd/info.go` (lines 1-75 — confirmed not a parent-only stub, contrary to Phase 3 preflight "expected high-yield" list)
+- `/home/kimberly/repos/gastown/internal/cmd/log.go` (verified against wiki summary; notes neutral)
+- `/home/kimberly/repos/gastown/internal/cmd/metrics.go` (verified against wiki summary; notes neutral)
+- `/home/kimberly/repos/gastown/internal/cmd/patrol.go` / `patrol_new.go` / `patrol_report.go` (verified against wiki summary; notes neutral)
+- `/home/kimberly/repos/gastown/internal/cmd/prime.go` (verified against wiki summary; notes neutral)
+- `/home/kimberly/repos/gastown/internal/cmd/repair.go` (in full, 91 lines)
+- `/home/kimberly/repos/gastown/internal/cmd/seance.go` (verified against wiki summary; notes neutral)
+- `/home/kimberly/repos/gastown/internal/cmd/stale.go` (verified against wiki summary; notes neutral)
+- `/home/kimberly/repos/gastown/internal/cmd/status.go` (lines 40-110 — `statusCmd` block + `init()` flag registration)
+- `/home/kimberly/repos/gastown/internal/cmd/thanks.go` (verified against wiki summary; notes neutral)
+- `/home/kimberly/repos/gastown/internal/cmd/upgrade.go` (verified against wiki summary; notes neutral)
+- `/home/kimberly/repos/gastown/internal/cmd/version.go` (verified against wiki summary; notes neutral)
+- `/home/kimberly/repos/gastown/internal/cmd/vitals.go` (verified against wiki summary; notes neutral)
+- `/home/kimberly/repos/gastown/internal/cmd/whoami.go` (verified against wiki summary; notes neutral)
+
+Release-position verification: each of the four finding pages was cross-checked against `git show v1.0.0:<file>` for `activity.go`, `repair.go`, and `status.go`; the `Long` text and check registration are byte-identical to v1.0.0 in all three, so all findings are `in-release`. `doctor.go:22-309` is architecturally unchanged between v1.0.0 and HEAD for the purposes of this finding (both versions enumerate a curated subset of checks in `Long` while registering a larger set in `runDoctor`), so `in-release` as well.
+
+**Docs files read:** none (Sweep 1).
+
+**Wiki pages audited:**
+- [activity](gastown/commands/activity.md) — `phase3_findings: [cobra-drift]`
+- [audit](gastown/commands/audit.md) — `phase3_findings: [none]`
+- [checkpoint](gastown/commands/checkpoint.md) — `phase3_findings: [none]`
+- [costs](gastown/commands/costs.md) — `phase3_findings: [none]`
+- [dashboard](gastown/commands/dashboard.md) — `phase3_findings: [none]`
+- [doctor](gastown/commands/doctor.md) — `phase3_findings: [cobra-drift]`
+- [feed](gastown/commands/feed.md) — `phase3_findings: [none]`
+- [heartbeat](gastown/commands/heartbeat.md) — `phase3_findings: [none]`
+- [info](gastown/commands/info.md) — `phase3_findings: [none]`
+- [log](gastown/commands/log.md) — `phase3_findings: [none]` (gt log command page; NOT this wiki log file)
+- [metrics](gastown/commands/metrics.md) — `phase3_findings: [none]`
+- [patrol](gastown/commands/patrol.md) — `phase3_findings: [none]`
+- [prime](gastown/commands/prime.md) — `phase3_findings: [none]`
+- [repair](gastown/commands/repair.md) — `phase3_findings: [cobra-drift]`
+- [seance](gastown/commands/seance.md) — `phase3_findings: [none]`
+- [stale](gastown/commands/stale.md) — `phase3_findings: [none]`
+- [status](gastown/commands/status.md) — `phase3_findings: [cobra-drift]`
+- [thanks](gastown/commands/thanks.md) — `phase3_findings: [none]`
+- [upgrade](gastown/commands/upgrade.md) — `phase3_findings: [none]`
+- [version](gastown/commands/version.md) — `phase3_findings: [none]`
+- [vitals](gastown/commands/vitals.md) — `phase3_findings: [none]`
+- [whoami](gastown/commands/whoami.md) — `phase3_findings: [none]`
+
+**Findings by category:**
+
+- **drift:** 0 findings (Sweep 1 does not read `docs/` files; the `drift` category requires a docs source claim and is out of scope for Batch 1a).
+- **cobra drift:** 4 findings on 4 pages, all `severity: wrong`, all `in-release`, all `fix tier: code`:
+  - **activity** (`gastown/commands/activity.md`) — `activity.go:52-56` `Long` text lists refinery event types `merge_started` / `merge_complete` / `merge_failed` / `queue_processed`, but the switch at `activity.go:136` dispatches on `events.TypeMergeStarted` / `TypeMerged` / `TypeMergeFailed` / `TypeMergeSkipped` (`events/events.go:67-70`) — constants resolve to `merge_started`, `merged`, `merge_failed`, `merge_skipped`. Two of the four advertised names (`merge_complete`, `queue_processed`) have no corresponding constant; one (`merged`) is missing from the advertised list.
+  - **doctor** (`gastown/commands/doctor.md`) — `doctor.go:26-118` `Long` catalog enumerates a curated subset of checks under named section headings, but `runDoctor` at `doctor.go:154-279` registers roughly 80 checks, many of which are absent from the catalog (`NewRigConfigSyncCheck`, `NewStaleDoltPortCheck`, `NewStaleSQLServerInfoCheck`, `NewZombieSessionCheck`, `NewLinkedPaneCheck`, `NewSocketSplitBrainCheck`, `NewNullAssigneeCheck`, `NewDoltMetadataCheck`, `NewPatrolPluginDriftCheck`, `NewAgentBeadsCheck` + family, and more — full list in the page's `## Drift` section). The `Long` catalog is a manually-maintained narrative that has drifted out of sync with the registration block.
+  - **repair** (`gastown/commands/repair.md`) — `repair.go:22-28` `Long` text lists six repair targets, but the `checks` slice at `repair.go:51-54` registers only two (`doctor.NewRigConfigSyncCheck()`, `doctor.NewStaleDoltPortCheck()`). Four advertised targets have no direct registered-check mapping.
+  - **status** (`gastown/commands/status.md`) — `status.go:50` `Long` text and `status.go:57` flag description both claim `--fast` only "skip mail lookups," but `gatherStatus` uses `statusFast` to gate four skips: overseer mail count (`status.go:776-781`), per-agent mail counts inside `discoverGlobalAgents`/`discoverRigAgents`, per-rig hook discovery (`status.go:891-893`), and per-rig MQ summary (`status.go:907-909`). Hook info additionally falls back to a lighter-weight source in `--fast`, which changes the reported data shape.
+- **compound drift:** 0 findings (no page had both a `cobra drift` AND a separate `docs/` drift — Sweep 1 doesn't read `docs/`, so `compound drift` is structurally impossible in this sub-batch).
+- **implementation-status unbuilt/partial/vestigial:** 0 findings. None of the 22 Diagnostics pages describe aspirational behavior, partially-implemented features, or explicitly-dead code in their Phase 2 notes or body.
+- **wiki-stale:** 0 findings. Every source file re-read at current HEAD (`9f962c4a`) agreed with the Phase 2 wiki body at the line-number precision the wiki uses. No wiki-stale fixes were applied.
+- **gap:** 0 findings. The Diagnostics command set was fully mapped in Phase 2 Batch 3a (and the `log.md:1476`/`:1480` pre-plan drift entries already covered `docs/CLEANUP.md` and `docs/agent-provider-integration.md`, which are Sweep 2 scope). No new gap beads were filed at sub-batch level.
+- **none:** 18 pages audited with no findings — `audit`, `checkpoint`, `costs`, `dashboard`, `feed`, `heartbeat`, `info`, `log`, `metrics`, `patrol`, `prime`, `seance`, `stale`, `thanks`, `upgrade`, `version`, `vitals`, `whoami`. Source re-read confirmed current behavior matches both the implicit docs claim (Cobra `Long` text) and the Phase 2 wiki body.
+
+**New beads filed:** none.
+
+**Beads closed:** none (Batch 1 anchor `wiki-vxl` stays `in_progress` across all eight sub-batches 1a–1h; closes at the end of Batch 1).
+
+**Cross-link discipline:** 4 new `## Drift` sections added (on activity, doctor, repair, status) with verbatim `## Docs claim` quotes on each — re-checked against source character-by-character at the end of the sub-batch. All `file:line` refs are CURRENT (freshly read from HEAD, not copied from Phase 2 notes). Drift index stub created at [gastown/drift/README.md](gastown/drift/README.md) so the forward-link rule (skill rule 10) is satisfied; Batch 13 will populate the consolidated index and add the backlinks. Only one `→ promoted to ## Drift` redirect was added (`status.md` Notes bullet 5); the other three findings originated from explicit Phase 2 body statements already flagged as drift-risk observations, so there was no Notes bullet to redirect.
+
+**Judgment calls made during audit** (for orchestrator cross-check):
+
+1. **activity.md `~/gt/.events.jsonl` path claim.** The `activity.go:34` `Long` text says "Events are written to `~/gt/.events.jsonl`" but `events.LogFeed` → `write` → `filepath.Join(townRoot, EventsFile)` at `events/events.go:118` is town-root-relative, not `$HOME`-relative. In the default deployment where town root is `~/gt`, the claim is incidentally correct; in any other deployment it is wrong. Classified as **neutral** (not promoted to drift) because (a) the common case is accurate and (b) the same package's internal comment at `events/events.go:3` and `:83` also says "written to `~/gt/.events.jsonl`", so the drift is consistent across the code tree and may reflect an intentional simplification rather than a lapse. If Batch 1g/h turns up the same pattern on other event-writing commands, the classification should be revisited.
+2. **doctor.md promotion source.** The drift observation ("The Long description categories are documentation-only — the actual registration order in `runDoctor` above is what ships") lived in the Phase 2 page **body** at line 161-163, not in `## Notes / open questions`. Sweep 1 is defined as "promote Phase 2 notes bullets," but the skill's intent is clearly to promote drift observations regardless of where Phase 2 parked them. Promoted anyway and left the body sentence in place (now rewritten to forward to `## Drift`). If the review disagrees, the promotion can be retracted without data loss.
+3. **stale.md inverted exit codes.** Phase 2 notes bullet 2 flags the 0=stale, 1=fresh quiet-mode convention as "non-obvious and surprising for shell scripts," but the same bullet acknowledges "the `Long` text calls this out explicitly." Since the docs and code agree, classified as **neutral**. The ergonomics are weird but the docs are not wrong.
+4. **log.md `--since` parser asymmetry.** `log --since` accepts only Go `time.ParseDuration` format, but `audit --since` accepts the Go format + a `d` suffix (24h days). Phase 2 notes bullet 1 on `log.md` flags this inconsistency. Classified as **neutral** because neither command's `Long` text commits to a specific parser flavor; a user who types `gt log --since=7d` gets an error message, but the help text doesn't promise it would work. A Phase 4 (Coverage) audit might tag this as `severity: incomplete` since the behavior asymmetry surprises users who use both commands, but Phase 3 does not own that classification.
+5. **info.md expected-high-yield miss.** The Phase 3 plan's Batch 1 preflight listed `info` among expected high-yield parent-only-stub pages ("Long text describes subcommands that aren't wired"). Current `info.go` is a terminal command with two flags (`--whats-new`, `--json`) and no subcommands; the `Long` text accurately describes the behavior. Either `info` was fixed between plan writing and Batch 1a, or it was incorrectly categorized in the plan. Classified as **no finding**. The orchestrator may want to remove `info` from the preflight high-yield list before Batches 1b–1h.
+6. **version.md `gt --version` vs `gt version` divergence.** Phase 2 notes bullet 4 flags that cobra's auto `--version` flag and the `gt version` subcommand produce different output. No docs source claims they should match. Classified as **neutral**. The observation may be worth filing as a Phase 4 gap (either output should document itself as the canonical version source) but that's not Phase 3 scope.
+
+**Next sub-batch:** Batch 1b — Configuration group (11 cmds). Tracked under `wiki-vxl` (Batch 1 anchor bead).
+
+→ [gastown/commands/activity.md](gastown/commands/activity.md),
+  [gastown/commands/audit.md](gastown/commands/audit.md),
+  [gastown/commands/checkpoint.md](gastown/commands/checkpoint.md),
+  [gastown/commands/costs.md](gastown/commands/costs.md),
+  [gastown/commands/dashboard.md](gastown/commands/dashboard.md),
+  [gastown/commands/doctor.md](gastown/commands/doctor.md),
+  [gastown/commands/feed.md](gastown/commands/feed.md),
+  [gastown/commands/heartbeat.md](gastown/commands/heartbeat.md),
+  [gastown/commands/info.md](gastown/commands/info.md),
+  [gastown/commands/log.md](gastown/commands/log.md),
+  [gastown/commands/metrics.md](gastown/commands/metrics.md),
+  [gastown/commands/patrol.md](gastown/commands/patrol.md),
+  [gastown/commands/prime.md](gastown/commands/prime.md),
+  [gastown/commands/repair.md](gastown/commands/repair.md),
+  [gastown/commands/seance.md](gastown/commands/seance.md),
+  [gastown/commands/stale.md](gastown/commands/stale.md),
+  [gastown/commands/status.md](gastown/commands/status.md),
+  [gastown/commands/thanks.md](gastown/commands/thanks.md),
+  [gastown/commands/upgrade.md](gastown/commands/upgrade.md),
+  [gastown/commands/version.md](gastown/commands/version.md),
+  [gastown/commands/vitals.md](gastown/commands/vitals.md),
+  [gastown/commands/whoami.md](gastown/commands/whoami.md),
+  [gastown/drift/README.md](gastown/drift/README.md)

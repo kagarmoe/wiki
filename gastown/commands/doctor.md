@@ -4,11 +4,15 @@ type: command
 status: partial
 topic: gastown
 created: 2026-04-11
-updated: 2026-04-11
+updated: 2026-04-15
 sources:
   - /home/kimberly/repos/gastown/internal/cmd/doctor.go
   - /home/kimberly/repos/gastown/internal/cmd/root.go
 tags: [command, diagnostics, health-checks, beads-exempt, branch-check-exempt]
+phase3_audited: 2026-04-15
+phase3_findings: [cobra-drift]
+phase3_severities: [wrong]
+phase3_findings_post_release: false
 ---
 
 # gt doctor
@@ -160,7 +164,28 @@ groups: workspace, town root protection, infrastructure, cleanup, clone
 divergence, crew workspace, migration, rig-specific (`--rig`),
 routing, lifecycle, formula overlay, migration, session hooks, Dolt,
 and patrol. Those groups are documentation-only — the actual
-registration order in `runDoctor` above is what ships.
+registration order in `runDoctor` above is what ships, and the registered
+set is a strict superset of what `Long` enumerates. See the `## Drift`
+section below for details.
+
+## Docs claim
+
+### Source
+- `/home/kimberly/repos/gastown/internal/cmd/doctor.go:26-118` — Cobra `Long` text on `doctorCmd`, which is a narrative catalog of checks grouped by category. Not reproduced verbatim here because the entire block is ~93 lines of bulleted check names; the drift below cites specific omissions.
+
+## Drift
+
+See forward-link: [../drift/README.md](../drift/README.md).
+
+### Cobra `Long` text enumerates a selective subset of the checks `runDoctor` registers
+
+- **Claim source:** Cobra `Long` text at `/home/kimberly/repos/gastown/internal/cmd/doctor.go:26-118`.
+- **Docs claim:** the `Long` text presents a bulleted catalog under named sections (Workspace checks, Town root protection, Infrastructure checks, Cleanup checks, Clone divergence checks, Crew workspace checks, Migration checks, Rig checks, Routing checks, Lifecycle checks, Formula overlay checks, Session hook checks, Dolt checks, Patrol checks) and asks readers to use the list to understand what doctor tests.
+- **Code does:** `runDoctor` registers roughly 80 checks at `/home/kimberly/repos/gastown/internal/cmd/doctor.go:154-279`, of which many are not named anywhere in the `Long` text. Examples of registered checks absent from the catalog: `NewTmuxGlobalEnvCheck`, `NewOverlayHealthCheck`, `NewRigNameMismatchCheck`, `NewRigConfigSyncCheck`, `NewStaleDoltPortCheck`, `NewStaleSQLServerInfoCheck`, `NewMalformedSessionNameCheck`, `NewZombieSessionCheck`, `NewOrphanProcessCheck`, `NewWispGCCheck`, `NewMisclassifiedWispsCheck`, `NewBranchCheck`, `NewIdentityCollisionCheck`, `NewLinkedPaneCheck`, `NewSocketSplitBrainCheck`, `NewThemeCheck`, `NewCrashReportCheck`, `NewEnvVarsCheck`, `NewTownClaudeMDCheck`, `NewLandWorktreeGitignoreCheck`, `NewHooksPathAllRigsCheck`, `NewPatrolPluginDriftCheck`, `NewAgentBeadsCheck`, `NewStaleAgentBeadsCheck`, `NewRigBeadsCheck`, `NewRoleBeadsCheck`, `NewCrewCommandsCheck`, `NewHookAttachmentValidCheck`, `NewHookSingletonCheck`, `NewOrphanedAttachmentsCheck`, `NewLifecycleHygieneCheck`, `NewLifecycleDefaultsCheck`, `NewNullAssigneeCheck`, `NewDoltMetadataCheck`, `NewUnregisteredBeadsDirsCheck`, `NewRigRoutesJSONLCheck`, `NewRoutingModeCheck`. The `Long` catalog is thus a partial, manually-maintained snapshot of a much larger registered set.
+- **Category:** `cobra drift`
+- **Severity:** `wrong`
+- **Fix tier:** `code` — edit the `Long` text in `doctor.go` to either (a) accurately enumerate the registered set, (b) summarize the categories without committing to a bulleted catalog, or (c) generate the catalog from the registered checks at runtime so it cannot drift.
+- **Release position:** `in-release` (doctor.go file and its check-registration block both exist at `v1.0.0`).
 
 ## Related
 
