@@ -4,11 +4,15 @@ type: command
 status: partial
 topic: gastown
 created: 2026-04-11
-updated: 2026-04-11
+updated: 2026-04-15
 sources:
   - /home/kimberly/repos/gastown/internal/cmd/assign.go
   - /home/kimberly/repos/gastown/internal/cmd/root.go
 tags: [command, work, bd-wrapper, crew, hook]
+phase3_audited: 2026-04-15
+phase3_findings: [cobra-drift]
+phase3_severities: [wrong]
+phase3_findings_post_release: false
 ---
 
 # gt assign
@@ -107,13 +111,56 @@ Worth confirming.
   `--nudge`, called via `exec.Command("gt", "nudge", ...)`
   (`assign.go:180`).
 
+## Docs claim
+
+### Source
+
+- `/home/kimberly/repos/gastown/internal/cmd/assign.go:62` — flag
+  registration for `--force` on `assignCmd`.
+
+### Verbatim
+
+> `assignCmd.Flags().BoolVar(&assignForce, "force", false, "Replace existing hooked work")`
+
+## Drift
+
+See forward-link: [../drift/README.md](../drift/README.md).
+
+### `--force` flag is defined but never consumed
+
+- **Claim source:** flag description on
+  `/home/kimberly/repos/gastown/internal/cmd/assign.go:62`.
+- **Docs claim:** the `--force` flag's cobra description advertises
+  `"Replace existing hooked work"`, setting an expectation that
+  passing `--force` lets a caller reassign a crew member who already
+  has work on their hook.
+- **Code does:** `assignForce` is declared at `assign.go:51` and
+  bound to the flag at `assign.go:62`, but no reference to
+  `assignForce` exists anywhere in the file. `runAssign`
+  (`assign.go:67-192`) never reads it, and the hook retry loop at
+  `assign.go:142-161` has no force branch. The `updateAgentHookBead`
+  call at `assign.go:166` takes `(agentID, beadID, rigBeadsDir,
+  townBeadsDir)` and does not receive the force flag. A caller who
+  runs `gt assign <crew> <title> --force` against a crew member who
+  already has an incomplete hooked bead gets the same behavior as
+  without `--force`: the `bd update --status=hooked` call either
+  succeeds (creating a second hooked bead) or fails on whatever the
+  underlying `bd` invariants enforce, with no gt-side replace path.
+- **Category:** `cobra drift`
+- **Severity:** `wrong`
+- **Fix tier:** `code` — either implement `--force` to clear any
+  existing hooked bead on the target before re-hooking (matching the
+  advertised description), or remove the flag registration so users
+  don't see a no-op option in `--help`. The flag description text is
+  in `assign.go:62` and must be edited alongside any code change.
+- **Release position:** `in-release` — both the flag registration
+  and the absence of any `assignForce` read exist byte-identical at
+  `v1.0.0:internal/cmd/assign.go:51` and `:62`.
+
 ## Notes / open questions
 
-- **`--force` appears unused in-file.** The flag is defined on
-  `assign.go:62` but no reference to `assignForce` appears inside
-  `runAssign`. Either it's a stub, or force handling is delegated to
-  `updateAgentHookBead` / the retry loop. Verify before claiming it
-  doesn't do anything.
+- **`--force` unused** — see `## Drift` above (promoted from Phase 2
+  notes).
 - **`slingBackoff`** — the exponential backoff helper is shared with
   `gt sling`. Defined elsewhere in the package. Worth documenting.
 - **`updateAgentHookBead`** is commented as a "currently a no-op" —

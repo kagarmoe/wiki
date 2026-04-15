@@ -4,11 +4,15 @@ type: command
 status: verified
 topic: gastown
 created: 2026-04-11
-updated: 2026-04-11
+updated: 2026-04-15
 sources:
   - /home/kimberly/repos/gastown/internal/cmd/changelog.go
   - /home/kimberly/repos/gastown/internal/cmd/root.go
 tags: [command, work, reporting, bd-wrapper]
+phase3_audited: 2026-04-15
+phase3_findings: [cobra-drift]
+phase3_severities: [wrong]
+phase3_findings_post_release: false
 ---
 
 # gt changelog
@@ -136,12 +140,74 @@ redundant. This is worth flagging.
   command counts.
 - [../binaries/gt.md](../binaries/gt.md) — root.
 
+## Docs claim
+
+### Source
+
+- `/home/kimberly/repos/gastown/internal/cmd/changelog.go:32-42` —
+  `changelogCmd.Long` including the Examples block.
+- `/home/kimberly/repos/gastown/internal/cmd/changelog.go:49` —
+  flag description on `--week`.
+
+### Verbatim
+
+> `Show a changelog of closed beads across all rigs in Gas Town.`
+>
+> `Filters out ephemeral/internal beads (wisps, patrols) to show only real work.`
+>
+> `Examples:`
+> `  gt changelog            # This week's completed work (default)`
+> `  gt changelog --today    # Today's completions`
+> `  gt changelog --week     # This week's completions`
+> `  gt changelog --since 2026-03-10  # Since a specific date`
+> `  gt changelog --rig gastown       # One rig only`
+> `  gt changelog --json              # JSON output`
+
+> `changelogCmd.Flags().BoolVar(&changelogWeek, "week", false, "Show this week's completions")`
+
+## Drift
+
+See forward-link: [../drift/README.md](../drift/README.md).
+
+### `--week` flag is defined but never consulted
+
+- **Claim source:** `changelogCmd.Long` Examples block at
+  `/home/kimberly/repos/gastown/internal/cmd/changelog.go:39` and the
+  flag description at `changelog.go:49`.
+- **Docs claim:** the Long-text Examples line `gt changelog --week
+  # This week's completions` and the flag description `"Show this
+  week's completions"` both present `--week` as a selectable option
+  distinct from the default.
+- **Code does:** `changelogWeek` is declared as a package-level bool
+  (`changelog.go:22`) and bound to the flag at `changelog.go:49`,
+  but `changelogSinceTime` (`changelog.go:99-121`) — the only
+  function that computes the cutoff time — never reads
+  `changelogWeek`. The resolution cascade is `--since` →
+  `--today` → default-this-week-monday; the `--week` path is absent
+  entirely. A caller who types `gt changelog --week` gets
+  "this-week's completions" only because it coincides with the
+  default. If the default ever changes (e.g., to "all time") or the
+  caller combines `--week` with `--since`, the flag will silently
+  fail to influence behavior. No error is surfaced.
+- **Category:** `cobra drift`
+- **Severity:** `wrong`
+- **Fix tier:** `code` — either wire `changelogWeek` into
+  `changelogSinceTime` (the `--today` branch at `:109-112` is the
+  template: add a symmetric `if changelogWeek { ...monday... }`
+  branch before the default), or remove the flag registration at
+  `changelog.go:49` and the Examples-block line at `changelog.go:39`
+  together. Removing is consistent with the current "it's the
+  default" behavior but loses the explicit UX affordance; wiring is
+  consistent with the advertised help text.
+- **Release position:** `in-release` — `changelogWeek` is declared
+  and registered byte-identical at `v1.0.0:internal/cmd/changelog.go:22`
+  and `:49`, and `changelogSinceTime` at `:99-121` never reads it at
+  v1.0.0 either.
+
 ## Notes / open questions
 
-- **`--week` is a no-op.** The flag is defined (`changelog.go:49`) but
-  `changelogSinceTime` (`changelog.go:99-121`) never reads
-  `changelogWeek`. Week-of-Monday is already the default. Either
-  remove the flag or wire it up — neutral observation.
+- **`--week` is a no-op** — see `## Drift` above (promoted from
+  Phase 2 notes bullet 1).
 - **`isInternalBead` hard-codes title prefixes.** `mol-`, `wisp-`,
   `plugin run:`, `cost report` are baked into the filter
   (`changelog.go:216-221`). A configuration-driven approach would be

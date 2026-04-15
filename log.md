@@ -1897,3 +1897,155 @@ Decision deferred to the retrospective gate.
 The 1b subagent also flagged that wiki-stale findings should log under the `lint` verb per the skill, not `drift-found`. Batch 1b folded its wiki-stale findings into the `drift-found` Batch 1b entry to preserve audit-trail continuity. Kimberly's ruling: defer the placement question to the Sweep 1 retrospective gate as well. Do not re-classify or re-log Batch 1b's entries until then.
 
 → [.claude/skills/writing-entity-pages/SKILL.md](.claude/skills/writing-entity-pages/SKILL.md), [.claude/plans/2026-04-14-phase3-drift.md](.claude/plans/2026-04-14-phase3-drift.md), `gastown/commands/directive.md`, `gastown/commands/hooks.md`
+
+## [2026-04-15] drift-found | Batch 1c (Sweep 1 commands/ Work Management — 26 pages)
+
+**Scope:** Sweep 1 promotion across all 26 pages in the `GroupWork` cobra group (`assign`, `bead`, `cat`, `changelog`, `cleanup`, `close`, `compact`, `convoy`, `done`, `formula`, `handoff`, `hook`, `molecule`, `mountain`, `mq`, `orphans`, `prune-branches`, `ready`, `release`, `resume`, `scheduler`, `sling`, `synthesis`, `trail`, `unsling`, `wl`). Every page received `phase3_audited` / `phase3_findings` / `phase3_severities` / `phase3_findings_post_release` frontmatter. Pages with non-neutral findings received `## Docs claim` + `## Drift` sections with verbatim quotes, current `file:line` refs, and v1.2 fix-tier + severity + release-position fields. Drift index stub at [gastown/drift/README.md](gastown/drift/README.md) already exists from Batch 1a; not modified in this sub-batch.
+
+**Source files re-read at current HEAD** (current gastown HEAD `9f962c4af068fe9da9f4bd3624e7b66351121fdf`):
+
+- `/home/kimberly/repos/gastown/internal/cmd/assign.go` (in full, 192 lines — parent `Long`, var block, `init()` flag registrations, `runAssign` body including the non-reference to `assignForce`)
+- `/home/kimberly/repos/gastown/internal/cmd/bead.go` (lines 15-214 — parent `Long`, three subcommand declarations, `init()` AddCommand block, `runBeadMove`; notes neutral)
+- `/home/kimberly/repos/gastown/internal/cmd/cat.go` (in full, 79 lines; notes neutral)
+- `/home/kimberly/repos/gastown/internal/cmd/changelog.go` (lines 28-145 — parent `Long` + Examples block, `init()`, `changelogSinceTime`, `collectChangelogEntries`; confirmed `changelogWeek` bound at `:49` and never read)
+- `/home/kimberly/repos/gastown/internal/cmd/cleanup.go` (lines 1-50 — parent `Long` + `init()`; notes neutral)
+- `/home/kimberly/repos/gastown/internal/cmd/close.go` (in full via spot-reads; notes neutral)
+- `/home/kimberly/repos/gastown/internal/cmd/compact.go` (in full via spot-reads, confirmed `isReferenced` at `:456` has no call sites; notes neutral)
+- `/home/kimberly/repos/gastown/internal/cmd/convoy.go` + `convoy_stage.go` + `convoy_launch.go` + `convoy_watch.go` (spot-verified subcommand registrations; notes neutral)
+- `/home/kimberly/repos/gastown/internal/cmd/done.go` (lines 31-120 + 1205-1265 + 1670-1740 — `doneCmd` declaration, `runDone` prologue, `selfNukePolecat` declaration site and absence of call sites; confirmed DONE→IDLE transition path)
+- `/home/kimberly/repos/gastown/docs/CLEANUP.md` (lines 17-29 — for verbatim quotation of the stale `gt done` row; re-read is for the existing `done.md` Phase-3 section reformat per task-explicit carveout and does NOT represent a Sweep-2-scope docs read)
+- `/home/kimberly/repos/gastown/internal/cmd/formula.go` (spot-verified 4 subcommand registrations at `:179-184`; notes neutral)
+- `/home/kimberly/repos/gastown/internal/cmd/handoff.go` (lines 30-200 — `handoffCmd`, `init()`, `runHandoff` prologue, polecat-detect-and-redirect block; notes neutral)
+- `/home/kimberly/repos/gastown/internal/cmd/hook.go` (lines 14-250 — parent + subcommands declarations, `init()` with all 5 `hookCmd.AddCommand` calls; notes neutral)
+- `/home/kimberly/repos/gastown/internal/cmd/molecule.go` (lines 15-268 — parent `Long`, all subcommand declarations, `init()` AddCommand block; confirmed only `moleculeStepDoneCmd` registered on `step` group in this file)
+- `/home/kimberly/repos/gastown/internal/cmd/molecule_await_event.go` (in full, 115 lines — `moleculeAwaitEventCmd` declaration with full `Long`, `init()` registering on `moleculeStepCmd`)
+- `/home/kimberly/repos/gastown/internal/cmd/molecule_await_signal.go` (lines 31-140 — `moleculeAwaitSignalCmd` + `moleculeAwaitSignalShortcutCmd` declarations, both `init()` registrations — `moleculeStepCmd.AddCommand(moleculeAwaitSignalCmd)` at `:113` and `moleculeCmd.AddCommand(moleculeAwaitSignalShortcutCmd)` at `:132`)
+- `/home/kimberly/repos/gastown/internal/cmd/molecule_emit_event.go` (lines 18-65 — `moleculeEmitEventCmd` declaration + `moleculeStepCmd.AddCommand(moleculeEmitEventCmd)` at `:64`)
+- `/home/kimberly/repos/gastown/internal/cmd/mountain.go` (spot-verified 4 subcommand registrations at `:100-103`; notes neutral)
+- `/home/kimberly/repos/gastown/internal/cmd/mq.go` (lines 62-365 — parent `Long`, all 6 direct subcommand declarations, `mqIntegrationCmd` and its 3 children, `init()` AddCommand block; confirmed `mq.go`'s `init()` does NOT register `mq_next`)
+- `/home/kimberly/repos/gastown/internal/cmd/mq_next.go` (in full, 55+ lines — `mqNextCmd` declaration with full `Long`, `init()` registering at `mq_next.go:47` via `mqCmd.AddCommand(mqNextCmd)`)
+- `/home/kimberly/repos/gastown/internal/cmd/orphans.go` (spot-reads of `:157-181`, `:192-296`; notes neutral)
+- `/home/kimberly/repos/gastown/internal/cmd/prune_branches.go` (in full, 95 lines — `Long` at `:20-39`; confirmed "(main)" is illustrative parenthetical, not a hard claim)
+- `/home/kimberly/repos/gastown/internal/cmd/ready.go` (lines 28-254; notes neutral)
+- `/home/kimberly/repos/gastown/internal/cmd/release.go` (in full, 78 lines — parent `Long`, `runRelease`; notes neutral)
+- `/home/kimberly/repos/gastown/internal/cmd/resume.go` (in full, 144 lines; notes neutral)
+- `/home/kimberly/repos/gastown/internal/cmd/scheduler.go` (lines 29-115 — parent + 6 subcommand declarations, `init()` AddCommand block; sibling `scheduler_convoy.go` / `scheduler_epic.go` inspected — they contain helper functions, no `AddCommand` calls; notes neutral)
+- `/home/kimberly/repos/gastown/internal/cmd/sling.go` (spot-reads of `:27-290`, `slingRespawnResetCmd` at `:167-194`, sibling files inspected via `grep -n 'slingCmd.AddCommand' sling_*.go` returning no additional registrations; notes neutral)
+- `/home/kimberly/repos/gastown/internal/cmd/synthesis.go` (spot-verified 3 subcommand registrations at `:102-104`; notes neutral)
+- `/home/kimberly/repos/gastown/internal/cmd/trail.go` (lines 29-107 — parent + 3 subcommand declarations including the parent `Long` enumerating all 3 subcommands accurately; notes neutral)
+- `/home/kimberly/repos/gastown/internal/cmd/unsling.go` (spot-reads of `:20-260`; notes neutral)
+- `/home/kimberly/repos/gastown/internal/cmd/wl.go` (in full, 154 lines — parent `Long`, `wlJoinCmd`, `init()` at `:65-71` registering ONLY `wlJoinCmd`; confirmed `runWlJoin` at `:73-154`)
+- `/home/kimberly/repos/gastown/internal/cmd/wl_browse.go` (spot-read — declaration + `wlCmd.AddCommand(wlBrowseCmd)` in `init()`)
+- `/home/kimberly/repos/gastown/internal/cmd/wl_charsheet.go` (spot-read — declaration + AddCommand)
+- `/home/kimberly/repos/gastown/internal/cmd/wl_claim.go` (spot-read — declaration + AddCommand)
+- `/home/kimberly/repos/gastown/internal/cmd/wl_done.go` (spot-read — declaration + AddCommand)
+- `/home/kimberly/repos/gastown/internal/cmd/wl_post.go` (spot-read — declaration + AddCommand)
+- `/home/kimberly/repos/gastown/internal/cmd/wl_scorekeeper.go` (spot-read — declaration + AddCommand)
+- `/home/kimberly/repos/gastown/internal/cmd/wl_show.go` (spot-read — declaration + AddCommand)
+- `/home/kimberly/repos/gastown/internal/cmd/wl_stamp.go` (spot-read — declaration + AddCommand)
+- `/home/kimberly/repos/gastown/internal/cmd/wl_stamps.go` (spot-read — declaration + AddCommand)
+- `/home/kimberly/repos/gastown/internal/cmd/wl_sync.go` (spot-read — declaration + AddCommand)
+
+Release-position verification: every promoted finding was cross-checked against `git -C /home/kimberly/repos/gastown show v1.0.0:<file>`. All findings are `in-release`:
+
+- `assign.go:51` + `:62` `assignForce` declaration and flag registration byte-identical at v1.0.0; `runAssign` still does not reference `assignForce` at v1.0.0.
+- `changelog.go:22` + `:49` `changelogWeek` declaration and flag registration byte-identical at v1.0.0; `changelogSinceTime` at `:99-121` never reads `changelogWeek` at v1.0.0.
+- `molecule.go:22-43` `moleculeCmd.Long` byte-identical at v1.0.0; `molecule_await_event.go`, `molecule_await_signal.go`, `molecule_emit_event.go` all present at v1.0.0 with their AddCommand lines unchanged (verified via `git show v1.0.0:internal/cmd/molecule_<name>.go | grep -c AddCommand`).
+- `mq_next.go` present at v1.0.0 with `mqCmd.AddCommand(mqNextCmd)` at the same line.
+- All ten `wl_*.go` sibling files present at v1.0.0 with their AddCommand registrations byte-identical (verified via `git -C /home/kimberly/repos/gastown ls-tree -r --name-only v1.0.0 | grep internal/cmd/wl_` and per-file AddCommand count).
+- `done.go:36-57` Cobra `Long` text describing DONE→IDLE transition byte-identical at v1.0.0; `done.go:1209-1263` DONE→IDLE implementation byte-equivalent at v1.0.0 (persistent polecat model shipped in v1.0.0). `docs/CLEANUP.md:28` stale row byte-identical at v1.0.0 — the drift was already present at the release tag. No post-release surprises in Work Management.
+
+**Important release-position note on `wl`:** the Batch 1c dispatch prompt stated the ten `wl_*.go` sibling-file subcommands were "post-v1.0.0" additions (citing the plan's PR-delta scoping draft at line 1479). Direct verification at the `v1.0.0` tag contradicted that — every one of `wl_browse.go`, `wl_charsheet.go`, `wl_claim.go`, `wl_done.go`, `wl_post.go`, `wl_scorekeeper.go`, `wl_show.go`, `wl_stamp.go`, `wl_stamps.go`, `wl_sync.go` was already present at `v1.0.0` with its `wlCmd.AddCommand(...)` wired. The wiki-stale finding on `wl.md` is therefore `in-release`, not `post-release`, and the `phase-2-incomplete` classification holds (Phase 2 read `wl.go` in isolation on 2026-04-11, when all ten sibling files already existed). The PR-delta scoping draft needs a correction pass; flagged for the Sweep 1 retrospective gate.
+
+**Docs files read:** none (Sweep 1) — **except** `docs/CLEANUP.md:17-29` which was re-read for verbatim quotation while reformatting the pre-existing Phase-3 `## Docs claim` / `## Drift` sections on `done.md` (commit `f143813`, 2026-04-14) to the v1.2 schema. This read is within the task-explicit carveout for `done.md`: "verify its existing `## Docs claim` / `## Drift` sections conform to v1.2 schema." No new Sweep 2 findings were generated — the existing `f143813` finding (drift in CLEANUP.md vs code, code correct, docs stale) was preserved with its citations updated to verbatim quotes and v1.2 fields. The pre-plan `[2026-04-14] drift-found | docs/CLEANUP.md vs code` log entry still covers the substance of the finding; Sweep 2 Batch 9 (`docs/CLEANUP.md` formal re-audit) will supersede it with a per-row audit trail.
+
+**Wiki pages audited:**
+- [assign](gastown/commands/assign.md) — `phase3_findings: [cobra-drift]`
+- [bead](gastown/commands/bead.md) — `phase3_findings: [none]`
+- [cat](gastown/commands/cat.md) — `phase3_findings: [none]`
+- [changelog](gastown/commands/changelog.md) — `phase3_findings: [cobra-drift]`
+- [cleanup](gastown/commands/cleanup.md) — `phase3_findings: [none]`
+- [close](gastown/commands/close.md) — `phase3_findings: [none]`
+- [compact](gastown/commands/compact.md) — `phase3_findings: [none]`
+- [convoy](gastown/commands/convoy.md) — `phase3_findings: [none]`
+- [done](gastown/commands/done.md) — `phase3_findings: [drift]` (reformat of existing f143813 section to v1.2 schema)
+- [formula](gastown/commands/formula.md) — `phase3_findings: [none]`
+- [handoff](gastown/commands/handoff.md) — `phase3_findings: [none]`
+- [hook](gastown/commands/hook.md) — `phase3_findings: [none]`
+- [molecule](gastown/commands/molecule.md) — `phase3_findings: [cobra-drift, wiki-stale]`
+- [mountain](gastown/commands/mountain.md) — `phase3_findings: [none]`
+- [mq](gastown/commands/mq.md) — `phase3_findings: [wiki-stale]`
+- [orphans](gastown/commands/orphans.md) — `phase3_findings: [none]`
+- [prune-branches](gastown/commands/prune-branches.md) — `phase3_findings: [none]`
+- [ready](gastown/commands/ready.md) — `phase3_findings: [none]`
+- [release](gastown/commands/release.md) — `phase3_findings: [none]`
+- [resume](gastown/commands/resume.md) — `phase3_findings: [none]`
+- [scheduler](gastown/commands/scheduler.md) — `phase3_findings: [none]`
+- [sling](gastown/commands/sling.md) — `phase3_findings: [none]`
+- [synthesis](gastown/commands/synthesis.md) — `phase3_findings: [none]`
+- [trail](gastown/commands/trail.md) — `phase3_findings: [none]`
+- [unsling](gastown/commands/unsling.md) — `phase3_findings: [none]`
+- [wl](gastown/commands/wl.md) — `phase3_findings: [wiki-stale]`
+
+**Findings by category:**
+
+- **drift:** 1 finding on 1 page, `severity: wrong`, `in-release`, `fix tier: docs`:
+  - **done** (`gastown/commands/done.md`) — `docs/CLEANUP.md:28` row for `gt done` claims the command "self-nukes worktree, kills own session," but `doneCmd.Long` at `done.go:36-57` and the DONE→IDLE transition at `done.go:1209-1263` implement the persistent polecat model: sandbox preserved, session kept alive for reuse. `selfNukePolecat` at `done.go:1673-1680` has no call sites (verified via grep). The Cobra `Long` and the inline implementation comment at `done.go:108-110` agree with each other; only `docs/CLEANUP.md` carries the stale claim. Reformat from existing pre-plan `f143813` section to v1.2 schema — verbatim quote, fresh file:line refs, Category/Severity/Fix tier/Release position fields, forward link to drift index.
+- **cobra drift:** 3 findings on 3 pages, all `severity: wrong`, all `in-release`, all `fix tier: code`:
+  - **assign** (`gastown/commands/assign.md`) — `assign.go:62` registers a `--force` flag with description `"Replace existing hooked work"`, but `assignForce` (declared at `:51`) is never read anywhere in `runAssign` (`:67-192`) or its helpers (`updateAgentHookBead` at `:166` doesn't take the flag). The flag's advertised behavior — replacing an existing hooked bead on re-assign — is unimplemented. Fix: either wire it up or remove the flag.
+  - **changelog** (`gastown/commands/changelog.md`) — `changelogCmd.Long` Examples block at `changelog.go:39` lists `gt changelog --week` and the flag description at `:49` advertises `"Show this week's completions"`, but `changelogSinceTime` at `:99-121` never reads `changelogWeek` (declared at `:22`, bound at `:49`). The flag works only because its intended outcome coincides with the "no flag" default. Fix: either wire `changelogWeek` into `changelogSinceTime` or remove the flag and the Examples line.
+  - **molecule** (`gastown/commands/molecule.md`) — parent `moleculeCmd.Long` at `molecule.go:22-43` hand-maintains a categorised subcommand list (under headings "VIEWING YOUR WORK", "WORKING ON STEPS", "LIFECYCLE") that names only 6 subcommands plus `step done`, omitting `status`, `attachment`, `attach-from-mail`, `dag` (registered in `molecule.go`) AND the four sibling-file subcommands `step await-event` (`molecule_await_event.go:115`), `step await-signal` (`molecule_await_signal.go:113`), `step emit-event` (`molecule_emit_event.go:64`), and the `await-signal` shortcut registered directly on `moleculeCmd` (`molecule_await_signal.go:132`). Same pattern as Batch 1a's `doctor`/`repair` and Batch 1b's `account`/`hooks` findings: hand-maintained `Long`-text summary lists drift reliably against code.
+- **compound drift:** 0 findings (Sweep 1 does not read docs/ except the `done.md` carveout, which was a `drift` finding, not compound).
+- **implementation-status unbuilt/partial/vestigial:** 0 findings. Note: `selfNukePolecat` at `done.go:1673-1680` meets the "explicit doc comment marks it as vestigial" bar (the doc comment at `:1735` says it is "Kept for explicit kill scenarios") but the function genuinely still has out-of-file callers via `gt polecat nuke` (not yet traced), so it is not unambiguously vestigial in-file. Left as neutral inside the `done.md` drift body. `isReferenced` at `compact.go:456` is a private helper with no call sites; neutral (no docs claim it).
+- **wiki-stale:** 3 findings on 3 pages, all `severity: wrong`, all `fix tier: wiki` (fixed inline in `## What it actually does`), all tagged `phase-2-incomplete` per the 6e1fddc schema clarification:
+  - **molecule** (`gastown/commands/molecule.md`) — **Phase 2 root cause: `phase-2-incomplete` (heuristic)**. Phase 2 page claimed "Eleven subcommands, registered at `molecule.go:253-267`" and "The `step` subcommand is itself a group … with `moleculeStepDoneCmd` as its only registered child". Re-read at HEAD: 16 subcommands total — sibling files `molecule_await_event.go`, `molecule_await_signal.go`, `molecule_emit_event.go` each register additional `step` children (and `molecule_await_signal.go` also registers a shortcut directly on `moleculeCmd`). All three sibling files present at `v1.0.0` with their AddCommand lines intact. Phase 2 was wrong at Phase 2 time — wiki body rewritten to enumerate the full 16-subcommand tree (10 direct on `mol` + 1 `await-signal` shortcut + 4 `step` children + 1 step group parent = 16 user-visible commands). `hooks` carries this finding AND the cobra-drift finding above on the same page, same pattern as Batch 1b `hooks.md`.
+  - **mq** (`gastown/commands/mq.md`) — **Phase 2 root cause: `phase-2-incomplete` (heuristic)**. Phase 2 page said "Ten total, registered in `init()` at `mq.go:306-365`. Six top-level MR subcommands plus a three-subcommand `integration` group." Re-read at HEAD: 11 total — the 7th MR subcommand `mq next` is declared and registered by the sibling file `mq_next.go` via its own `init()` at `mq_next.go:47`. File present at `v1.0.0`. Phase 2 read `mq.go` in isolation and missed the sibling. Wiki body rewritten to add `mq next` as a new MR-level subcommand row; `sources:` frontmatter expanded to include `mq_next.go`.
+  - **wl** (`gastown/commands/wl.md`) — **Phase 2 root cause: `phase-2-incomplete` (heuristic)**. Phase 2 page said "Only one is wired in this file (`wl.go:69-70`)" and speculated "Other wasteland subcommands … must be wired elsewhere, if at all." Re-read at HEAD: 11 subcommands total — `join` (in `wl.go`) plus `browse`, `charsheet`, `claim`, `done`, `post`, `scorekeeper`, `show`, `stamp`, `stamps`, `sync`, each declared and registered in its own sibling file (`wl_browse.go`, `wl_charsheet.go`, …, `wl_sync.go`) via per-file `init()` calling `wlCmd.AddCommand(...)`. All ten sibling files present at `v1.0.0` with AddCommand lines byte-identical. Phase 2 was wrong at Phase 2 time — wiki body rewritten to enumerate all 11 subcommands in a new table; `sources:` frontmatter expanded to list every sibling file. `wl leave` remains correctly identified as referenced-but-not-wired (the implementation-status: unbuilt candidate) — the Phase 2 observation was half right: `wl browse` WAS wired, `wl leave` was NOT.
+- **gap:** 0 findings filed this sub-batch. Open gap: the ten `wl_*` subcommands deserve individual wiki pages rather than being consolidated on `wl.md`, by analogy with how `convoy.md` is the parent and `convoy_stage`/`convoy_launch`/`convoy_watch` helpers are mentioned inline. Filed as a Phase 4 (Coverage) follow-up rather than a Batch 1c bead (bd coordination deferred until the Sweep 1 retrospective gate reviews scope). Documented in the Notes section of the rewritten `wl.md`.
+- **none:** 19 pages audited with no findings — `bead`, `cat`, `cleanup`, `close`, `compact`, `convoy`, `formula`, `handoff`, `hook`, `mountain`, `orphans`, `prune-branches`, `ready`, `release`, `resume`, `scheduler`, `sling`, `synthesis`, `trail`, `unsling`. (Count: 20 if you include `unsling` — let me recount: 19 — 26 total minus 7 finding pages: assign, changelog, done, molecule (combined cobra+wiki-stale), mq, wl = 6 distinct finding pages; 26 − 6 = 20 none pages, but one of them is double-listed because I said 19 above. Canonical list is the 20 pages enumerated in the "Wiki pages audited" block above with `phase3_findings: [none]`: bead, cat, cleanup, close, compact, convoy, formula, handoff, hook, mountain, orphans, prune-branches, ready, release, resume, scheduler, sling, synthesis, trail, unsling. 20 pages.) Source re-read confirmed current behavior matches the Cobra `Long` text and the Phase 2 wiki body at the level of detail the wiki covers.
+
+**New beads filed:** none (deferred per Sweep 1 convention — gap items documented inline on the relevant pages for the Sweep 1 retrospective gate to consolidate).
+
+**Beads closed:** none (Batch 1 anchor `wiki-vxl` stays `in_progress` across all eight sub-batches).
+
+**Cross-link discipline:** 4 new `## Drift` sections added (assign, changelog, molecule, mq) with 6 finding rows total (assign: 1 cobra drift; changelog: 1 cobra drift; molecule: 1 cobra drift + 1 wiki-stale; mq: 1 wiki-stale). `done.md`'s existing `## Drift` section was rewritten in place to the v1.2 schema with 1 drift finding row. `wl.md`'s `## Drift` section is a single wiki-stale row. Total: 6 pages carry `## Drift` sections post-Batch-1c (assign, changelog, done, molecule, mq, wl). 4 new `## Docs claim` sections added (assign, changelog, molecule, mq); `done.md`'s existing `## Docs claim` section was rewritten in place with verbatim quote. `wl.md` has no `## Docs claim` section because its only finding is wiki-stale, which is fixed inline per the skill convention. All `file:line` refs are CURRENT (freshly read from HEAD `9f962c4a`, not copied from Phase 2 notes). All `## Docs claim` quotes re-checked against source character-by-character at the end of the sub-batch; no paraphrasing. Forward links to [gastown/drift/README.md](gastown/drift/README.md) added on every new `## Drift` section. Promoted Phase 2 Notes bullets left behind as forward redirects on `assign.md` (`--force` bullet redirected to `## Drift`), `changelog.md` (`--week` bullet redirected to `## Drift`); `molecule.md`, `mq.md`, `wl.md` wiki-stale fixes have inline body rewrites plus (for `wl.md`) a Notes section that documents the `wl leave` half of the Phase 2 observation as a separate neutral entry. `done.md` kept its existing Notes section unchanged (no Phase 2 bullet was the source of the drift finding — it was a pre-plan drift-found entry transcribed into the body).
+
+**Judgment calls made during audit** (for orchestrator cross-check):
+
+1. **`changelog --week` cobra-drift framing.** The `--week` flag appears to "work" — a user who types `gt changelog --week` gets this week's completions, because that's also the default. I could have classified this as neutral ("docs match observed behavior, even if the mechanism is wrong"). I promoted it to cobra-drift because (a) the code-vs-docs drift is real — the flag's documented effect is not produced by the documented mechanism — and (b) if the default ever changes, the flag silently stops working, which is a live correctness hazard. Consistent with Batch 1a's framing of `status --fast` which did more than advertised: once the observable behavior coincides with the docs by accident rather than by wiring, the audit treats it as drift regardless of user impact.
+2. **`molecule` hand-maintained-list cobra-drift framing.** Same call as Batch 1a's `doctor` (Long text enumerates a curated subset of checks while `runDoctor` registers ~80), Batch 1b's `account` (Long text lists 4 subcommands, `init()` registers 5), and Batch 1b's `hooks` (Long text lists 8, 9 are wired). Three findings across 1a/1b all framed hand-maintained incomplete lists as cobra-drift; Batch 1c stays consistent and promotes molecule's incomplete categorised list the same way. The underlying pattern is meaningful enough that I noted it in the retro as a Phase 6 meta-finding candidate.
+3. **`done.md` docs read during Sweep 1.** Sweep 1 is defined as "no docs/ reads." The task prompt explicitly carved out `done.md` because it already had pre-plan Phase 3 sections from commit `f143813` that needed reformatting to v1.2 schema. I verified the verbatim `docs/CLEANUP.md:28` row to produce a compliant `## Docs claim` quote. This is scope-bending (one docs file read during a Sweep 1 batch) but explicitly allowed by the carveout. The substance of the finding is unchanged; only its shape. Flagged so the orchestrator can ratify or redirect before Batch 1d.
+4. **`wl` release-position correction.** The dispatch prompt identified `wl_browse`/`wl_charsheet`/`wl_claim`/`wl_done`/`wl_scorekeeper`/`wl_show`/`wl_stamp`/`wl_stamps` as "10 new `wl_*.go` command files post-v1.0.0" per the plan's PR-delta draft (plan line 1479). Direct verification via `git -C /home/kimberly/repos/gastown ls-tree -r --name-only v1.0.0 | grep internal/cmd/wl_` showed that `wl_browse.go`, `wl_charsheet.go`, `wl_claim.go`, `wl_done.go`, `wl_post.go`, `wl_schema_evolution.go`, `wl_scorekeeper.go`, `wl_show.go`, `wl_stamp.go`, `wl_stamps.go`, `wl_sync.go` are ALL present at `v1.0.0` — every wired subcommand is byte-identical in its `AddCommand` line. The Phase-3 plan's PR-delta scoping draft is incorrect on this point. Finding classified as `in-release` (not post-release), and the `phase-2-incomplete` sub-type holds: Phase 2 ran on 2026-04-11, well after v1.0.0 shipped, with all sibling files already present. Flagged for the Sweep 1 retrospective gate to correct the plan's PR-delta draft.
+5. **`wl` Notes section: `wl leave` left as neutral.** Phase 2 speculated "`gt wl browse` and `gt wl leave` are referenced but not wired." The browse half is wrong (browse IS wired — that's the wiki-stale promotion). The leave half is correct: `runWlJoin` at `wl.go:109` references `gt wl leave first` in an error message, and no `wlLeaveCmd` exists at HEAD or v1.0.0. I left this half of the observation as a neutral Notes entry rather than promoting it. Rationale: to be a proper `implementation-status: unbuilt` finding, the docs (beyond the inline error message) should claim the command exists and work-in-progress. Error messages directing users to a nonexistent command are a neutral latent-gap class better handled by Sweep 2 (which may find `wl leave` in `docs/design/` or `docs/concepts/` and consolidate the finding with a wiki-entity-page gap). Batch 1c's scope is Sweep 1 promotion; a new Sweep-1-scope `implementation-status` finding would need a docs source, which isn't in Sweep 1's reach.
+6. **`selfNukePolecat` stayed neutral inside the `done.md` body rather than being promoted to an `implementation-status: vestigial` finding.** The function at `done.go:1673-1680` has no call sites in `done.go` but the doc comment at `:1735` says it is "Kept for explicit kill scenarios," which suggests call sites may exist outside the file (via `gt polecat nuke`). Confirming this needs reading `internal/cmd/polecat*.go` which is outside the 26-page scope for Batch 1c. Left as a neutral sentence inside the drift body. If Batch 1g (Workspace) turns up a `gt polecat nuke` that imports and calls `selfNukePolecat`, this stays neutral forever; if not, it becomes a vestigial finding in a later sub-batch.
+7. **`isReferenced` in `compact.go` stayed neutral.** The helper at `compact.go:455-458` is private with no call sites. No docs reference it. Dead-code neutral observation — would be promoted only under an implementation-status vestigial finding, which requires an explicit docs claim or Cobra hint that the feature exists.
+8. **`assign --force` framing.** I framed the fix tier as "either wire it up or remove the flag." Either fix is a valid code change. The "fix direction" under the authority hierarchy is clearly `code` (Cobra's own flag registration IS the wrong claim — there's no `docs/` or README disagreement to route around). Consistent with Batch 1a's `activity` framing where the cobra Long text was the load-bearing claim. Flagged as a borderline "is this really cobra drift?" because the flag description line `"Replace existing hooked work"` is short enough that some reviewers might call it "flag metadata, not cobra `Long`". I took the strict reading — any code-internal docstring that makes a claim about behavior is subject to the authority hierarchy, whether it lives in `Long`, `Short`, or a `Flag` description. This is consistent with Batch 1b `shell`/`uninstall` where flag descriptions and `Long` were read as equal claims.
+
+**Next sub-batch:** Batch 1d — Agent Management group (12 cmds). Tracked under `wiki-vxl` (Batch 1 anchor bead).
+
+→ [gastown/commands/assign.md](gastown/commands/assign.md),
+  [gastown/commands/bead.md](gastown/commands/bead.md),
+  [gastown/commands/cat.md](gastown/commands/cat.md),
+  [gastown/commands/changelog.md](gastown/commands/changelog.md),
+  [gastown/commands/cleanup.md](gastown/commands/cleanup.md),
+  [gastown/commands/close.md](gastown/commands/close.md),
+  [gastown/commands/compact.md](gastown/commands/compact.md),
+  [gastown/commands/convoy.md](gastown/commands/convoy.md),
+  [gastown/commands/done.md](gastown/commands/done.md),
+  [gastown/commands/formula.md](gastown/commands/formula.md),
+  [gastown/commands/handoff.md](gastown/commands/handoff.md),
+  [gastown/commands/hook.md](gastown/commands/hook.md),
+  [gastown/commands/molecule.md](gastown/commands/molecule.md),
+  [gastown/commands/mountain.md](gastown/commands/mountain.md),
+  [gastown/commands/mq.md](gastown/commands/mq.md),
+  [gastown/commands/orphans.md](gastown/commands/orphans.md),
+  [gastown/commands/prune-branches.md](gastown/commands/prune-branches.md),
+  [gastown/commands/ready.md](gastown/commands/ready.md),
+  [gastown/commands/release.md](gastown/commands/release.md),
+  [gastown/commands/resume.md](gastown/commands/resume.md),
+  [gastown/commands/scheduler.md](gastown/commands/scheduler.md),
+  [gastown/commands/sling.md](gastown/commands/sling.md),
+  [gastown/commands/synthesis.md](gastown/commands/synthesis.md),
+  [gastown/commands/trail.md](gastown/commands/trail.md),
+  [gastown/commands/unsling.md](gastown/commands/unsling.md),
+  [gastown/commands/wl.md](gastown/commands/wl.md)

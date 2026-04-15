@@ -4,11 +4,16 @@ type: command
 status: partial
 topic: gastown
 created: 2026-04-11
-updated: 2026-04-11
+updated: 2026-04-15
 sources:
   - /home/kimberly/repos/gastown/internal/cmd/done.go
   - /home/kimberly/repos/gastown/internal/cmd/root.go
+  - /home/kimberly/repos/gastown/docs/CLEANUP.md
 tags: [command, work, polecat-safe, polecat, merge-queue, handoff]
+phase3_audited: 2026-04-15
+phase3_findings: [drift]
+phase3_severities: [wrong]
+phase3_findings_post_release: false
 ---
 
 # gt done
@@ -137,11 +142,78 @@ Defined in `init()` at `done.go:79-89`:
 
 ## Docs claim
 
-[docs/CLEANUP.md](https://github.com/gastownhall/gastown/blob/main/docs/CLEANUP.md) claims: "Polecat self-cleaning: pushes branch, submits MR (by default), self-nukes worktree, kills own session. MR skipped for `--status ESCALATED\|DEFERRED` or `no_merge` paths"
+### Source
+
+- `/home/kimberly/repos/gastown/docs/CLEANUP.md:28` — the `gt done`
+  row of the "Polecat (Agent Sandbox) Cleanup" table.
+
+### Verbatim
+
+> `| `gt done` | Polecat self-cleaning: pushes branch, submits MR (by default), self-nukes worktree, kills own session. MR skipped for `--status ESCALATED\|DEFERRED` or `no_merge` paths |`
 
 ## Drift
 
-Code post-gt-4ac/gt-hdf8 no longer self-nukes; transitions to IDLE with sandbox preserved. Nuke is explicit via `gt polecat nuke`.
+See forward-link: [../drift/README.md](../drift/README.md).
+
+### `docs/CLEANUP.md` claims `gt done` self-nukes the worktree and kills its session, but code transitions to IDLE with sandbox preserved
+
+- **Claim source:**
+  `/home/kimberly/repos/gastown/docs/CLEANUP.md:28`.
+- **Docs claim:** the CLEANUP.md row for `gt done` states that the
+  command "self-nukes worktree, kills own session." This implies a
+  hard teardown of the polecat's sandbox as the default completion
+  path.
+- **Code does:** `doneCmd.Long` at
+  `/home/kimberly/repos/gastown/internal/cmd/done.go:36-57` describes
+  the completion path as "Syncs worktree to main and transitions
+  polecat to IDLE (sandbox preserved, session stays alive for
+  reuse)." The matching implementation-side comment at
+  `done.go:108-110` is explicit: *"Persistent polecat model
+  (gt-hdf8): sessions stay alive after gt done. No deferred session
+  kill — the polecat transitions to IDLE with sandbox preserved.
+  The Witness handles any cleanup if the polecat gets stuck."* The
+  DONE→IDLE transition is handled at `done.go:1209-1263`, which
+  syncs the worktree to main, deletes the old branch, and prints
+  `"✓ Polecat transitioned to IDLE — ready for new work"`
+  (`done.go:1263`). The function `selfNukePolecat` at
+  `done.go:1673-1680` still exists but has **no call sites** in
+  `done.go` at HEAD `9f962c4a` (verified via
+  `grep -n "selfNukePolecat\b" internal/cmd/done.go` — only the
+  declaration and a reference in a doc comment at `:1735` that says
+  it is "Kept for explicit kill scenarios"). Nuke is now only
+  triggered explicitly via `gt polecat nuke`, not as a side effect
+  of `gt done`. The Cobra `Long` text and the code agree with each
+  other; only `docs/CLEANUP.md` carries the stale claim.
+- **Category:** `drift`
+- **Severity:** `wrong`
+- **Fix tier:** `docs` — edit `docs/CLEANUP.md:28` to describe the
+  actual behavior: "Polecat self-cleaning: pushes branch, submits
+  MR (by default), syncs worktree to main, transitions session to
+  IDLE (sandbox preserved for reuse). MR skipped for `--status
+  ESCALATED|DEFERRED` or `no_merge` paths." The Cobra `Long` and
+  the inline comments at `done.go:36-57`, `:108-110`, `:1209-1263`
+  are already correct and do not need changes. The bead references
+  `gt-4ac` and `gt-hdf8` track the original "persistent polecat
+  model" redesign and should be mentioned in the docs commit
+  message.
+- **Release position:** `in-release` — the DONE→IDLE transition
+  code at `done.go:1209-1263` is byte-equivalent at `v1.0.0` (the
+  persistent polecat model shipped in the v1.0.0 release), and the
+  stale `docs/CLEANUP.md:28` row is also byte-identical at
+  `v1.0.0:docs/CLEANUP.md`. The drift was already present at the
+  release tag.
+
+**Note on provenance:** this finding was originally filed by the
+pre-plan 2026-04-14 `docs/CLEANUP.md` drift-found entry (see
+[log.md](../../log.md) `[2026-04-14] drift-found |
+docs/CLEANUP.md vs code`) and initially drafted as a `## Drift`
+section on this page in commit `f143813`. Phase 3 Batch 1c
+reformatted the section to the v1.2 schema (verbatim docs quote,
+fresh `file:line` refs, Category/Severity/Fix tier/Release position
+fields, forward link to the drift index). The substance of the
+finding is unchanged; only the shape is. Per the plan, Sweep 2
+Batch 9 (`docs/CLEANUP.md` formal re-audit) will supersede the
+pre-plan informal entry and this section will be left as-is.
 
 ## Notes / open questions
 

@@ -1,21 +1,29 @@
 ---
 title: gt mq
 type: command
-status: partial
+status: verified
 topic: gastown
 created: 2026-04-11
-updated: 2026-04-11
+updated: 2026-04-15
 sources:
   - /home/kimberly/repos/gastown/internal/cmd/mq.go
+  - /home/kimberly/repos/gastown/internal/cmd/mq_next.go
   - /home/kimberly/repos/gastown/internal/cmd/root.go
 tags: [command, work, merge-queue, refinery, integration-branch]
+phase3_audited: 2026-04-15
+phase3_findings: [wiki-stale]
+phase3_severities: [wrong]
+phase3_findings_post_release: false
 ---
 
 # gt mq
 
 Manage merge requests and the merge queue for a rig. Parent command
-for six MR-level subcommands plus a three-subcommand `integration`
-branch-management group.
+for seven MR-level subcommands plus a three-subcommand `integration`
+branch-management group. (Phase 3 Batch 1c wiki-stale correction:
+the Phase 2 page body said "six MR-level subcommands" and described
+the tree as "Ten total"; `mq_next.go` wires a 7th MR subcommand
+`mq next` via its own `init()` that Phase 2 missed.)
 
 **Also known as:** `gt mr` (alias, `mq.go:64`).
 **Parent:** [gt](../binaries/gt.md) (root command)
@@ -43,8 +51,11 @@ request. The help text notes: `'gt mr' is equivalent to 'gt mq'
 
 ### Subcommand tree
 
-Ten total, registered in `init()` at `mq.go:306-365`. Six top-level
-MR subcommands plus a three-subcommand `integration` group.
+Eleven total: seven MR-level subcommands plus a three-subcommand
+`integration` group (with `integration` itself as the parent).
+Registered across `mq.go:306-365` (`submit`, `retry`, `list`,
+`reject`, `status`, `post-merge`, and the `integration` tree) and
+in the sibling file `mq_next.go` via its own `init()` (`next`).
 
 #### MR-level subcommands
 
@@ -100,6 +111,16 @@ MR subcommands plus a three-subcommand `integration` group.
 
    Show detailed MR info: all fields, current status with
    timestamps, dependencies, blockers, and processing history.
+
+7. **`gt mq next <rig>`** (`mqNextCmd`, `mq_next.go:20-48`,
+   `runMQNext :50+`)
+
+   Show the next merge request to process for a rig, ordered by
+   priority score (convoy age + issue priority + retry deprioritisation
+   + MR age FIFO tiebreaker) or by `--strategy=fifo` for pure FIFO
+   ordering. `--quiet` prints just the MR ID; `--json` emits the full
+   MR shape. Wired via `mq_next.go:47` — `mqCmd.AddCommand(mqNextCmd)`
+   — in its own `init()`, not in `mq.go`'s `init()`.
 
 #### Integration-branch subcommands (`gt mq integration ...`)
 
@@ -172,6 +193,9 @@ Per the `init()` at `mq.go:306-365`. Grouped by subcommand:
 
 **`post-merge`** (`mq.go:336`): `--skip-branch-delete`.
 
+**`next`** (`mq_next.go:43-45`): `--strategy` (`priority`|`fifo`,
+default `priority`), `--json`, `-q/--quiet`.
+
 **`integration create`** (`mq.go:347-349`): `--branch` template,
 `--base-branch` (create from something other than main), `--force`
 (recreate existing).
@@ -209,6 +233,46 @@ to return the rig object (`mq.go:398+`).
 - [close](close.md) — closing a merged MR bead is what `post-merge`
   does internally, so the close → convoy-check chain still fires.
 - [../binaries/gt.md](../binaries/gt.md) — root.
+
+## Drift
+
+See forward-link: [../drift/README.md](../drift/README.md).
+
+### Phase 2 wiki body missed the `mq next` subcommand wired in a sibling file (wiki-stale)
+
+- **Category:** `wiki-stale`
+- **Severity:** `wrong`
+- **Phase 2 root cause:** `phase-2-incomplete` (heuristic
+  determination per Sweep 1 convention — the Phase 2 page read
+  `mq.go` in isolation and enumerated the six subcommands registered
+  by `mq.go:init()` at `:339-344`, missing the seventh subcommand
+  `mq next` which is declared and registered in the sibling file
+  `mq_next.go` via its own `init()` at `mq_next.go:47`. Both Phase
+  2's HEAD and the current HEAD have `mq_next.go` with its
+  registration line; the file was present at `v1.0.0`. Phase 2 was
+  wrong at Phase 2 time, not stale against churn.)
+- **Phase 2 claim (removed):** the Phase 2 page body stated
+  "Ten total, registered in `init()` at `mq.go:306-365`. Six
+  top-level MR subcommands plus a three-subcommand `integration`
+  group." and "Registered at `mountain.go:100-103`"-style per-file
+  single-source citations.
+- **Current reality (2026-04-15, gastown HEAD `9f962c4a`):** seven
+  top-level MR subcommands — the original six (`submit`, `retry`,
+  `list`, `reject`, `status`, `post-merge`) plus `next`, which is
+  declared at `mq_next.go:20-40` with its own `runMQNext`
+  implementation at `:50+` and registered via
+  `mqCmd.AddCommand(mqNextCmd)` at `mq_next.go:47`. Total tree:
+  11 subcommands (7 MR-level + the `integration` parent + 3
+  integration children). Confirmed via
+  `grep -rn "mqCmd.AddCommand" internal/cmd/`. The `mq_next.go`
+  file exists at `v1.0.0:internal/cmd/mq_next.go` with its
+  `AddCommand` line unchanged.
+- **Fix tier:** `wiki` — already fixed inline in the
+  `### Subcommand tree` / `#### MR-level subcommands` tables above
+  (the Phase 2 "six subcommands" count is replaced with seven; the
+  new row enumerates `mq next`'s behavior, flags, and sibling-file
+  registration; the frontmatter `sources:` list now includes
+  `mq_next.go`).
 
 ## Notes / open questions
 
