@@ -15,7 +15,7 @@ The wiki schema is evolvable, not frozen. It's expected to change as the wiki gr
 
 Triggers:
 - **Proposing a new page type** (e.g. adding `library` or `protocol` to the 17 existing types). The set is open, but additions are recorded.
-- **Proposing a new frontmatter field** (e.g. a Phase 4 field, a topic-scoping field).
+- **Proposing a new frontmatter field** (e.g. `phase4_audited` for the Coverage/Completeness phase, `phase5_audience` for audience classification, or a topic-scoping field).
 - **Proposing a new category folder** (e.g. `gastown/services/`, `gastown/drift/`, `gastown/config/`). Folders are lazy — created when the first page lands — but the folder name and purpose get recorded at decision time.
 - **Proposing a schema version bump** (typically part of one of the above).
 - **Proposing a new discipline rule** (e.g. a cross-link rule, a naming convention).
