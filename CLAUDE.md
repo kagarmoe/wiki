@@ -39,6 +39,7 @@ sources are never modified — only read.
   LICENSE            # CC BY 4.0
   index.md           # global catalog of all pages
   log.md             # chronological event log (append-only)
+  retros.md          # retrospective log (append-only; stage / phase / scheduled entries)
   .claude/
     settings.json         # Claude Code settings (committed)
     settings.local.json   # permission scoping; gitignored
@@ -48,6 +49,8 @@ sources are never modified — only read.
       tracking-wiki-work/      # bd conventions + Obsidian Tasks + handoff protocol
       maintaining-wiki-schema/ # schema evolution, lint workflow, maintenance principles
       syncing-gastown-updates/ # release-sync runbook (triggered by new gastown tag)
+      closing-sessions/        # mandatory session-close checklist
+      compact-recovery/        # session orientation after context loss
     llm-wiki.md           # Karpathy LLM-wiki pattern reference; gitignored
   .obsidian/         # Obsidian vault config (app.json committed; workspace state gitignored)
   .beads/            # beads issue tracker (config + hooks committed; dolt db + runtime gitignored)
@@ -72,15 +75,16 @@ Sub-folders are created lazily. Don't scaffold empty folders.
 
 ## Hard rules (every session)
 
-Seven non-negotiable constraints that apply to every wiki work session:
+Eight non-negotiable constraints that apply to every wiki work session:
 
 1. **Code is the only source of truth.** The code at `~/repos/gastown/` is authoritative. Wiki pages, Cobra `Long` help text, `docs/*.md`, and READMEs are all synthesis/derivation and must be verified against code.
 2. **Nesting capped at 3 levels:** `<topic>/<category>/<entity>.md`. If a page feels like it needs deeper nesting, split the category into sibling categories instead.
 3. **Relative markdown links only.** Use `[text](../category/page.md)`, never Obsidian wikilinks (`[[...]]`). External source refs use absolute paths in backticks: `` `/home/kimberly/repos/gastown/internal/cmd/root.go:96-106` ``.
 4. **YAML frontmatter required** on every entity page. See `.claude/skills/writing-entity-pages/` for the full template.
-5. **`log.md` is append-only.** Historical entries are preserved verbatim, even when superseded. Corrections land as new entries, not in-place edits. Grep the timeline with `grep "^## \[" log.md`.
+5. **`log.md` and `retros.md` are append-only.** Historical entries are preserved verbatim, even when superseded. Corrections land as new entries, not in-place edits. Grep the timelines with `grep "^## \[" log.md` / `grep "^## \[" retros.md`.
 6. **Kimberly curates; the LLM writes.** Raw sources in `~/repos/gastown/` are read-only. The LLM never modifies source repos.
 7. **Write access is scoped to `~/repos/gt-wiki/`.** Everything outside the wiki is read-only reference. See "Permission scoping" below.
+8. **Subagents append a `stage` retro to `retros.md` at the end of every dispatched unit of work; the main orchestrator appends a `phase` retro at the end of every phase.** Format + triggers in `retros.md`'s header. Retros are honest by default — a retro that only records wins is broken.
 
 ## Session startup (required reading)
 
@@ -101,9 +105,12 @@ The coordination surface. Schema reference, workflows, and decision history live
 | **Tracking wiki work** — bd actor (`BEADS_ACTOR=wiki-curator`), label set, bead description format, Obsidian Tasks plugin conventions, cross-tool handoff protocol (`wants-wiki-entry` label, `→ handed to bd-<id>` notation) | `.claude/skills/tracking-wiki-work/SKILL.md` |
 | **Schema evolution + lint + maintenance** — schema version bump policy, lint workflow (orphans, broken links, wiki-stale, stale dates, mention gaps), maintenance principles, common patterns for adding page types/fields/folders | `.claude/skills/maintaining-wiki-schema/SKILL.md` |
 | **Release sync after a new stable gastown release tag** — tag-to-tag delta, scope proposal, per-file audit, commit cadence, batch entry format | `.claude/skills/syncing-gastown-updates/SKILL.md` |
+| **Closing a session** — mandatory 7-step close protocol, push discipline, wiki-specific gotchas | `.claude/skills/closing-sessions/SKILL.md` |
+| **Recovering after compact / clear / cold start** — 7-step read-in-order checklist, synthesis format, self-check | `.claude/skills/compact-recovery/SKILL.md` |
 | **Active phase plan** — current phase's batch decomposition, task-level steps, drift taxonomy (if Phase 3+), PR-delta scoping, review gates | `.claude/plans/` (gitignored; grep for the most recent file) |
 | **Schema decision history** — every `decision` entry in `log.md` is a schema-evolution event. Most recent: `[2026-04-14] decision | Phase 3 schema change: re-enable Docs claim / Drift / Implementation status sections (schema v1.2)` | `log.md` — `grep "decision \|" log.md` |
 | **Event timeline** — `ingest`, `query`, `experiment`, `lint`, `drift-found` entries | `log.md` — `grep "^## \[" log.md` |
+| **Retrospective log** — `stage` entries from subagents, `phase` entries from the main orchestrator, `scheduled` entries from human-LLM retro discussions; format + triggers at file head | `retros.md` — `grep "^## \[" retros.md` |
 | **Page catalog** | `index.md` |
 
 ## Ingest / Query / Lint workflows
