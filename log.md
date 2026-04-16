@@ -4063,3 +4063,28 @@ Both findings are in-release (code unchanged since v1.0.0).
 **No wiki annotation needed** — the wiki already correctly documents the hyphenated `pool-init` command name. The drift is docs-only.
 
 -> (no wiki pages touched)
+
+## [2026-04-15] drift-found | Batch 11d (Sweep 2: docs/design/escalation.md)
+
+**Scope:** Full read of `/home/kimberly/repos/gastown/docs/design/escalation.md` (214 lines). Design doc for the unified escalation protocol: severity levels, tiered flow, configuration, bead labels, category routing, commands, integration points.
+
+**Docs files read:**
+- `/home/kimberly/repos/gastown/docs/design/escalation.md` (in full, 214 lines)
+
+**Source files re-read at current HEAD:**
+- `/home/kimberly/repos/gastown/internal/cmd/escalate.go` (lines 32-36 — confirmed 4 severity levels including `low`/P3)
+- `/home/kimberly/repos/gastown/internal/cmd/escalate.go` (lines 139-172 — confirmed no `--to` flag exists; flags are `--severity`, `--reason`, `--source`, `--related`, `--json`, `--dry-run`, `--stdin`)
+- `/home/kimberly/repos/gastown/internal/config/loader.go` (line 2726 — confirmed `escalation.json` config path)
+- `/home/kimberly/repos/gastown/internal/config/types.go` (line 161 — confirmed `StaleThreshold` field)
+
+**Wiki pages spot-checked:** commands/escalate.md (correctly documents 4 severity levels including `low`)
+
+**Findings by category:**
+- **drift:** 2 findings.
+  1. Design doc severity table (lines 13-17) lists only 3 levels (CRITICAL/HIGH/MEDIUM). Code at `escalate.go:32-36` has 4 levels: critical (P0), high (P1), medium (P2), **low (P3)**. The `--severity` flag at `escalate.go:141` explicitly includes `low`. The stale re-escalation chain at `escalate.go:112` includes `low→medium→high→critical`. Fix tier: docs. Severity: wrong. Release position: in-release.
+  2. Design doc line 95 references `--to` flag for explicit routing ("currently use `--to` for explicit routing"). No `--to` flag exists in `escalate.go:139-147`. The only routing-related flags are `--severity` and `--source`. Fix tier: docs. Severity: wrong. Release position: in-release.
+- **none (verified):** Config structure (`escalation.json` with routes, contacts, stale_threshold, max_reescalations) confirmed. Bead label schema plausible. Subcommands (list, ack, close, stale, show) match code. Integration patterns (plugin escalation, deacon patrol) consistent with wiki. Category routing section honestly self-labeled as "future" / "not yet implemented."
+
+**No wiki annotation needed** — wiki's escalate.md already correctly documents 4 severity levels and the actual flag set. Drift is docs-only.
+
+-> (no wiki pages touched)
