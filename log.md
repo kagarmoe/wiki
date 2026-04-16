@@ -4299,3 +4299,24 @@ Both findings are in-release (code unchanged since v1.0.0).
 - **implementation-status: unbuilt:** 1 finding. The entire ledger export trigger system (bead closure triggers, convoy completion triggers, agent lifecycle triggers, Level 2/3 format specification, skill derivation engine, CV growth model, HOP economy bootstrapping) has no code implementation. The three data planes concept exists in `dolt-storage.md` and the operational plane is implemented (JSONL Dog handles backup), but the ledger plane export pipeline described here is entirely aspirational. Fix tier: preserve-as-vision. Severity: wrong. Release position: in-release.
 
 -> (no wiki pages touched)
+
+## [2026-04-15] drift-found | Batch 11o (Sweep 2: docs/design/polecat-lifecycle-patrol.md)
+
+**Scope:** Full read of `/home/kimberly/repos/gastown/docs/design/polecat-lifecycle-patrol.md` (664 lines). Design doc for polecat lifecycle coordination: session-per-step model, two cleanup stages, cleanup pipeline, per-rig polecat channel, design questions and resolutions.
+
+**Reclassification assessment:** NOT reclassified. Status header says "Implemented" and core lifecycle is confirmed shipped. The stale elements are completion flow diagrams (same issue as 11l/mail-protocol) where the witness relay is no longer the primary path.
+
+**Docs files read:**
+- `/home/kimberly/repos/gastown/docs/design/polecat-lifecycle-patrol.md` (in full, 664 lines)
+
+**Source files re-read at current HEAD:**
+- `/home/kimberly/repos/gastown/internal/cmd/done.go` (lines 1158-1611 — confirmed self-managed completion flow)
+- `/home/kimberly/repos/gastown/internal/witness/handlers.go` — confirmed zombie detection, polecat monitoring
+
+**Wiki pages spot-checked:** workflows/polecat-lifecycle.md, roles/polecat.md, roles/witness.md, roles/refinery.md
+
+**Findings by category:**
+- **drift:** 1 finding. The cleanup pipeline diagram (lines 123-162) and molecule cleanup section (lines 96-109) show the old flow: polecat sends POLECAT_DONE → witness sends MERGE_READY → refinery merges → witness receives MERGED. Per self-managed completion (gt-1qlg, confirmed shipped in Batch 11i), the polecat now nudges refinery directly and sets `agent_state=idle` directly. The witness is no longer a required checkpoint. Same stale flow documented in mail-protocol.md (Batch 11l). Fix tier: docs. Severity: wrong. Release position: in-release.
+- **none (verified):** Session-per-step model, two cleanup stages (step cleanup vs molecule cleanup), state continuity mechanisms, design questions and resolutions (Q1-Q8) — all consistent with code and wiki. The "sessions are pistons, sandboxes are cylinders" framing matches the persistent polecat pool design.
+
+-> (no wiki pages touched)
