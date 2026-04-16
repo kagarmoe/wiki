@@ -3443,3 +3443,31 @@ Both findings are in-release (code unchanged since v1.0.0).
 **Next sub-batch:** Batch 7d — docs/concepts/polecat-lifecycle.md.
 
 -> (no wiki pages touched)
+
+## [2026-04-15] drift-found | Batch 7d (Sweep 2: docs/concepts/polecat-lifecycle.md)
+
+**Scope:** Full read of `/home/kimberly/repos/gastown/docs/concepts/polecat-lifecycle.md` (381 lines).
+
+**Docs files read:**
+- `/home/kimberly/repos/gastown/docs/concepts/polecat-lifecycle.md` (in full, 381 lines)
+
+**Source files re-read at current HEAD:**
+- `/home/kimberly/repos/gastown/internal/polecat/manager.go` (lines 1509-1520, ReuseIdlePolecat; lines 1910-1914, FindIdlePolecat; line 1946, valid agent states: spawning/working/done/stuck/idle)
+- `/home/kimberly/repos/gastown/internal/witness/handlers.go` (lines 104-171, HandlePolecatDone / POLECAT_DONE routing)
+
+**Wiki pages audited:**
+- [gastown/roles/polecat.md](gastown/roles/polecat.md) — already Phase 3 audited, `phase3_findings: [wiki-stale]`. No new findings. The wiki page's three-layer model (identity/sandbox/session), four conceptual states (Working/Idle/Stalled/Zombie), and persistent-polecat model are all consistent with the docs/concepts file.
+
+**Findings by category:**
+- **none:** The docs/concepts/polecat-lifecycle.md is a comprehensive and accurate design document. Key verified claims: (1) `FindIdlePolecat` and `ReuseIdlePolecat` exist at `manager.go:1910,1509`; (2) POLECAT_DONE handling exists at `handlers.go:104`; (3) the four conceptual operating states (Working, Idle, Stalled, Zombie) are a higher-level abstraction of the 5 code-level `agent_state` values (spawning, working, done, stuck, idle) — the wiki already documents both levels; (4) three-layer architecture (identity/sandbox/session) accurately describes the code structure; (5) key files listed in the implementation status section all exist at HEAD. No drift against code or wiki.
+
+**Additional observation (not a finding):**
+- The docs uses "Stalled" where code uses `stuck` and the docs' "Zombie" has no direct `agent_state` string (it's detected by the witness cleanup pipeline). These are conceptual descriptions, not state-value claims, so not filed as drift.
+
+**New beads filed:** none
+**Beads closed:** none
+**Cross-link discipline:** No wiki pages touched.
+
+**Next sub-batch:** Batch 7e — docs/concepts/identity.md.
+
+-> (no wiki pages touched)
