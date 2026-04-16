@@ -3805,3 +3805,17 @@ Both findings are in-release (code unchanged since v1.0.0).
 **Cross-link discipline:** No new wiki page annotations needed (the sole drift finding was already filed).
 
 -> (no wiki pages touched)
+
+## [2026-04-15] drift-found | Batch 10a (Sweep 2: docs/glossary.md)
+
+**Scope:** Full read of `/home/kimberly/repos/gastown/docs/glossary.md` (94 lines). Community-contributed glossary defining ~20 Gas Town terms across 6 sections.
+
+**Docs files read:**
+- `/home/kimberly/repos/gastown/docs/glossary.md` (in full, 94 lines)
+
+**Wiki pages spot-checked:** boot.md, deacon.md, polecat.md, crew.md, convoy concept, rig concept, roles/*.
+
+**Findings by category:**
+- **none:** High-level glossary. All definitions consistent with wiki's code-grounded pages. No code behavior claims that contradict wiki or code.
+
+-> (no wiki pages touched)
