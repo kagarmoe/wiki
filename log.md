@@ -3259,3 +3259,27 @@ Both findings are in-release (code unchanged since v1.0.0).
 **Next sub-batch:** Batch 5g — docs/examples/rig-settings.example.json.
 
 -> (no wiki pages touched)
+
+## [2026-04-15] drift-found | Batch 5g (Sweep 2: docs/examples/rig-settings.example.json)
+
+**Scope:** Full read of `/home/kimberly/repos/gastown/docs/examples/rig-settings.example.json` (77 lines).
+
+**Docs files read:**
+- `/home/kimberly/repos/gastown/docs/examples/rig-settings.example.json` (in full, 77 lines)
+
+**Source files re-read at current HEAD:**
+- None needed. Example config file — self-documenting structure.
+
+**Wiki pages audited:**
+- None. The file is a commented JSON example showing rig-level settings (agent selection, merge queue, theme, namepool, crew, workflow). No prose claims about code behavior. No `gastown/config/` wiki pages exist yet to compare against.
+
+**Findings by category:**
+- **none:** Example configuration file. No verifiable code claims.
+
+**New beads filed:** none
+**Beads closed:** none
+**Cross-link discipline:** No wiki pages touched.
+
+**Next sub-batch:** Batch 5h — docs/examples/town-settings.example.json.
+
+-> (no wiki pages touched)
