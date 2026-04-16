@@ -3418,3 +3418,28 @@ Both findings are in-release (code unchanged since v1.0.0).
 **Next sub-batch:** Batch 7c — docs/concepts/molecules.md.
 
 -> (no wiki pages touched)
+
+## [2026-04-15] drift-found | Batch 7c (Sweep 2: docs/concepts/molecules.md)
+
+**Scope:** Full read of `/home/kimberly/repos/gastown/docs/concepts/molecules.md` (132 lines).
+
+**Docs files read:**
+- `/home/kimberly/repos/gastown/docs/concepts/molecules.md` (in full, 132 lines)
+
+**Source files re-read at current HEAD:**
+- `/home/kimberly/repos/gastown/internal/cmd/patrol.go` (lines 60-61, patrol subcommands wired)
+- `/home/kimberly/repos/gastown/internal/cmd/patrol_new.go` (lines 13-32, patrolNewCmd)
+
+**Wiki pages audited:**
+- [gastown/concepts/molecule.md](gastown/concepts/molecule.md) — already Phase 3 audited, `phase3_findings: [none]`. The wiki's description of pour vs inline, root-only wisps, `gt mol` subcommands, and patrol workflow is consistent with the docs/concepts file. No new findings.
+
+**Findings by category:**
+- **none:** The docs/concepts/molecules.md is a concise overview consistent with both code and wiki. Key verified claims: (1) root-only wisps as default, poured wisps for `pour = true` — matches wiki and `formula/types.go:34`; (2) `gt patrol new` and `gt patrol report` commands exist (confirmed at `patrol.go:60-61`); (3) molecule lifecycle (formula → protomolecule → mol/wisp) accurately described; (4) `bd` commands referenced are beads-side, out of gastown code scope. No drift.
+
+**New beads filed:** none
+**Beads closed:** none
+**Cross-link discipline:** No wiki pages touched.
+
+**Next sub-batch:** Batch 7d — docs/concepts/polecat-lifecycle.md.
+
+-> (no wiki pages touched)
