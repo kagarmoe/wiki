@@ -973,3 +973,56 @@ Flagging is cheap; Kimberly decides when to actually schedule.
 - The incomplete packages share a pattern: Phase 2 read the "main" files and described the architecture, but acknowledged large subsystem files it didn't ground. Phase 5 should prioritize these 4 pages as they represent the largest coverage holes in the wiki.
 
 **Stats:** 44 pages audited, 40 upgraded to verified, 4 confirmed incomplete (beads.md, daemon.md, doltserver.md, polecat.md).
+
+## [2026-04-16] stage | Phase 4 Batch 3 — Drift index update + Phase 4 close
+
+**Actor:** wiki-curator (main orchestrator)
+**Unit:** Added Section 6 (Coverage gaps) to gastown/drift/README.md, updated summary stats, appended log entry, closed Phase 4.
+**Duration:** one dispatch
+
+**What went well:**
+- Clean consolidation of Batch 1-2 findings into the drift index. The 5-row table is a concise work-list for future content-writing.
+- Upgrading the drift index from "Phase 3 only" to "Phase 3+4" was straightforward — the existing section structure accommodated a new section without restructuring.
+- Summary statistics split cleanly into Phase 3 and Phase 4 sub-sections.
+
+**What didn't:**
+- Nothing notable. This was a mechanical consolidation batch with no judgment calls.
+
+**What to change next time:**
+- Future phases that add sections to the drift index should follow this pattern: one consolidation batch at phase close that updates the index header, adds the section, and updates summary stats in a single commit.
+
+**Follow-ups filed:**
+- None — this batch is purely a consolidation step.
+
+## [2026-04-16] phase | Phase 4 — Coverage/Completeness audit
+
+**Scope:** Audited all 94 `status:partial` wiki pages for completeness against source code. Upgraded 89 to `status:verified`, confirmed 5 as genuinely incomplete, and added Section 6 to the drift index.
+**Duration:** 2026-04-16 (single day, 3 batches)
+**Stages logged:** 3 (Batch 1: commands, Batch 2: packages + other, Batch 3: drift index close)
+
+**Patterns across stages:**
+- Phase 2's self-assessment was overwhelmingly conservative. 89 of 94 pages (94.7%) tagged `status: partial` were actually adequate — the tag reflected "I didn't deep-read every edge case" rather than actual missing content.
+- The 5 genuinely incomplete pages share a single root cause: large file counts (5-33 files per package) where Phase 2 read the primary files but acknowledged subsystems it didn't fully ground. This is a "depth of read" gap, not a "wrong methodology" gap.
+- The one incomplete command (formula.md) is a sibling-file miss — the same pattern that caused most Phase 3 `phase-2-incomplete` wiki-stale findings.
+
+**What went well:**
+- Mechanical comparison methodology (source flag/subcommand/export counts vs wiki content) was efficient and repeatable across 94 pages in two batches.
+- The 89 upgrades to `status:verified` provide a strong confidence signal for the wiki's overall quality. Phase 2 was much better than we expected.
+- Phase 4 was fast (3 batches in one day) because most pages passed the completeness check.
+
+**What didn't:**
+- The 5 incomplete pages are the largest packages in the codebase. Filling these gaps is substantial reading work (130KB+ of source across the 4 packages alone). Phase 4 can identify them but not fix them — that's Phase 5/6 content-writing work.
+
+**Schema / skill changes surfaced:**
+- None. Phase 4 used existing methodology without needing new schema fields or skill updates.
+
+**Recommendations for next phase:**
+- Phase 5 (Audience classification) can proceed on the full wiki. The 5 incomplete pages should be flagged but don't block audience classification.
+- Phase 6 (Implementation) should prioritize the 5 incomplete pages as content-writing work items alongside the upstream correction work-list from Section 1.
+- The drift index now covers three severity axes: wrong (Phase 3), missing (Phase 3), incomplete (Phase 4). Phase 5 adds the audience dimension; Phase 6 executes fixes.
+
+**Outstanding follow-ups:**
+- 5 incomplete pages need content-writing (formula.md overlay tree, beads.md, daemon.md, doltserver.md, polecat.md)
+- Section 1 upstream corrections (52 rows) await Phase 5 audience classification and Phase 6 implementation
+
+**For Kimberly retro discussion:** Phase 2's 94.7% adequacy rate is a strong signal. The wiki's factual coverage is solid; remaining work is depth (5 large packages) and upstream corrections (52 drift findings). Worth discussing whether Phase 5 audience classification or Phase 6 implementation should come next, and whether the 5 incomplete packages should be interleaved or batched separately.

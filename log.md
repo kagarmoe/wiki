@@ -4531,3 +4531,17 @@ Revisited the wiki-stale log placement question from the Sweep 1 retrospective (
 **Methodology:** For each package, compared exported function/type/method counts in source against wiki page coverage. For roles/concepts/workflows/binaries, checked whether the page covers the major behavioral aspects documented in the corresponding code pages. Phase 2's `status: partial` was overwhelmingly a conservative self-assessment rather than actual incompleteness — most pages cover their entity's significant API surface thoroughly. The 4 genuinely incomplete packages share a pattern: large file counts (5-33 files) with specific subsystems that Phase 2 acknowledged but didn't fully ground.
 
 → 4 packages incomplete (beads.md, daemon.md, doltserver.md, polecat.md), 40 pages upgraded to verified
+
+## [2026-04-16] drift-found | Phase 4 close (Coverage/Completeness audit complete)
+
+**Scope:** Audited 94 status:partial pages across all categories for completeness.
+
+**Results:**
+- Upgraded to verified: 89 pages (Phase 2 coverage was adequate)
+- Confirmed incomplete: 5 pages (1 command, 4 packages)
+
+**Phase 4 adds Section 6 to the drift index:** Coverage gaps with severity: incomplete.
+
+The drift index now covers: wrong (Phase 3 drift), missing (Phase 3 gaps), AND incomplete (Phase 4). Ready for Phase 5 (Audience classification) and Phase 6 (Implementation).
+
+→ gastown/drift/README.md

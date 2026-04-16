@@ -1,16 +1,16 @@
 ---
-title: Phase 3 drift index
+title: Drift index
 type: drift
 status: complete
 topic: gastown
 created: 2026-04-15
 updated: 2026-04-16
-phase: 3
+phase: 3-4
 ---
 
-# Phase 3 Drift Index
+# Drift Index
 
-Consolidated index of all Phase 3 findings from Batches 1-14. Phase 3 audited 271 units (211 entity pages in Sweep 1 + 60 docs files in Sweep 2) and surfaced ~83 findings across 9 drift taxonomy categories plus systematic gap enumeration (10 gap findings + 9 deliberate exclusions).
+Consolidated index of findings from Phase 3 (Drift audit, Batches 1-14) and Phase 4 (Coverage/Completeness audit, Batches 1-3). Phase 3 audited 271 units (211 entity pages in Sweep 1 + 60 docs files in Sweep 2) and surfaced ~83 findings. Phase 4 audited 94 `status:partial` pages: 89 upgraded to `status:verified`, 5 confirmed incomplete.
 
 **How to read this index:**
 - **Section 1** is the Phase 6 work-list: upstream corrections to the gastown source repo (code edits, docs PRs). Phase 5 (Audience classification) refines it; Phase 6 (Implementation) executes it.
@@ -18,6 +18,7 @@ Consolidated index of all Phase 3 findings from Batches 1-14. Phase 3 audited 27
 - **Section 3** identifies cross-cutting meta-patterns that Phase 6 should batch as single PRs.
 - **Section 4** lists missing entity pages (code entities with no corresponding wiki page).
 - **Section 5** records subcommand coverage decisions (384 subcommands systematically classified).
+- **Section 6** lists coverage gaps from Phase 4: pages whose wiki content is incomplete relative to their source code surface.
 
 **Plan:** [../../.claude/plans/2026-04-14-phase3-drift.md](../../.claude/plans/2026-04-14-phase3-drift.md) (gitignored).
 
@@ -243,7 +244,29 @@ Entities systematically evaluated and excluded from wiki coverage with rationale
 
 ---
 
+## Section 6: Coverage gaps (severity: incomplete)
+
+Wiki pages whose content is incomplete relative to their source code surface. Surfaced by Phase 4 (Coverage/Completeness audit, Batches 1-2). These are not drift findings (the wiki doesn't contradict the code); they are coverage gaps where significant source code subsystems are acknowledged but not grounded.
+
+**Phase 4 overview:** 94 `status:partial` pages audited (50 commands + 22 packages + 8 roles + 7 concepts + 2 workflows + 3 binaries + 1 inventory + 1 plugins). 89 upgraded to `status:verified` (Phase 2's coverage was adequate). 5 confirmed incomplete (1 command, 4 packages).
+
+### Fix tier: wiki (we write the page content)
+
+| Entity page | Category | Gap description | Severity | Fix tier |
+|---|---|---|---|---|
+| [formula.md](../commands/formula.md) | incomplete | Missing entire `overlay` subcommand tree (4 source files, 347 lines): `formula_overlay.go`, `formula_overlay_edit.go`, `formula_overlay_list.go`, `formula_overlay_show.go` | incomplete | wiki |
+| [beads.md](../packages/beads.md) | incomplete | 28 files / 10,300 lines; ~10 files read in full. Merge-slot internals, molecule detach audit schema, delegation metadata encoding, channel/queue/group bead lifecycles not grounded | incomplete | wiki |
+| [daemon.md](../packages/daemon.md) | incomplete | 33 files / 23,025 lines; 4 large files (~130KB total: `dolt.go`, `compactor_dog.go`, `convoy_manager.go`, `jsonl_git_backup.go`) acknowledged but not grounded | incomplete | wiki |
+| [doltserver.md](../packages/doltserver.md) | incomplete | WLCommons subsystem (wanted-list, stamps, badges query surfaces) + DoltHub remote management API not covered | incomplete | wiki |
+| [polecat.md](../packages/polecat.md) | incomplete | `session_manager.go` startup builder, pane monitoring loop, session recovery flow, and `AddWithOptions` sandbox container-creation flow not grounded | incomplete | wiki |
+
+**Pattern:** The 5 incomplete pages share a common root cause: Phase 2 read the primary files and described the architecture correctly, but acknowledged large subsystem files it didn't fully ground. These are content-writing work items, not corrections.
+
+---
+
 ## Summary statistics
+
+### Phase 3 (Drift audit)
 
 | Metric | Count |
 |---|---|
@@ -256,6 +279,15 @@ Entities systematically evaluated and excluded from wiki coverage with rationale
 | **Total gap findings (Sections 4-5)** | 10 |
 | **Grand total findings** | ~83 |
 | **Deliberately excluded entities** | 9 |
+
+### Phase 4 (Coverage/Completeness audit)
+
+| Metric | Count |
+|---|---|
+| **Pages audited** | 94 (all `status:partial`) |
+| **Upgraded to verified** | 89 |
+| **Confirmed incomplete (Section 6)** | 5 |
+| **Coverage rate** | 94.7% adequate (89 of 94) |
 
 ### Section 1 breakdown by category
 
