@@ -4,10 +4,14 @@ type: package
 status: verified
 topic: gastown
 created: 2026-04-11
-updated: 2026-04-11
+updated: 2026-04-15
 sources:
   - /home/kimberly/repos/gastown/internal/events/events.go
 tags: [package, data-layer, events, activity-feed, jsonl, flock]
+phase3_audited: 2026-04-15
+phase3_findings: [wiki-stale]
+phase3_severities: [incomplete]
+phase3_findings_post_release: false
 ---
 
 # internal/events
@@ -20,6 +24,11 @@ the event and appends one JSON line to `<townRoot>/.events.jsonl`. A
 `flock`-based cross-process lock guards the file so multiple gt processes
 never tear each other's writes. This is the **raw audit log**; the separate
 feed daemon curates a subset into `~/.feed.jsonl` for user display.
+
+> **Phase 3 correction (2026-04-15):** Phase 2 said "21 event types + 21
+> payload constructors." There are actually **30 event-type constants** and
+> 21 payload constructors. The per-category breakdown below correctly lists
+> all 30; the opening count was wrong.
 
 **Go package path:** `github.com/steveyegge/gastown/internal/events`
 **File count:** 1 go file, 1 test file
@@ -155,10 +164,12 @@ should wait for goes through `channelevents`.
 
 ## Notes / open questions
 
-- The package has 21 event-type string constants and 21 payload helpers;
+- The package has 30 event-type string constants and 21 payload helpers;
   they're not in a table structure, so adding a new event is a three-step
   chore (constant, helper, caller) but the uniformity is paid back in
-  consistent payload shapes downstream.
+  consistent payload shapes downstream. Nine event types lack dedicated
+  payload constructors (callers build their own `map[string]interface{}`
+  for those).
 - Error handling is deliberately permissive: `write` returns `nil` on
   "not in a workspace", but returns an error on flock/write failures.
   Callers typically ignore both.

@@ -2569,3 +2569,84 @@ Release-position verification: all 9 package directories had zero commits betwee
   [gastown/packages/util.md](gastown/packages/util.md),
   [gastown/packages/version.md](gastown/packages/version.md),
   [gastown/packages/workspace.md](gastown/packages/workspace.md)
+
+## [2026-04-15] lint | Batch 2b wiki-stale findings (beads.md sources frontmatter, events.md type count)
+
+**Scope:** 2 wiki-stale findings surfaced during Batch 2b (Sweep 1 packages/ Data layer) package-file audit and spot-check.
+
+**Findings:**
+
+- **beads.md** — `sources:` frontmatter listed only 11 of 28 production `.go` files. The page body correctly describes all 28 files in the "domain files" section, but frontmatter `sources:` omitted 17 files (`agent_ids.go`, `beads_channel.go`, `beads_delegation.go`, `beads_dog.go`, `beads_escalation.go`, `beads_group.go`, `beads_merge_slot.go`, `beads_mr.go`, `beads_queue.go`, `beads_rig.go`, `beads_sling_context.go`, `catalog.go`, `config_yaml.go`, `fields.go`, `handoff.go`, `molecule.go`, `stale_pid.go`). Fixed by adding all 17 to `sources:`.
+  - **Category:** `wiki-stale`
+  - **Severity:** `incomplete`
+  - **Phase 2 root cause:** `phase-2-incomplete` (heuristic determination — Phase 2 read all files and described them in the body but did not list them in frontmatter; all files existed at Phase 2 time at v1.0.0).
+  - **Release position:** `in-release`
+
+- **events.md** — opening paragraph and Notes section said "21 event types" but there are 30 event-type string constants (`events.go:36-77`): 11 command + 4 session + 7 patrol + 4 merge + 4 scheduler. The "21 payload constructors" count was correct. Phase 2 appears to have conflated the payload-constructor count with the type-constant count. Body correctly lists all 30 types in the per-category breakdown. Fixed by correcting "21" to "30" in the opening paragraph (via correction callout) and Notes section.
+  - **Category:** `wiki-stale`
+  - **Severity:** `incomplete`
+  - **Phase 2 root cause:** `phase-2-incomplete` (heuristic determination — the 30 type constants existed at v1.0.0; Phase 2 counted the 21 payload constructors and used that number for both).
+  - **Release position:** `in-release`
+
+→ [gastown/packages/beads.md](gastown/packages/beads.md),
+  [gastown/packages/events.md](gastown/packages/events.md)
+
+## [2026-04-15] drift-found | Batch 2b (Sweep 1 packages/ Data layer — 8 pages)
+
+**Scope:** Sweep 1 promotion of Phase 2 notes to v1.2 annotations across all 8 Data layer package pages. Every page received `phase3_audited` / `phase3_findings` / `phase3_severities` / `phase3_findings_post_release` frontmatter. Two pages surfaced `wiki-stale` findings (logged separately above); the other 6 were audited with `phase3_findings: [none]`.
+
+**Source files re-read at current HEAD** (no changes since v1.0.0 for any of these packages — `git log --oneline v1.0.0..HEAD` for all 8 package directories returned zero commits):
+- `/home/kimberly/repos/gastown/internal/beads/` (28 production files; file list verified against wiki; line counts spot-checked: beads.go 1689, fields.go 1057, beads_agent.go 753, store.go 599, molecule.go 579, beads_channel.go 529, beads_types.go 481, agent_ids.go 472, beads_escalation.go 442, beads_queue.go 398, beads_redirect.go 381, beads_group.go 373, routes.go 360 — all match wiki claims exactly; total production lines ~10,330 matching wiki's "~10,300")
+- `/home/kimberly/repos/gastown/internal/channelevents/channelevents.go` (single file; wiki matches)
+- `/home/kimberly/repos/gastown/internal/doltserver/` (9 production files; all listed in wiki `sources:`; spot-checked doltserver.go structure matches wiki)
+- `/home/kimberly/repos/gastown/internal/events/events.go` (single file; 30 type constants + 21 payload constructors verified)
+- `/home/kimberly/repos/gastown/internal/lock/` (5 production files; all listed in wiki `sources:`)
+- `/home/kimberly/repos/gastown/internal/mail/` (7 production files; all listed in wiki `sources:`; router.go 1884 lines matching wiki's "~1880")
+- `/home/kimberly/repos/gastown/internal/mq/id.go` (single file, 58 lines; wiki says "59" — trivial, not flagged)
+- `/home/kimberly/repos/gastown/internal/nudge/` (6 production files; all listed in wiki `sources:`; queue.go 358, poller.go 276 — exact match)
+
+Release-position verification: all 8 package directories had zero commits between v1.0.0 and HEAD. All source is byte-identical. All findings are `in-release`.
+
+**Docs files read:** none (Sweep 1).
+
+**Wiki pages audited:**
+- [beads](gastown/packages/beads.md) — `phase3_findings: [wiki-stale]`
+- [channelevents](gastown/packages/channelevents.md) — `phase3_findings: [none]`
+- [doltserver](gastown/packages/doltserver.md) — `phase3_findings: [none]`
+- [events](gastown/packages/events.md) — `phase3_findings: [wiki-stale]`
+- [lock](gastown/packages/lock.md) — `phase3_findings: [none]`
+- [mail](gastown/packages/mail.md) — `phase3_findings: [none]`
+- [mq](gastown/packages/mq.md) — `phase3_findings: [none]`
+- [nudge](gastown/packages/nudge.md) — `phase3_findings: [none]`
+
+**Findings by category:**
+
+- **drift:** 0 (Sweep 1; no `docs/` files read).
+- **cobra drift:** 0 (packages have no Cobra Long text — structurally impossible).
+- **compound drift:** 0.
+- **implementation-status:** 0. No aspirational, partial, or vestigial behavior found.
+- **wiki-stale:** 2 findings on 2 pages (beads.md sources frontmatter, events.md type count). Both severity `incomplete`, root cause `phase-2-incomplete`, release position `in-release`.
+- **gap:** 0.
+- **none:** 6 pages.
+
+**Judgment calls:**
+
+1. **beads.md `status: partial` retained.** The page's own Notes section explains the partial status: only a minority of the 28 files were read in full during Phase 2. The sources frontmatter fix adds all 28 files, but the page remains partial because the per-domain file descriptions are grounded in headers and exported symbols rather than line-by-line reading. Phase 3 does not change this designation.
+2. **events.md mismatch: 30 types vs 21 constructors.** Not every event type has a dedicated payload constructor. Nine types (e.g., some session/scheduler variants) lack one; callers build `map[string]interface{}` directly. The "21" in the opening was wrong about types, correct about constructors. Corrected via inline callout rather than rewriting the Phase 2 text.
+3. **mq.md "59 lines" vs actual 58.** Trivial off-by-one, likely a counting methodology difference. Not flagged as wiki-stale since the body and all functional claims are correct.
+4. **doltserver.md "phantom DB quarantine" checked.** The quarantine logic at `doltserver.go:1489-1539` matches the wiki's description. No changes since v1.0.0.
+5. **nudge.md "orphan-claim sweep" checked.** The restore-rather-than-delete logic at `queue.go:182-202` matches the wiki. No changes since v1.0.0.
+6. **mail.md "~600ms" subprocess overhead claim.** store.go:1-6 comment confirms. No changes since v1.0.0.
+
+**Yield:** 2/8 pages (25%), within the 15-25% estimate. Higher than 2a (11%) because the two high-leverage targets (beads, events) both had phase-2-incomplete findings, confirming the dispatch expectation.
+
+**Next sub-batch:** Batch 2c — Agent runtime packages (Phase 2 Batch 6).
+
+→ [gastown/packages/beads.md](gastown/packages/beads.md),
+  [gastown/packages/channelevents.md](gastown/packages/channelevents.md),
+  [gastown/packages/doltserver.md](gastown/packages/doltserver.md),
+  [gastown/packages/events.md](gastown/packages/events.md),
+  [gastown/packages/lock.md](gastown/packages/lock.md),
+  [gastown/packages/mail.md](gastown/packages/mail.md),
+  [gastown/packages/mq.md](gastown/packages/mq.md),
+  [gastown/packages/nudge.md](gastown/packages/nudge.md)

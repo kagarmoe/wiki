@@ -4,7 +4,7 @@ type: package
 status: partial
 topic: gastown
 created: 2026-04-11
-updated: 2026-04-11
+updated: 2026-04-15
 sources:
   - /home/kimberly/repos/gastown/internal/beads/beads.go
   - /home/kimberly/repos/gastown/internal/beads/store.go
@@ -17,7 +17,28 @@ sources:
   - /home/kimberly/repos/gastown/internal/beads/beads_agent.go
   - /home/kimberly/repos/gastown/internal/beads/routes.go
   - /home/kimberly/repos/gastown/internal/beads/integration.go
+  - /home/kimberly/repos/gastown/internal/beads/agent_ids.go
+  - /home/kimberly/repos/gastown/internal/beads/beads_channel.go
+  - /home/kimberly/repos/gastown/internal/beads/beads_delegation.go
+  - /home/kimberly/repos/gastown/internal/beads/beads_dog.go
+  - /home/kimberly/repos/gastown/internal/beads/beads_escalation.go
+  - /home/kimberly/repos/gastown/internal/beads/beads_group.go
+  - /home/kimberly/repos/gastown/internal/beads/beads_merge_slot.go
+  - /home/kimberly/repos/gastown/internal/beads/beads_mr.go
+  - /home/kimberly/repos/gastown/internal/beads/beads_queue.go
+  - /home/kimberly/repos/gastown/internal/beads/beads_rig.go
+  - /home/kimberly/repos/gastown/internal/beads/beads_sling_context.go
+  - /home/kimberly/repos/gastown/internal/beads/catalog.go
+  - /home/kimberly/repos/gastown/internal/beads/config_yaml.go
+  - /home/kimberly/repos/gastown/internal/beads/fields.go
+  - /home/kimberly/repos/gastown/internal/beads/handoff.go
+  - /home/kimberly/repos/gastown/internal/beads/molecule.go
+  - /home/kimberly/repos/gastown/internal/beads/stale_pid.go
 tags: [package, data-layer, beads, bd-wrapper, subprocess, sdk, hybrid, issue-tracker, dolt, routing, largest-package]
+phase3_audited: 2026-04-15
+phase3_findings: [wiki-stale]
+phase3_severities: [incomplete]
+phase3_findings_post_release: false
 ---
 
 # internal/beads

@@ -480,3 +480,28 @@ Flagging is cheap; Kimberly decides when to actually schedule.
 - none — lessons are purely informational
 
 **For Kimberly retro discussion:** The 11% yield on packages vs 32% on commands suggests packages may not need the full Sweep 1 treatment. Worth discussing whether Batches 2b-2f should use the fast-path for zero-churn packages.
+
+## [2026-04-15 13:00] stage | 3.2.2b — Data layer packages Sweep 1
+
+**Actor:** wiki-curator subagent (Phase 3 Batch 2b dispatch)
+**Unit:** 8 package pages audited (beads, channelevents, doltserver, events, lock, mail, mq, nudge), 2 wiki-stale findings, 1 commit
+**Duration:** one dispatch
+
+**What went well:**
+- Package-file audit surfaced the two expected high-leverage findings: beads.md (17 missing sources entries) and events.md (type count wrong). Both are phase-2-incomplete, confirming that Phase 2's package methodology had a blind spot for frontmatter completeness vs body completeness.
+- Zero code churn since v1.0.0 across all 8 packages (same as 2a), making release-position verification trivial.
+- Spot-checking line counts for beads (13 files with >300 lines each) found exact matches across the board — Phase 2's line-count claims were reliable even when its frontmatter was incomplete.
+- The 2a retro's fast-path recommendation (frontmatter + spot-check for zero-churn packages) worked well. Full re-read was not necessary for 6 of 8 packages.
+
+**What didn't:**
+- The dispatch expected more activity from beads/mail/doltserver ("actively developed" / "most active"). All had zero commits since v1.0.0, identical to the "boring" platform packages. The expectation was wrong — v1.0.0 is recent enough that the data layer hasn't moved.
+- beads.md's partial status means Phase 3 can only verify what Phase 2 wrote, not complete the coverage. A full re-read of all 28 beads files is a Phase 4 concern.
+
+**What to change next time:**
+- For future sub-batches, check churn BEFORE reading all wiki pages in full. If all zero-churn, read only the frontmatter + notes sections for promotion candidates, then spot-check 2-3 key claims. The full wiki page reads were useful for context but didn't change the findings.
+- The beads sources-frontmatter pattern (body lists files, frontmatter doesn't) may recur on other `status: partial` pages. Watch for `status: partial` in Batch 2c's agent-runtime packages.
+
+**Follow-ups filed:**
+- none — lessons are purely informational
+
+**Yield comparison:** 2b 25% (2/8) vs 2a 11% (1/9). Both phase-2-incomplete. The data layer's larger packages (beads at 28 files, events at 30 type constants) had more surface area for Phase 2 enumeration errors.
