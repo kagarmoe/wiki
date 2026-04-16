@@ -4109,3 +4109,24 @@ Both findings are in-release (code unchanged since v1.0.0).
 - **none (verified):** File layout (directives at `~/gt/directives/<role>.md` and `~/gt/<rig>/directives/<role>.md`), precedence (concatenate for directives, full replace for overlays), TOML format with 3 override modes (replace/append/skip), skip mode dependency handling, validation rules, doctor `overlay-health` check — all confirmed in code and consistent with wiki.
 
 -> (no wiki pages touched)
+
+## [2026-04-15] drift-found | Batch 11f (Sweep 2: docs/design/architecture.md)
+
+**Scope:** Full read of `/home/kimberly/repos/gastown/docs/design/architecture.md` (381 lines). Comprehensive architecture doc covering two-level beads, agent taxonomy, directory structure, Dolt storage, beads routing/redirects, merge queue, polecat lifecycle, data plane lifecycle, deployment artifacts, directives/overlays.
+
+**Docs files read:**
+- `/home/kimberly/repos/gastown/docs/design/architecture.md` (in full, 381 lines)
+
+**Source files re-read at current HEAD:**
+- `/home/kimberly/repos/gastown/internal/refinery/batch.go` (line 190 — confirmed `ProcessBatch` exists, batch-then-bisect implemented)
+- `/home/kimberly/repos/gastown/internal/refinery/engineer.go` (line 141-143 — confirmed `GatesParallel` config field exists)
+- `/home/kimberly/repos/gastown/internal/daemon/lifecycle_defaults.go` (line 4 — confirmed six-stage lifecycle)
+- `/home/kimberly/repos/gastown/internal/mail/router.go` (line 711 — confirmed `routes.jsonl` usage)
+
+**Wiki pages spot-checked:** commands/escalate.md, roles/refinery.md, packages/refinery.md, concepts/directive.md
+
+**Findings by category:**
+- **drift:** 1 finding. Merge queue implementation phases table (lines 229-234) says GatesParallel (Phase 1) is "In progress" and batch-then-bisect (Phase 2) is "Blocked by Phase 1." But code has both `GatesParallel` (`engineer.go:141-143`) and `ProcessBatch` (`batch.go:190-199`) fully implemented with test coverage. The status labels are stale. Fix tier: docs. Severity: wrong. Release position: in-release.
+- **none (verified):** Two-level beads architecture (town at `~/gt/.beads/`, rig at `<rig>/mayor/rig/.beads/`) confirmed. Agent bead storage table confirmed via `agent_ids.go` and doctor integration tests. Directory structure matches code. Dolt SQL Server on port 3307 confirmed. `routes.jsonl` routing confirmed. Beads redirects with `ResolveBeadsDir()` confirmed. Six-stage data lifecycle (CREATE→LIVE→CLOSE→DECAY→COMPACT→FLATTEN) confirmed at `lifecycle_defaults.go:4`. Deployment artifacts table consistent with `goreleaser.yml` and wiki.
+
+-> (no wiki pages touched)
