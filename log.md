@@ -2241,3 +2241,79 @@ Release-position: `mail.go` COMMANDS section byte-identical at v1.0.0; all 5 sib
   [gastown/commands/notify.md](gastown/commands/notify.md),
   [gastown/commands/nudge.md](gastown/commands/nudge.md),
   [gastown/commands/peek.md](gastown/commands/peek.md)
+
+## [2026-04-15] drift-found | Batch 1f (Sweep 1 commands/ Services — 11 pages)
+
+**Scope:** Sweep 1 promotion across all 11 pages in the `GroupServices` cobra group (`daemon`, `dolt`, `down`, `estop`, `maintain`, `quota`, `reaper`, `shutdown`, `start`, `thaw`, `up`). Every page received `phase3_audited` / `phase3_findings` / `phase3_severities` / `phase3_findings_post_release` frontmatter. `quota.md`, `reaper.md`, and `down.md` received `## Docs claim` + `## Drift` sections with verbatim quotes, current `file:line` refs, and v1.2 fix-tier + severity + release-position fields. `dolt.md` received `## Docs claim` section with inline wiki-stale fix for 2 missed sibling-file subcommands.
+
+**Source files re-read at current HEAD** (current gastown HEAD `9f962c4af068fe9da9f4bd3624e7b66351121fdf`):
+
+- `/home/kimberly/repos/gastown/internal/cmd/daemon.go` (lines 21-167 — parent `Long` at `:26-34`, `init()` registering 8 subcommands at `:152-165`)
+- `/home/kimberly/repos/gastown/internal/cmd/daemon_reload_unix.go` (lines 10-11 — `signalDaemonReload` sends SIGUSR2)
+- `/home/kimberly/repos/gastown/internal/cmd/dolt.go` (lines 20-389 — parent `Long` at `:25-35`, `init()` at `:345-389` registering 19 subcommands)
+- `/home/kimberly/repos/gastown/internal/cmd/dolt_flatten.go` (lines 1-60 — `init()` at `:43-46` registering `flatten` on `doltCmd`)
+- `/home/kimberly/repos/gastown/internal/cmd/dolt_rebase.go` (lines 1-70 — `init()` at `:56-63` registering `rebase` on `doltCmd`)
+- `/home/kimberly/repos/gastown/internal/cmd/down.go` (lines 45-94 — parent `Long` at `:49-77`, `init()` at `:86-93`)
+- `/home/kimberly/repos/gastown/internal/cmd/estop.go` (lines 1-80 — `estopCmd.Long` at `:31-48`, `thawCmd.Long` at `:51-61`, `init()` at `:67-72`)
+- `/home/kimberly/repos/gastown/internal/cmd/maintain.go` (lines 1-80 — parent `Long` at `:42-62`, `init()` at `:63-67`)
+- `/home/kimberly/repos/gastown/internal/cmd/quota.go` (lines 36-55 — parent `Long` at `:42-54`, `init()` at `:960-980` registering 5 subcommands)
+- `/home/kimberly/repos/gastown/internal/cmd/reaper.go` (lines 27-60 — parent `Long` at `:34-45`, `init()` at `:522-573` registering 6 subcommands)
+- `/home/kimberly/repos/gastown/internal/cmd/start.go` (lines 1-170 — `startCmd.Long` at `:62-74`, `shutdownCmd.Long` at `:83-110`, `init()` at `:133-164`)
+- `/home/kimberly/repos/gastown/internal/cmd/up.go` (lines 120-170 — parent `Long` at `:125-147`, `init()` at `:154-158`)
+
+**Sibling-file audit:**
+
+- `daemon` → `daemon.go`, `daemon_reload_unix.go`, `daemon_reload_windows.go`, `daemon_test.go`. Reload siblings define `signalDaemonReload` (SIGUSR2 on Unix). No AddCommand in siblings. 8 subcommands in parent `init()`, accurate.
+- `dolt` → **LOAD-BEARING**: `dolt.go`, `dolt_flatten.go`, `dolt_rebase.go`, `dolt_test.go`, `dolt_test_helpers_test.go`. Two siblings register NEW subcommands: `dolt_flatten.go:46` registers `flatten`, `dolt_rebase.go:63` registers `rebase`. Phase 2 listed only `dolt.go` in `sources:` — `phase-2-incomplete`.
+- `reaper` → `reaper.go` only. 6 subcommands in `init()`, accurate.
+- `quota` → `quota.go` only. 5 subcommands in `init()`, accurate.
+- `start` → `start.go`, `start_orphan_unix.go`, `start_orphan_windows.go`. Orphan siblings define platform-specific orphan cleanup helpers. No AddCommand in siblings.
+- `up` → `up.go`, `up_json_test.go`, `up_test.go`. No AddCommand in siblings.
+- `down` → `down.go`, `down_legacy_socket_test.go`, `down_test.go`. No AddCommand in siblings.
+- `estop` → `estop.go`, `estop_unix.go`, `estop_windows.go`. Platform siblings define signal helpers. No AddCommand in siblings.
+- `maintain` → `maintain.go`, `maintain_test.go`. No AddCommand in siblings.
+
+Release-position: all source files present at v1.0.0. All findings `in-release`.
+
+**Docs files read:** none (Sweep 1).
+
+**Wiki pages audited:**
+- [daemon](gastown/commands/daemon.md) — `phase3_findings: [none]`
+- [dolt](gastown/commands/dolt.md) — `phase3_findings: [wiki-stale]`
+- [down](gastown/commands/down.md) — `phase3_findings: [cobra-drift]`
+- [estop](gastown/commands/estop.md) — `phase3_findings: [none]`
+- [maintain](gastown/commands/maintain.md) — `phase3_findings: [none]`
+- [quota](gastown/commands/quota.md) — `phase3_findings: [cobra-drift]`
+- [reaper](gastown/commands/reaper.md) — `phase3_findings: [cobra-drift]`
+- [shutdown](gastown/commands/shutdown.md) — `phase3_findings: [none]`
+- [start](gastown/commands/start.md) — `phase3_findings: [none]`
+- [thaw](gastown/commands/thaw.md) — `phase3_findings: [none]`
+- [up](gastown/commands/up.md) — `phase3_findings: [none]`
+
+**Findings by category:**
+
+- **cobra drift:** 3 findings.
+  - `quota.md` — `quotaCmd.Long` COMMANDS lists 4; 5 registered (missing `watch`). `severity: wrong`, `in-release`, `fix tier: code`. Hand-maintained enumeration pattern (7th instance across Batches 1a-1f).
+  - `reaper.md` — `reaperCmd.Long` "When run by a Dog" lists 4; 6 registered (missing `databases`, `run`). `severity: wrong`, `in-release`, `fix tier: code`. Hand-maintained enumeration pattern (8th instance).
+  - `down.md` — `downCmd.Long` says "use 'gt start' to bring everything back up" but `gt start` does not start the daemon; `gt up` is the actual complement. `severity: wrong`, `in-release`, `fix tier: code`.
+- **wiki-stale:** 1 finding on `dolt.md` — Phase 2 invocation listed 19 subcommands; missed `flatten` and `rebase` from sibling files `dolt_flatten.go` and `dolt_rebase.go`. **Phase 2 root cause: `phase-2-incomplete` (heuristic)**. Fixed inline.
+- **none:** 7 pages (`daemon`, `estop`, `maintain`, `shutdown`, `start`, `thaw`, `up`).
+
+**Judgment calls:** (1) `daemon.Long` does not enumerate subcommands → no enumeration drift possible; neutral. (2) `down.Long` "use 'gt start'" → classified as cobra-drift because `gt start` genuinely does not restart the daemon and is not the symmetric counterpart of `gt down`. (3) `start` vs `up` overlap → both Long texts are internally accurate; the architectural divergence (two boot commands) is a design observation, not drift. (4) `estop` "manual only" claim matches code (PR #3237 cherry-pick). (5) `maintain` 4-step pipeline claim matches code. (6) `shutdown` Long accurately describes the comparison with `down`. (7) `thaw` Long accurately describes SIGCONT + sentinel removal.
+
+**Cross-link discipline:** 3 `## Docs claim` + 3 `## Drift` sections + 1 wiki-stale inline fix. Forward links to [gastown/drift/README.md](gastown/drift/README.md). All `file:line` refs fresh from HEAD `9f962c4a`. 7 pages frontmatter-only. Sibling sources added to `sources:` frontmatter on `daemon`, `dolt`, `estop`, `maintain`, `start`, `thaw`.
+
+**Next sub-batch:** Batch 1g — Workspace group (7 cmds). Tracked under `wiki-vxl`.
+
+**Audited pages:**
+  [gastown/commands/daemon.md](gastown/commands/daemon.md),
+  [gastown/commands/dolt.md](gastown/commands/dolt.md),
+  [gastown/commands/down.md](gastown/commands/down.md),
+  [gastown/commands/estop.md](gastown/commands/estop.md),
+  [gastown/commands/maintain.md](gastown/commands/maintain.md),
+  [gastown/commands/quota.md](gastown/commands/quota.md),
+  [gastown/commands/reaper.md](gastown/commands/reaper.md),
+  [gastown/commands/shutdown.md](gastown/commands/shutdown.md),
+  [gastown/commands/start.md](gastown/commands/start.md),
+  [gastown/commands/thaw.md](gastown/commands/thaw.md),
+  [gastown/commands/up.md](gastown/commands/up.md)

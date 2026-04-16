@@ -4,10 +4,16 @@ type: command
 status: partial
 topic: gastown
 created: 2026-04-11
-updated: 2026-04-11
+updated: 2026-04-15
 sources:
   - /home/kimberly/repos/gastown/internal/cmd/daemon.go
+  - /home/kimberly/repos/gastown/internal/cmd/daemon_reload_unix.go
+  - /home/kimberly/repos/gastown/internal/cmd/daemon_reload_windows.go
 tags: [command, services, daemon, lifecycle, supervisor, logs]
+phase3_audited: 2026-04-15
+phase3_findings: [none]
+phase3_severities: []
+phase3_findings_post_release: false
 ---
 
 # gt daemon
@@ -132,8 +138,9 @@ Subcommand-scoped (`daemon.go:152-165`):
 ## Notes / open questions
 
 - **`signalDaemonReload`** is referenced from `clear-backoff`
-  (`daemon.go:438`) but defined in another file in the same package.
-  Likely SIGHUP — confirm the signal and what else triggers a reload.
+  (`daemon.go:438`) and defined in `daemon_reload_unix.go:10-11` —
+  sends **SIGUSR2** (not SIGHUP as originally speculated) to trigger
+  a reload. Windows variant in `daemon_reload_windows.go`.
 - **`templates.ProvisionSupervisor` mechanics**: where do the plist /
   systemd unit templates live? Worth grounding under `gastown/files/`.
 - **`daemon.IdentityEnvVars`**: what's the full list? The comment cites

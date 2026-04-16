@@ -4,10 +4,14 @@ type: command
 status: partial
 topic: gastown
 created: 2026-04-11
-updated: 2026-04-11
+updated: 2026-04-15
 sources:
   - /home/kimberly/repos/gastown/internal/cmd/reaper.go
 tags: [command, services, dolt, beads, wisps, cleanup, maintenance]
+phase3_audited: 2026-04-15
+phase3_findings: [cobra-drift]
+phase3_severities: [wrong]
+phase3_findings_post_release: false
 ---
 
 # gt reaper
@@ -168,6 +172,37 @@ Threshold flags (`reaper.go:554-564`):
   `run`
 
 Duration format is anything `time.ParseDuration` accepts.
+
+## Docs claim
+
+### Source
+- `/home/kimberly/repos/gastown/internal/cmd/reaper.go:34-45` — Cobra `Long` text
+
+### Verbatim
+> Execute wisp reaper operations against Dolt databases.
+>
+> These subcommands are the callable helper functions for the mol-dog-reaper
+> formula. They execute SQL operations but leave eligibility decisions to the
+> Dog agent or daemon orchestrator.
+>
+> When run by a Dog:
+>   gt reaper scan --db=gastown          # Discover candidates
+>   gt reaper reap --db=gastown          # Close stale wisps
+>   gt reaper purge --db=gastown         # Delete old closed wisps + mail
+>   gt reaper auto-close --db=gastown    # Close stale issues
+
+## Drift
+
+### `reaperCmd.Long` "When run by a Dog" block lists 4 subcommands; 6 registered
+- **Claim source:** Cobra `Long` text at `/home/kimberly/repos/gastown/internal/cmd/reaper.go:40-45`
+- **Docs claim:** "When run by a Dog" example block enumerates 4 subcommands: `scan`, `reap`, `purge`, `auto-close`.
+- **Code does:** `init()` at `reaper.go:566-571` registers 6 subcommands: **`databases`**, `scan`, `reap`, `purge`, `auto-close`, **`run`**. `databases` (`reaper.go:45-59`) lists databases available for reaping. `run` (`reaper.go:408-520`) executes the full scan-reap-purge-auto-close cycle in one pass — the "inline fallback when Dog dispatch is unavailable."
+- **Category:** `cobra drift`
+- **Severity:** `wrong`
+- **Fix tier:** `code`
+- **Release position:** `in-release`
+
+See also: [gastown/drift/README.md](../drift/README.md)
 
 ## Notes / open questions
 

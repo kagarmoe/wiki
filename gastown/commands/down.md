@@ -4,10 +4,14 @@ type: command
 status: partial
 topic: gastown
 created: 2026-04-11
-updated: 2026-04-11
+updated: 2026-04-15
 sources:
   - /home/kimberly/repos/gastown/internal/cmd/down.go
 tags: [command, services, lifecycle, shutdown, tmux]
+phase3_audited: 2026-04-15
+phase3_findings: [cobra-drift]
+phase3_severities: [wrong]
+phase3_findings_post_release: false
 ---
 
 # gt down
@@ -179,6 +183,28 @@ Defined at `down.go:86-94`:
 - [polecat](./polecat.md), [crew](./crew.md) (if present) — Phase 0.5
   / 0.6 targets
 - [doctor](./doctor.md) — diagnostics for what `gt down` cleans up
+
+## Docs claim
+
+### Source
+- `/home/kimberly/repos/gastown/internal/cmd/down.go:49-77` — Cobra `Long` text
+
+### Verbatim
+> This is a "pause" operation - use 'gt start' to bring everything back up.
+> For permanent cleanup (removing worktrees), use 'gt shutdown' instead.
+
+## Drift
+
+### `downCmd.Long` recommends `gt start` as complement; `gt up` is the actual complement
+- **Claim source:** Cobra `Long` text at `/home/kimberly/repos/gastown/internal/cmd/down.go:66`
+- **Docs claim:** "use 'gt start' to bring everything back up"
+- **Code does:** `gt start` (`start.go:167-296`) does NOT start the daemon — it starts Mayor + Deacon and optionally witnesses/refineries/crew, but has no `ensureDaemon` call. `gt up` (`up.go:120-448`) is the actual complement: it starts Dolt, daemon, deacon, mayor, witnesses, and refineries with a Dolt-readiness gate and orphan recovery. The wiki page for [start](./start.md) explicitly notes: "start does not launch the daemon. Unlike gt up, nothing in runStart calls ensureDaemon." The wiki page for this command (`down.md`) itself says "Reversible via gt up" in its header text — the Long text contradicts the wiki and the code's intended pairing.
+- **Category:** `cobra drift`
+- **Severity:** `wrong`
+- **Fix tier:** `code`
+- **Release position:** `in-release`
+
+See also: [gastown/drift/README.md](../drift/README.md)
 
 ## Notes / open questions
 

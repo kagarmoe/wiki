@@ -4,10 +4,14 @@ type: command
 status: partial
 topic: gastown
 created: 2026-04-11
-updated: 2026-04-11
+updated: 2026-04-15
 sources:
   - /home/kimberly/repos/gastown/internal/cmd/quota.go
 tags: [command, services, quota, accounts, rate-limits, keychain, rotation]
+phase3_audited: 2026-04-15
+phase3_findings: [cobra-drift]
+phase3_severities: [wrong]
+phase3_findings_post_release: false
 ---
 
 # gt quota
@@ -236,6 +240,29 @@ non-init order.)
   events
 - [../packages/quota.md](../packages/quota.md) — the Claude Code
   rate-limit detection + Keychain token rotation library (darwin-only).
+
+## Docs claim
+
+### Source
+- `/home/kimberly/repos/gastown/internal/cmd/quota.go:47-54` — Cobra `Long` text
+
+### Verbatim
+> Commands:
+>   gt quota status            Show account quota status
+>   gt quota scan              Detect rate-limited sessions
+>   gt quota rotate            Swap blocked sessions to available accounts
+>   gt quota clear             Mark account(s) as available again
+
+## Drift
+
+### `quotaCmd.Long` COMMANDS block lists 4 subcommands; 5 registered
+- **Claim source:** Cobra `Long` text at `/home/kimberly/repos/gastown/internal/cmd/quota.go:47-54`
+- **Docs claim:** COMMANDS block enumerates 4 subcommands: `status`, `scan`, `rotate`, `clear`.
+- **Code does:** `init()` at `quota.go:974-978` registers 5 subcommands: `status`, `scan`, `rotate`, `clear`, **`watch`**. The `watch` subcommand (`quota.go:812-869`) continuously polls sessions for rate limits and rotates proactively. It is a long-running foreground process with `--interval` and `--dry-run` flags.
+- **Category:** `cobra drift`
+- **Severity:** `wrong`
+- **Fix tier:** `code`
+- **Release position:** `in-release`
 
 ## Notes / open questions
 

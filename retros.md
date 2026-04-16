@@ -330,3 +330,35 @@ Flagging is cheap; Kimberly decides when to actually schedule.
 
 - **The `phase-2-incomplete` pattern is now 5-for-5 across sub-batches.** Every sub-batch from 1b onward has found at least one case where Phase 2 read a parent `.go` file in isolation without checking sibling-file `init()` registrations. The cumulative evidence: `directive` (1b), `hooks` (1b), `molecule` (1c), `mq` (1c), `wl` (1c), `agents` (1d), `polecat` (1d), `mail` (1e). That's 8 distinct commands with missed sibling registrations across 4 sub-batches. The mail case is notable because Phase 2 DID list all sibling files in `sources:` — it knew about them, listed them, but still didn't verify their `init()` blocks. This suggests the Phase 2 methodology had a systematic gap: it treated `sources:` as "files I was aware of" rather than "files I read for cobra registrations."
 - **Communication is the cleanest group so far for the Sweep 1 retrospective gate's calibration data.** 6 of 7 pages resolved as neutral on first read. The group's design surface (nudge/peek pair, dnd/notify layering, mail as the durable substrate, broadcast as fan-out, escalate as severity routing) is well-factored and the Cobra Long texts accurately describe what the code does. Phase 6 work on Communication will be concentrated on mail's COMMANDS block and nothing else from Sweep 1.
+
+## [2026-04-15 23:00] stage | 3.1.1f — Services Sweep 1
+
+**Actor:** general-purpose subagent dispatched by main orchestrator for Phase 3 Batch 1f
+**Unit:** 11 `GroupServices` command pages audited; 3 cobra-drift findings + 1 wiki-stale finding (across `quota.md`, `reaper.md`, `down.md`, `dolt.md`); 7 pages tagged `phase3_findings: [none]`; one commit
+**Duration:** one dispatch
+
+**What went well:**
+
+- **Dolt sibling-file audit was the highest-leverage activity, as predicted.** The dispatch prompt specifically called out `dolt_flatten.go` and `dolt_rebase.go` as sibling-file candidates, and both registered subcommands via their own `init()` blocks. This extends the `phase-2-incomplete` pattern to 6-for-6 across sub-batches (1b onward). Cumulative count: 9 distinct commands with missed sibling registrations (adding `dolt` to the prior list of `directive`, `hooks`, `molecule`, `mq`, `wl`, `agents`, `polecat`, `mail`).
+- **The `down.md` cobra-drift finding is a new pattern type.** Prior cobra-drift findings were all "hand-maintained enumeration lists that undercounted subcommands." The `down` finding is different: the Long text recommends `gt start` as the complement, but `gt start` does not restart the daemon. This is a semantic-correctness finding rather than a counting finding — it misleads the user about which command to use for recovery. It's the first finding in this category.
+- **The `start` vs `up` resolution confirmed the dispatch prompt's prediction.** Both Long texts are internally accurate, but `down`'s Long cross-references the wrong one. The architectural divergence between two boot commands is real but is a design observation, not drift. The drift is in `down`'s Long text pointing at the wrong complement.
+- **7 of 11 pages are clean neutrals (64%).** Services commands are well-documented in their Long text — the daemon, estop, thaw, maintain, shutdown, start, and up Long texts all match code. The yield of 36% (4 findings across 11 pages) is moderate, higher than Communication (14%) and consistent with the prediction that complex parent commands with sibling files produce findings while single-file commands do not.
+
+**What didn't:**
+
+- **Quota's `watch` omission was obvious but low-severity.** The COMMANDS block lists 4 subcommands and `watch` is the 5th. This is the same hand-maintained enumeration pattern seen 7+ times. Mechanically correct to flag but not interesting as a finding — it's another data point for the Phase 6 meta-fix rather than a unique insight.
+- **Reaper's `databases` and `run` omissions follow the same pattern.** The "When run by a Dog" block is framed as an example, not an exhaustive list, which makes the drift slightly ambiguous. Classified as `wrong` because the block lists 4 of 6 subcommands without indicating it's non-exhaustive. A Phase 6 reviewer might reasonably reclassify this as `ambiguous`.
+
+**What to change next time:**
+
+- **For Batch 1g (Workspace, 7 cmds): expect the same pattern.** Complex parent commands with sibling files will produce findings; single-file commands will be neutral. The sibling-file audit remains mandatory. Watch for semantic cross-reference errors like the `down` finding — check whether Long texts reference complementary commands accurately, not just whether they enumerate subcommands.
+- **No skill or plan edits needed from this sub-batch.** The methodology continues to produce consistent, classifiable findings. The "semantic cross-reference" finding type (down → start instead of up) may be worth adding as a named sub-pattern in the drift taxonomy if it recurs.
+
+**Follow-ups filed:**
+
+- none (bd beads) — all observations are informational.
+
+**For Kimberly retro discussion:**
+
+- **The `phase-2-incomplete` pattern is now 6-for-6.** `dolt` joins the list. Every sub-batch from 1b onward has surfaced at least one missed sibling-file registration. The evidence is overwhelming that Phase 2's methodology treated `sources:` as "files I was aware of" rather than "files I read for cobra registrations." This is now the single most reliable predictor of findings in Sweep 1: if a command has sibling `.go` files with `init()` blocks, at least one will register a subcommand that Phase 2 missed.
+- **Services group has a unique finding type: semantic cross-reference drift.** The `down` Long text saying "use gt start" when the real complement is `gt up` is a new pattern not seen in prior sub-batches. It's worth tracking whether this appears in other groups (e.g., does any command reference an obsolete or wrong sibling?).

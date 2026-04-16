@@ -4,10 +4,16 @@ type: command
 status: partial
 topic: gastown
 created: 2026-04-11
-updated: 2026-04-11
+updated: 2026-04-15
 sources:
   - /home/kimberly/repos/gastown/internal/cmd/dolt.go
+  - /home/kimberly/repos/gastown/internal/cmd/dolt_flatten.go
+  - /home/kimberly/repos/gastown/internal/cmd/dolt_rebase.go
 tags: [command, services, dolt, sql, database, beads-exempt]
+phase3_audited: 2026-04-15
+phase3_findings: [wiki-stale]
+phase3_severities: [wrong]
+phase3_findings_post_release: false
 ---
 
 # gt dolt
@@ -53,6 +59,8 @@ gt dolt rollback [backup-dir] [--dry-run] [--list]
 gt dolt sync [--db NAME] [--dry-run] [--force] [--gc]
 gt dolt pull [--db NAME] [--dry-run]
 gt dolt migrate-wisps [--dry-run] [--db NAME]
+gt dolt flatten <database> [--yes-i-am-sure]
+gt dolt rebase <database> [--yes-i-am-sure] [--keep-recent N] [--dry-run]
 ```
 
 The bare `gt dolt` is a parent command — `RunE: requireSubcommand`
@@ -188,6 +196,25 @@ beads from `issues` to `wisps`, closing the originals. Idempotent.
 After this runs, `bd mol wisp list` works and the agent lifecycle
 (spawn, sling, work, done, nuke, respawn) uses the wisps table.
 
+**`flatten <database>`** (`dolt_flatten.go:23-42`, run: `dolt_flatten.go:48-…`)
+Registered via `dolt_flatten.go:init()` at `:43-46`. The "NUCLEAR
+OPTION" for compaction — destroys all commit history by soft-resetting
+to the root commit and recommitting everything as a single commit.
+Safety protocol: pre-flight row counts, `DOLT_RESET('--soft',
+rootHash)`, `DOLT_COMMIT`, post-flight row count verification.
+Requires `--yes-i-am-sure` flag as safety interlock. All operations
+run via SQL on the running server — no downtime.
+
+**`rebase <database>`** (`dolt_rebase.go:25-55`, run: `dolt_rebase.go:66-…`)
+Registered via `dolt_rebase.go:init()` at `:56-63`. Surgical
+compaction using Dolt's `DOLT_REBASE`: squashes old commits while
+keeping the most recent N (`--keep-recent`, default 50) as individual
+picks. Creates anchor + work branches, populates `dolt_rebase` table,
+executes the plan, then swaps branches. **Not safe with concurrent
+writes** — unlike `flatten`. Requires `--yes-i-am-sure` or
+`--dry-run`. The Compactor Dog (daemon) has automatic retry logic for
+concurrent-write failures.
+
 ### Flags
 
 Per `dolt.go:326-388`. All scoped to their respective subcommands.
@@ -210,6 +237,10 @@ Per `dolt.go:326-388`. All scoped to their respective subcommands.
 | `pull`            | `--db`           | string | ""      |
 | `migrate-wisps`   | `--dry-run`      | bool   | false   |
 | `migrate-wisps`   | `--db`           | string | ""      |
+| `flatten`         | `--yes-i-am-sure`| bool   | false   |
+| `rebase`          | `--yes-i-am-sure`| bool   | false   |
+| `rebase`          | `--keep-recent`  | int    | 50      |
+| `rebase`          | `--dry-run`      | bool   | false   |
 
 ## Related
 
@@ -218,6 +249,41 @@ Per `dolt.go:326-388`. All scoped to their respective subcommands.
 - [compact](./compact.md) — separate compaction primitive
 - [doctor](./doctor.md) — health checks that inspect Dolt server state
 - [down](./down.md) — stops the Dolt server as part of town shutdown
+
+## Docs claim
+
+### Source
+- `/home/kimberly/repos/gastown/internal/cmd/dolt.go:25-35` — Cobra `Long` text
+
+### Verbatim
+> Manage the Dolt SQL server for Gas Town beads.
+>
+> The Dolt server provides multi-client access to all rig databases,
+> avoiding the single-writer limitation of embedded Dolt mode.
+>
+> Server configuration:
+>   - Port: 3307 (avoids conflict with MySQL on 3306)
+>   - User: root (default Dolt user, no password for localhost)
+>   - Data directory: .dolt-data/ (contains all rig databases)
+>
+> Each rig (hq, gastown, beads) has its own database subdirectory.
+
+The `doltCmd.Long` does not enumerate subcommands — it describes
+server configuration only. No enumeration drift. However, two
+subcommands registered from sibling files were missed by Phase 2.
+
+**wiki-stale (inline fix):** Phase 2's invocation block listed 19
+subcommands from `dolt.go` only. Two sibling files register additional
+subcommands via their own `init()` blocks:
+- `dolt_flatten.go:init()` at `:43-46` registers `gt dolt flatten`
+- `dolt_rebase.go:init()` at `:56-63` registers `gt dolt rebase`
+Total registered subcommands: **21** (not 19). The invocation block,
+subcommand descriptions, and flags table have been updated inline.
+**Phase 2 root cause: `phase-2-incomplete` (heuristic)** — Phase 2
+read only `dolt.go` in `sources:` and missed sibling-file cobra
+registrations. Both sibling files existed at Phase 2 time.
+
+See also: [gastown/drift/README.md](../drift/README.md)
 
 ## Notes / open questions
 
