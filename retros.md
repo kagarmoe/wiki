@@ -730,3 +730,27 @@ Flagging is cheap; Kimberly decides when to actually schedule.
 - none — findings annotated inline on existing wiki pages.
 
 **Batch 7 yield:** 2 findings on 2/6 files (33%). 2 drift (docs wrong, wiki correct). The concept docs are generally accurate because they describe the same domain the wiki was grounded in during Phase 2. The 33% finding rate is higher than Batch 5 (12.5%) because concept docs make denser code claims than research/example files.
+
+## [2026-04-15 23:00] stage | Phase 3.Batch 8 (Sweep 2: docs/design/convoy + docs/design/otel)
+
+**Actor:** wiki-curator subagent (Sweep 2 docs process)
+**Unit:** 9 docs/design/ files processed (8a-8i), 7 commits landed (8e/8f/8g batched), 1 wiki page annotated.
+**Duration:** one dispatch
+
+**What went well:**
+- Design docs processed efficiently. The "is this a design/aspirational document or a code behavior spec?" triage was effective. Most convoy design docs (spec.md, lifecycle.md, roadmap.md, mountain-eater.md) describe behavior already verified in earlier batches, so verification was fast.
+- The OTel architecture finding (8h) was genuinely useful — the docs' implementation status table is materially stale (claims functions don't exist when they do). This is the kind of finding that helps future readers of the docs avoid being misled.
+- Batch processing of 8e/8f/8g as a single commit was appropriate — all three are stage-launch planning artifacts with no code behavior claims.
+
+**What didn't:**
+- The bv-insights.json (8g) is an 82KB JSON blob that triggered a token limit error on first read. Pre-checking file size before reading would have avoided the retry.
+- Mountain-eater.md (8c) says "Status: Design" but the feature is implemented (710 lines in mountain.go). The stale status header is misleading but I didn't file it as drift because it's a header, not a code behavior claim. This is a gray area.
+
+**What to change next time:**
+- For docs/design/ files: pre-check for "Status:" header to triage quickly. If "Status: Design" but the feature is implemented, note the stale header in the log but don't annotate wiki pages.
+- For large non-text files (JSON, etc.): check file size before attempting to read. If >50KB and JSON, peek first 500 bytes to determine if it has code claims.
+
+**Follow-ups filed:**
+- none — findings annotated inline on the telemetry wiki page.
+
+**Batch 8 yield:** 1 finding on 1/9 files (11%). 1 drift (docs implementation status table stale, wiki correct). The design docs are overwhelmingly consistent with code because they were the specs that drove implementation. The one finding was in the OTel status table which hadn't been updated after the features were built.
