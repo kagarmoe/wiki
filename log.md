@@ -3332,3 +3332,34 @@ Both findings are in-release (code unchanged since v1.0.0).
 **Next sub-batch:** Batch 6b — docs/guides/mvgt-integration.md.
 
 -> (no wiki pages touched)
+
+## [2026-04-15] drift-found | Batch 6b (Sweep 2: docs/guides/mvgt-integration.md)
+
+**Scope:** Full read of `/home/kimberly/repos/gastown/docs/guides/mvgt-integration.md` (1,217 lines).
+
+**Docs files read:**
+- `/home/kimberly/repos/gastown/docs/guides/mvgt-integration.md` (in full, 1,217 lines)
+
+**Source files re-read at current HEAD:**
+- `/home/kimberly/repos/gastown/internal/cmd/wl.go` (lines 18-19 flags, 34-67 Long text + join flag defs, 73-154 runWlJoin)
+- `/home/kimberly/repos/gastown/internal/wasteland/wasteland.go` (lines 167-171, RegisterRig INSERT columns)
+- `/home/kimberly/repos/gastown/internal/cmd/wl_sync.go` (lines 25, 56-68, wl join references)
+
+**Wiki pages audited:**
+- [gastown/commands/wl.md](gastown/commands/wl.md) — already Phase 3 audited, `phase3_findings: [wiki-stale]`. No new findings from this docs file. The wiki page already documents `gt wl join` accurately including the fork-clone-register-push pipeline, env vars, and `wl leave` gap.
+- [gastown/packages/wasteland.md](gastown/packages/wasteland.md) — already Phase 3 audited, `phase3_findings: [none]`. No new findings.
+
+**Findings by category:**
+- **none:** The guide is primarily about the external wl-commons Dolt schema and Dolt CLI operations for non-Gas Town participants. Its gastown-specific claims are limited to: (1) `gt wl join` exists and automates forking/cloning/registering — accurate per `wl.go:39-154`; (2) the troubleshooting section documents a real `gt wl join` HTTP 400 fork API error — consistent with `wasteland.go:99-142` (POST to DoltHub API); (3) the 7-table commons schema (`rigs`, `wanted`, `completions`, `stamps`, `badges`, `chain_meta`, `_meta`) — external data, not gastown code. The `RegisterRig` INSERT at `wasteland.go:171` matches the column set described in the guide. No drift against code or wiki pages.
+
+**Additional observations (not findings):**
+- The guide mentions `gt wl leave` does not exist yet (troubleshooting section 3: workaround is to fork manually). This is consistent with the wiki's existing observation in `wl.md` Notes: "`wl leave` is referenced but not wired."
+- At 1,217 lines this is the largest single file in Phase 3 Sweep 2, but its gastown-specific surface is small. Most of the document is Dolt CLI tutorial and wl-commons schema reference.
+
+**New beads filed:** none
+**Beads closed:** none
+**Cross-link discipline:** No wiki pages touched.
+
+**Batch 6 complete.** 2 files processed, 0 findings. Retro follows.
+
+-> (no wiki pages touched)
