@@ -3523,3 +3523,28 @@ Both findings are in-release (code unchanged since v1.0.0).
 **Batch 7 complete.** 6 files processed, 2 findings (convoy lifecycle states drift, identity GIT_AUTHOR_NAME drift). Retro follows.
 
 -> (no wiki pages touched)
+
+## [2026-04-15] drift-found | Batch 8a (Sweep 2: docs/design/convoy/convoy-lifecycle.md)
+
+**Scope:** Full read of `/home/kimberly/repos/gastown/docs/design/convoy/convoy-lifecycle.md` (382 lines).
+
+**Docs files read:**
+- `/home/kimberly/repos/gastown/docs/design/convoy/convoy-lifecycle.md` (in full, 382 lines)
+
+**Source files re-read at current HEAD:**
+- `/home/kimberly/repos/gastown/internal/cmd/sling_batch.go` (line 274-277, resolveRigFromBeadIDs confirmed)
+- `/home/kimberly/repos/gastown/internal/cmd/convoy.go` (lines 97-102, status constants — no "abandoned" state; line 340, Long help uses "abandoned" as descriptive term)
+
+**Wiki pages audited:**
+- [gastown/concepts/convoy.md](gastown/concepts/convoy.md) — already has the staged_* omission drift finding from Batch 7a. No new annotation needed.
+
+**Findings by category:**
+- **none (new to wiki):** The design doc repeats the same lifecycle simplification (OPEN → CLOSED only, omitting staged_*) already filed as drift on the convoy concept page in Batch 7a. Not double-filed. The "ABANDONED" state described at lines 307-313 is explicitly framed as aspirational/future design ("New state for abandonment"), consistent with its status as a design document. The implementation status section (lines 360-367) correctly notes "P2: Owner field" and "P3: Timeout/SLA" as remaining future work. Auto-convoy on sling, batch sling, resolveRigFromBeadIDs, event poll/stranded scan — all verified in code.
+
+**New beads filed:** none
+**Beads closed:** none
+**Cross-link discipline:** No wiki pages touched.
+
+**Next sub-batch:** Batch 8b — docs/design/convoy/spec.md.
+
+-> (no wiki pages touched)
