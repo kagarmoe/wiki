@@ -3927,7 +3927,7 @@ Both findings are in-release (code unchanged since v1.0.0).
 - [gastown/packages/telemetry.md](gastown/packages/telemetry.md) — already annotated with drift from 8h. Root version consistent with code (no stale roadmap claims).
 
 **Findings by category:**
-- **none:** Data model reference describes attribute shapes and events without contradicting code or wiki. No implementation-status claims. Env vars table is plausible and consistent with telemetry package documentation.
+- **none:** Data model reference. No implementation-status claims. Env vars consistent with telemetry docs.
 
 -> (no wiki pages touched)
 
@@ -3953,6 +3953,33 @@ Both findings are in-release (code unchanged since v1.0.0).
 **Scope:** Full read of `/home/kimberly/repos/gastown/docs/phase4-minimum-fix-acceptance.md` (39 lines). Meta-document: Phase 4 test verification commands and PR draft.
 
 **Findings by category:**
-- **none:** Testing/PR artifact. No code behavior claims about gastown commands. Purely procedural.
+- **none:** Testing/PR artifact. No code behavior claims. Purely procedural.
+
+-> (no wiki pages touched)
+
+## [2026-04-15] drift-found | Batch 10j (Sweep 2: docs/reference.md)
+
+**Scope:** Full read of `/home/kimberly/repos/gastown/docs/reference.md` (767 lines). Dense technical reference covering beads routing, configuration, formula format, molecule lifecycle, agent lifecycle, env vars, CLI reference, patrol agents, plugins.
+
+**Docs files read:**
+- `/home/kimberly/repos/gastown/docs/reference.md` (in full, 767 lines)
+
+**Source files re-read at current HEAD:**
+- `/home/kimberly/repos/gastown/internal/cmd/session.go` (line 68 — confirmed `gt session stop <rig>/<polecat>` exists; `gt stop --all` as shown in reference.md is not a real top-level command)
+
+**Wiki pages audited:**
+- [gastown/commands/done.md](gastown/commands/done.md) — reference.md line 258 ("gt done nukes sandbox and exits") repeats the same stale claim already documented as drift on done.md. Not double-filed.
+- [gastown/commands/config.md](gastown/commands/config.md) — agent management, custom agents, built-in presets consistent.
+- [gastown/commands/convoy.md](gastown/commands/convoy.md) — convoy commands consistent.
+- [gastown/commands/hooks.md](gastown/commands/hooks.md) — settings file locations and `--settings` flag consistent.
+- [gastown/commands/mq.md](gastown/commands/mq.md) — MQ commands and integration branch commands listed in reference.md are plausible (not individually verified but consistent with wiki's known subcommands).
+
+**Findings by category:**
+- **drift:** 2 findings in the docs, both already covered:
+  1. Line 258: "gt done nukes sandbox and exits" — same stale claim as on done.md. Already filed.
+  2. Lines 630-633: "gt stop --all" and "gt stop --rig <name>" under "Emergency" — `gt stop` is not a top-level command. This should be `gt down --all` / `gt down` or `gt shutdown`. Not annotated on a wiki page because there's no `stop` command page to annotate.
+- **none (verified):** Beads routing (routes.jsonl, prefix-based), configuration tables (rig config, settings, merge queue fields), env vars (GT_ROLE, BD_ACTOR, etc.), formula format, patrol agents, plugin molecules — all consistent with wiki and code. Agent resolution order (rig → town → built-in) matches config.md.
+
+**No new wiki page annotations.** Both drift findings are either already filed or reference non-existent commands.
 
 -> (no wiki pages touched)
