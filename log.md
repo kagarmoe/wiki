@@ -4150,3 +4150,25 @@ Both findings are in-release (code unchanged since v1.0.0).
 - **none (verified):** Four property layers (wisp/rig-bead/town/system) confirmed in `rig_config.go` Long text. Override semantics (first non-nil wins) and stacking semantics (integers add) confirmed. Park/unpark/dock/undock commands confirmed. Directive and overlay integration as property-layer extensions confirmed. Operational state events pattern consistent with beads architecture.
 
 -> (no wiki pages touched)
+
+## [2026-04-15] drift-found | Batch 11h (Sweep 2: docs/design/scheduler.md)
+
+**Scope:** Full read of `/home/kimberly/repos/gastown/docs/design/scheduler.md` (459 lines). Comprehensive design doc for the config-driven capacity-controlled polecat dispatch scheduler: sling context beads, dispatch engine, capacity management, circuit breaker, convoy integration, safety properties.
+
+**Docs files read:**
+- `/home/kimberly/repos/gastown/docs/design/scheduler.md` (in full, 459 lines)
+
+**Source files re-read at current HEAD:**
+- `/home/kimberly/repos/gastown/internal/cmd/sling_schedule.go` — confirmed `scheduleBead()`, `shouldDeferDispatch()`
+- `/home/kimberly/repos/gastown/internal/cmd/capacity_dispatch.go` — confirmed `dispatchScheduledWork()`
+- `/home/kimberly/repos/gastown/internal/scheduler/capacity/dispatch.go` — confirmed `DispatchCycle` type
+- `/home/kimberly/repos/gastown/internal/scheduler/capacity/pipeline.go` — confirmed `PlanDispatch()`, `ReconstructFromContext()`
+- `/home/kimberly/repos/gastown/internal/cmd/scheduler.go` — confirmed `gt scheduler` command tree
+
+**Wiki pages spot-checked:** commands/scheduler.md, commands/sling.md, concepts/convoy.md
+
+**Findings by category:**
+- **drift:** 1 finding. Doc line 457 references `[Watchdog Chain](watchdog-chain.md)` but no `watchdog-chain.md` exists in `docs/design/`. Same stale cross-reference as property-layers.md (11g). Fix tier: docs. Severity: wrong. Release position: in-release.
+- **none (verified):** Sling context bead design (ephemeral beads with `gt:sling-context` label) confirmed. Dispatch modes (`max_polecats=-1` direct, `>0` deferred) confirmed. `DispatchCycle` generic orchestrator with callbacks confirmed. Capacity management config keys (`scheduler.max_polecats`, `scheduler.batch_size`, `scheduler.spawn_delay`) confirmed. Circuit breaker (3 failure threshold) confirmed. Convoy integration paths (direct vs deferred dispatch) confirmed. Code layout table accurate — all files confirmed at cited paths.
+
+-> (no wiki pages touched)
