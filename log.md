@@ -4320,3 +4320,23 @@ Both findings are in-release (code unchanged since v1.0.0).
 - **none (verified):** Session-per-step model, two cleanup stages (step cleanup vs molecule cleanup), state continuity mechanisms, design questions and resolutions (Q1-Q8) — all consistent with code and wiki. The "sessions are pistons, sandboxes are cylinders" framing matches the persistent polecat pool design.
 
 -> (no wiki pages touched)
+
+## [2026-04-15] drift-found | Batch 11p (Sweep 2: docs/design/agent-api-inventory.md)
+
+**Scope:** Full read of `/home/kimberly/repos/gastown/docs/design/agent-api-inventory.md` (853 lines). Comprehensive inventory of 28 GT-to-agent integration touch points, each with code references, flow direction, fragility analysis, and Factory Worker API mapping.
+
+**Docs files read:**
+- `/home/kimberly/repos/gastown/docs/design/agent-api-inventory.md` (in full, 853 lines)
+
+**Source files spot-checked at current HEAD:**
+- `/home/kimberly/repos/gastown/internal/tmux/tmux.go` — confirmed `NudgeSession`, `sendMessageToTarget`, `sanitizeNudgeMessage`, `matchesPromptPrefix`, `IsIdle`, `WaitForIdle`, `CheckSessionHealth`
+- `/home/kimberly/repos/gastown/internal/cmd/nudge.go` — confirmed delivery modes
+- `/home/kimberly/repos/gastown/internal/nudge/queue.go` — confirmed queue mechanisms
+- Grep for `FactoryWorker|factory.*worker` in internal/ — Factory Worker API not implemented
+
+**Wiki pages spot-checked:** packages/tmux.md, commands/nudge.md, packages/nudge.md
+
+**Findings by category:**
+- **none (factual inventory):** The 28 touch-point inventory is overwhelmingly accurate as a catalog of CURRENT mechanisms. Code references (file paths, function names, line numbers) match the implementation. Flow directions, fragility analyses, and API parity gaps are consistent with the code. The "API mapping" column throughout and the "Factory Worker API" references describe an aspirational replacement (factory-worker-api.md is in Batch 12 as a separate aspirational doc). The inventory's value is in the current-mechanism catalog, which is factual and code-grounded.
+
+-> (no wiki pages touched)
