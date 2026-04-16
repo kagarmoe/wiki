@@ -3187,3 +3187,27 @@ Both findings are in-release (code unchanged since v1.0.0).
 **Next sub-batch:** Batch 5d — docs/gas-city/crew-specialization-design.md.
 
 -> (no wiki pages touched)
+
+## [2026-04-15] drift-found | Batch 5d (Sweep 2: docs/gas-city/crew-specialization-design.md)
+
+**Scope:** Full read of `/home/kimberly/repos/gastown/docs/gas-city/crew-specialization-design.md` (402 lines).
+
+**Docs files read:**
+- `/home/kimberly/repos/gastown/docs/gas-city/crew-specialization-design.md` (in full, 402 lines)
+
+**Source files re-read at current HEAD:**
+- None needed. The document is a design discussion (bead hq-q76), not a description of implemented code. It describes aspirational features for the planned "Gas City" declarative layer.
+
+**Wiki pages audited:**
+- [gastown/roles/crew.md](gastown/roles/crew.md) — reviewed for conflicts with design doc claims. No conflicts found — the design doc describes aspirational features (capability profiles, routing, delegation, track records) that don't exist in the current crew implementation. The current crew wiki page accurately describes what crew workers are today (persistent, user-managed workspaces with full clones).
+
+**Findings by category:**
+- **none:** Entirely aspirational design document. Describes a cellular dispatch model, capability profiles with claims + evidence, bouncing-as-learning, and a Gas City role format that does not exist in code. References PR #2518 (TOML role parser) and PR #2527 (per-crew agent assignment) as "Open PR" — these are not implemented features. No verifiable code-behavior claims to drift-check.
+
+**New beads filed:** none
+**Beads closed:** none
+**Cross-link discipline:** No wiki pages touched.
+
+**Next sub-batch:** Batch 5e — docs/examples/hanoi-demo.md.
+
+-> (no wiki pages touched)
