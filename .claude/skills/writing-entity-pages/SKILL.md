@@ -228,9 +228,12 @@ Docs are NOT authoritative by themselves. Wiki pages (Phase 2 synthesis) are ALS
 
 **Operational classification procedure:**
 
+0. **Sibling-file audit (MANDATORY FIRST STEP).** Before re-reading any parent `.go` file, enumerate all files in the command's family: `ls /home/kimberly/repos/gastown/internal/cmd/<command>*.go`. For each sibling, grep for `AddCommand` or `init()` to find subcommand registrations. Compare the sibling list against the wiki page's `sources:` frontmatter and the body's subcommand count. If siblings exist that Phase 2 didn't list or that wire subcommands the wiki body doesn't mention, you have a `wiki-stale` + `phase-2-incomplete` candidate. **This step is load-bearing** — it surfaced ~12 findings across Batch 1's 8 sub-batches that would have been missed by parent-file-only reading.
 1. **Check Cobra vs code.** Read the cobra `Long` string at the cited `file:line` and compare to the code at the same file/function. If Cobra disagrees with code → `cobra drift`. Fix tier: **code** (edit the Long text + any other in-source docstrings).
 2. **Check docs vs correct code.** If Cobra was correct in step 1, compare docs to Cobra/code. If Cobra was wrong in step 1, compare docs to what code *actually* says (ignoring the wrong Cobra). If docs disagrees → `drift`. Fix tier: **docs** (upstream docs PR).
 3. **If both Cobra AND docs are wrong** → `compound drift`. Tag both `cobra drift` and `drift` on the same finding. Fix order: code first, then docs (fixing Cobra may make the docs fix obvious or even automatic).
+4. **Check Long text for doc references.** If the `Long` string cites a file path (e.g. "See docs/hq.md"), verify the cited file exists at HEAD. If it doesn't → `cobra drift` (dead doc reference). Novel sub-pattern surfaced in Batch 1g.
+5. **Check Long text for cross-command references.** If the `Long` string recommends another command (e.g. "use `gt start` to bring everything back up"), verify that the referenced command actually delivers what's implied. If not → `cobra drift` (semantic cross-reference drift). Novel sub-pattern surfaced in Batch 1f.
 
 ## Drift taxonomy (9 categories)
 
@@ -245,10 +248,19 @@ Every Phase 3+ finding fits exactly one primary category (with `compound drift` 
 | `implementation-status: partial` | Docs describe partially-implemented behavior. | `## Implementation status` tagged `partial` | **None** (preserve + status callout) |
 | `implementation-status: vestigial` | Code exists but is explicitly documented or commented as superseded / dead / "no longer runs". | `## Implementation status` tagged `vestigial` | **Code** (remove dead code) OR **Docs** (document the vestige) — per finding |
 | `gap` | Docs describe something real that has no wiki page yet (Phase 2 missed it or deferred it). | New `wants-wiki-entry` bead + `## Notes / open questions` entry pointing at the gap. | **Wiki** (Phase 2 coverage extension) |
-| `wiki-stale` | Phase 2 wiki page body disagrees with current source — our own synthesis has drifted or was never accurate. | Fix inline in `## What it actually does`. Log under `lint` verb, not `drift-found`. | **Wiki** (our synthesis) |
+| `wiki-stale` | Phase 2 wiki page body disagrees with current source — our own synthesis has drifted or was never accurate. | Fix inline in `## What it actually does`. Log under separate `lint` entry (not bundled into `drift-found`). Batch 1 bundled them; future batches split. Revisit at project end. | **Wiki** (our synthesis) |
 | `neutral` | Notes that on review turn out NOT to be drift (naming observations, curiosities, future considerations). | Stays in `## Notes / open questions`. No promotion. | **None** |
 
 **The critical distinction:** `drift` / `cobra drift` / `compound drift` mean *something needs to be corrected*. `implementation-status` means *docs are aspirationally correct and the reader should be told the feature isn't built yet*. Mixing these up is the single biggest risk during audits. Phase 6 (Implementation) treats them differently: drift gets factually rewritten; implementation-status gets a "not yet implemented" callout preserved as-is.
+
+**Compound axis extensions (surfaced in Batch 1).** The skill's `compound drift` row covers `cobra drift + drift`. Two additional compound shapes surfaced during Batch 1:
+
+- **`cobra drift + wiki-stale`** — Long text is wrong AND Phase 2's wiki body propagated the wrong claim. Example: `hooks.md` (Long omits a subcommand AND Phase 2 missed sibling-file registrations). Both drift sections live on the same page; both are tagged in `phase3_findings`.
+- **`cobra drift + implementation-status: vestigial`** — Long text advertises a feature that's vestigial in code. Example: `witness.md` `--foreground` flag (Long says it works; code prints "no longer runs patrol loop" and returns). The drift section and the implementation-status section are separate findings on the same page.
+
+These don't need new taxonomy rows — they're classified per existing categories and appear as multi-tag `phase3_findings` lists. Named here for discoverability.
+
+**Phase 6 meta-pattern: hand-maintained enumerations.** 10+ Long text blocks across Batch 1 have hand-maintained subcommand/capability lists that omit entries (doctor, repair, account, hooks, molecule, crew, namepool, mail, quota, etc.). Phase 6 should batch these as a single PR pattern rather than per-command PRs.
 
 ### `wiki-stale` sub-distinction: churn vs Phase-2-incomplete
 

@@ -2468,3 +2468,25 @@ Release-position: all source files present at v1.0.0. All findings `in-release`.
   [gastown/commands/tap.md](gastown/commands/tap.md),
   [gastown/commands/town.md](gastown/commands/town.md),
   [gastown/commands/warrant.md](gastown/commands/warrant.md)
+
+## [2026-04-15] decision | Sweep 1 retrospective: 7 process decisions after Batch 1 (111 commands)
+
+Post-Batch-1 retrospective with Kimberly. Eight sub-batches (1a-1h) audited all 111 command pages at 32% yield (35 pages with findings, exceeding the 20-32% estimate). Seven decisions ratified:
+
+**1. Sibling-file audit baked into skill.** Mandatory step 0 in the writing-entity-pages operational classification procedure. Before re-reading any parent `.go` file, enumerate siblings via `ls <command>*.go`, grep each for `AddCommand`/`init()`, compare against `sources:` frontmatter. Load-bearing methodology that surfaced ~12 findings across 8 sub-batches.
+
+**2. PR-delta scoping draft dropped as authoritative.** The plan's PR-delta draft is wrong about `wl_*.go` being post-v1.0.0 (verified: all 10 files exist at v1.0.0). Per-finding inline verification via `git show v1.0.0:<file>` is canonical. Draft remains as a hint.
+
+**3. Hand-maintained enumeration meta-pattern.** 10+ commands have Long text that hand-enumerates subcommands/capabilities and omits entries. Phase 6 batches these as a single PR pattern.
+
+**4. Wiki-stale log placement: separate lint entries** (option B). Future batches write wiki-stale findings as separate `lint` entries, not bundled into `drift-found`. Batch 1's bundled entries stand as-is. Revisit at project end.
+
+**5. Retroactive tagging of Batch 1b findings: do nothing** (option C). The 1b batch entry and retro already document the phase-2-incomplete determination for directive/hooks.
+
+**6. Novel sub-patterns named in skill.** Dead doc references (install.md → nonexistent docs/hq.md), semantic cross-reference drift (down.md → "use gt start" but start doesn't launch daemon), cobra-drift + implementation-status:vestigial compound (witness --foreground), cobra-drift + wiki-stale compound (hooks, molecule). Added to writing-entity-pages for discoverability.
+
+**7. Consolidated dispatch template for Batches 2-4** added to `.claude/plans/2026-04-14-phase3-drift.md`. Captures the final-form methodology from 8 Batch 1 iterations.
+
+**Observation (not a decision):** Phase-2-incomplete is the dominant wiki-stale root cause. Phase 2 treated `sources:` as "files I was aware of" rather than "files I read for cobra registrations." This is a Phase 4 input signal for re-audit scoping.
+
+→ [.claude/skills/writing-entity-pages/SKILL.md](.claude/skills/writing-entity-pages/SKILL.md), [.claude/plans/2026-04-14-phase3-drift.md](.claude/plans/2026-04-14-phase3-drift.md)

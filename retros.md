@@ -429,3 +429,30 @@ Flagging is cheap; Kimberly decides when to actually schedule.
 **For Kimberly retro discussion:**
 
 - **Batch 1 is complete. The Sweep 1 retrospective gate should assess:** (a) the sibling-file audit methodology that surfaced the highest-value findings; (b) the `[planned]` tag classification question; (c) whether the 32% finding rate across 111 pages is within expectations; (d) whether the wiki-stale sub-distinction (churn vs phase-2-incomplete) has enough data to inform Phase 4 scoping. The 12 wiki-stale pages are overwhelmingly `phase-2-incomplete` (sibling-file blind spot), not `churn`.
+
+## [2026-04-15] scheduled | Sweep 1 retrospective after Batch 1
+
+**Participants:** Kimberly + main orchestrator (Claude Opus 4.6)
+**Trigger:** Batch 1 complete (111 command pages, 8 sub-batches). Plan calls for Sweep 1 retrospective gate between Batches 4 and 5, but Kimberly pulled it forward — Batch 1 was the largest batch with the richest retro data.
+
+**Discussed:**
+
+- Sibling-file audit methodology — the #1 Phase 3 improvement, surfaced ~12 findings → ratified as skill step 0
+- Phase-2-incomplete as dominant wiki-stale root cause — 8+ commands missed sibling registrations → informational for Phase 4
+- PR-delta scoping draft wrong about wl_*.go → drop draft as authoritative, keep as hint
+- Hand-maintained enumeration meta-pattern (10+ cases) → Phase 6 batches as single PR pattern
+- Wiki-stale log placement (lint vs drift-found) → separate lint entries going forward
+- Novel finding sub-patterns (dead doc refs, semantic cross-refs, compound axes) → named in skill
+- Dispatch template consolidation → plan file
+- Yield calibration: 32% actual vs 20-32% estimated
+
+**Decided:**
+
+- 7 decisions ratified as documented above → landed as log.md `decision | Sweep 1 retrospective` entry + skill edits + plan edits in commit (this session)
+- No retroactive changes to Batch 1 — entries stand as-is
+- Wiki-stale log placement revisit deferred to project end
+
+**Deferred:**
+
+- Whether to run a second retrospective after Batches 2-4 (the originally-planned gate) or skip to Sweep 2 — decide at Batch 4 close based on yield and friction
+- Phase 4 scoping for Phase-2-incomplete re-audit — informational input from Batch 1 data, not actionable until Phase 4 planning begins
