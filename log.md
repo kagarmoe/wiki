@@ -3574,3 +3574,30 @@ Both findings are in-release (code unchanged since v1.0.0).
 **Next sub-batch:** Batch 8c — docs/design/convoy/mountain-eater.md.
 
 -> (no wiki pages touched)
+
+## [2026-04-15] drift-found | Batch 8c (Sweep 2: docs/design/convoy/mountain-eater.md)
+
+**Scope:** Full read of `/home/kimberly/repos/gastown/docs/design/convoy/mountain-eater.md` (544 lines).
+
+**Docs files read:**
+- `/home/kimberly/repos/gastown/docs/design/convoy/mountain-eater.md` (in full, 544 lines)
+
+**Source files re-read at current HEAD:**
+- `/home/kimberly/repos/gastown/internal/cmd/mountain.go` (lines 1-80, 710 lines total — `gt mountain` command with subcommands `status`, `pause`, `resume`, `cancel`)
+
+**Wiki pages audited:**
+- [gastown/commands/mountain.md](gastown/commands/mountain.md) — exists, no annotation needed from this design doc
+
+**Findings by category:**
+- **none (new to wiki):** The design document is marked "Status: Design" (line 5) but `gt mountain` is actually implemented in `mountain.go` (710 lines) with `status`, `pause`, `resume`, and `cancel` subcommands. This is a stale header, not a code behavior claim — the design doc describes what was subsequently built. The 4-layer architecture (ConvoyManager → Witness → Deacon Dog → Mayor), mountain label, skip-after-3-failures, and staging workflow described in the design are consistent with the implemented command. Not filed as drift because design doc status headers becoming stale after implementation is expected and doesn't mislead about code behavior.
+
+**Additional observation (not a finding):**
+- Layer 1 (Witness failure tracking for mountain convoys) and Layer 2 (Deacon Dog mountain audit) may not be fully implemented — the design describes these as enhancements. Checking implementation completeness would require deep reading of witness and deacon code, which is beyond Sweep 2's scope (Sweep 2 audits docs claims against code, not implementation completeness of design docs).
+
+**New beads filed:** none
+**Beads closed:** none
+**Cross-link discipline:** No wiki pages touched.
+
+**Next sub-batch:** Batch 8d — docs/design/convoy/roadmap.md.
+
+-> (no wiki pages touched)
