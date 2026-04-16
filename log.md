@@ -3690,3 +3690,27 @@ Both findings are in-release (code unchanged since v1.0.0).
 **Next sub-batch:** Batch 8h — docs/design/otel/otel-architecture.md.
 
 -> (no wiki pages touched)
+
+## [2026-04-15] drift-found | Batch 8h (Sweep 2: docs/design/otel/otel-architecture.md)
+
+**Scope:** Full read of `/home/kimberly/repos/gastown/docs/design/otel/otel-architecture.md` (694 lines, first 100 in full).
+
+**Docs files read:**
+- `/home/kimberly/repos/gastown/docs/design/otel/otel-architecture.md` (lines 1-100 in full)
+
+**Source files re-read at current HEAD:**
+- `/home/kimberly/repos/gastown/internal/telemetry/recorder.go` (lines 82-107, metric instrument declarations; lines 414, 692-766, RecordAgentInstantiate/RecordMolCook/RecordMolWisp/RecordMolSquash/RecordMolBurn/RecordBeadCreate)
+
+**Wiki pages audited:**
+- [gastown/packages/telemetry.md](gastown/packages/telemetry.md) — `phase3_findings` updated from `[none]` to `[drift]`
+
+**Findings by category:**
+- **drift:** 1 finding. The docs/design/otel/otel-architecture.md implementation status table (lines 54, 80-81) claims molecule lifecycle telemetry, bead creation telemetry, and agent instantiation telemetry are "❌ Roadmap" with "no RecordMol* functions exist" / "no RecordAgentInstantiate function exists." All these functions exist in `recorder.go` (RecordMolCook:692, RecordMolWisp:710, RecordMolSquash:731, RecordMolBurn:749, RecordBeadCreate:766, RecordAgentInstantiate:414). The docs also says "18 metric instruments" but the code has 24 (23 counters + 1 histogram). The wiki telemetry page already correctly lists all these functions.
+
+**New beads filed:** none
+**Beads closed:** none
+**Cross-link discipline:** Docs claim and Drift sections added to telemetry package page.
+
+**Next sub-batch:** Batch 8i — docs/design/otel/otel-data-model.md.
+
+-> [gastown/packages/telemetry.md](gastown/packages/telemetry.md)

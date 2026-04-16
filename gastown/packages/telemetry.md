@@ -11,8 +11,8 @@ sources:
   - /home/kimberly/repos/gastown/internal/telemetry/subprocess.go
 tags: [package, platform-service, telemetry, otel, opentelemetry, privacy, victoriametrics, victorialogs, opt-in]
 phase3_audited: 2026-04-15
-phase3_findings: [none]
-phase3_severities: []
+phase3_findings: [drift]
+phase3_severities: [wrong]
 phase3_findings_post_release: false
 ---
 
@@ -333,6 +333,27 @@ controlling surface here.
 - [gt done](../commands/done.md) — emits `RecordDone`.
 - [gt nudge](../commands/nudge.md) — emits `RecordNudge`.
 - [go-packages inventory](../inventory/go-packages.md).
+
+## Docs claim
+
+### Source
+- `/home/kimberly/repos/gastown/docs/design/otel/otel-architecture.md` (lines 76-84, implementation status table)
+
+### Verbatim
+> | Molecule lifecycle telemetry | ❌ Roadmap | `mol.cook`/`mol.wisp`/`mol.squash`/`mol.burn` — no `RecordMol*` functions exist |
+> | Bead creation telemetry | ❌ Roadmap | `bead.create` — no `RecordBeadCreate` function exists |
+> | **Agent instantiation** | ❌ Roadmap | `agent.instantiate` event — no `RecordAgentInstantiate` function exists |
+
+## Drift
+
+### docs/design/otel/otel-architecture.md claims RecordMol*/RecordBeadCreate/RecordAgentInstantiate don't exist but they do
+- **Claim source:** `docs/design/otel/otel-architecture.md` (lines 54, 80-81)
+- **Docs claim:** The implementation status table marks molecule lifecycle, bead creation, and agent instantiation telemetry as "❌ Roadmap" with explicit notes like "no RecordMol* functions exist" and "no RecordAgentInstantiate function exists."
+- **Code does:** `/home/kimberly/repos/gastown/internal/telemetry/recorder.go` has all these functions implemented: `RecordMolCook` (line 692), `RecordMolWisp` (line 710), `RecordMolSquash` (line 731), `RecordMolBurn` (line 749), `RecordBeadCreate` (line 766), `RecordAgentInstantiate` (line 414). Corresponding metric instruments are declared at lines 88, 100-104. Total instrument count is 24 (23 counters + 1 histogram), not the "18 metric instruments" stated in line 44.
+- **Category:** `drift`
+- **Severity:** `wrong`
+- **Fix tier:** `docs` — the otel-architecture.md implementation status table should mark these as ✅ Main and update the metric count.
+- **Release position:** `in-release`
 
 ## Notes / open questions
 
