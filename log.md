@@ -3163,3 +3163,27 @@ Both findings are in-release (code unchanged since v1.0.0).
 **Next sub-batch:** Batch 5c — docs/research/w-gc-004-agent-framework-survey.md.
 
 -> (no wiki pages touched)
+
+## [2026-04-15] drift-found | Batch 5c (Sweep 2: docs/research/w-gc-004-agent-framework-survey.md)
+
+**Scope:** Full read of `/home/kimberly/repos/gastown/docs/research/w-gc-004-agent-framework-survey.md` (647 lines).
+
+**Docs files read:**
+- `/home/kimberly/repos/gastown/docs/research/w-gc-004-agent-framework-survey.md` (in full, 647 lines)
+
+**Source files re-read at current HEAD:**
+- `/home/kimberly/repos/gastown/internal/templates/roles/` (ls confirmed 8 `.md.tmpl` files matching the survey's claim about Go template files)
+
+**Wiki pages audited:**
+- None annotated. The survey is a comparative analysis of 7 external frameworks vs Gas Town. Its gastown-specific claims (role templates at `internal/templates/roles/*.md.tmpl`, GUPP pull-based execution, bead/hook/molecule architecture, Dolt cell-level merge, 20-30 parallel polecats) are high-level architectural descriptions consistent with wiki entity pages. A few simplifications exist (e.g., bead states described as "open → working → done/parked" when the actual status set includes `in_progress`, `hooked`, etc.) but these are survey-level abstractions, not verifiable code-behavior claims.
+
+**Findings by category:**
+- **none:** Research survey with high-level gastown claims that are broadly accurate and not contradicted by wiki pages. External framework comparisons are out of scope. The "Gas City" aspirational claims (`implementation-status: unbuilt`) describe a planned product, not gastown code behavior.
+
+**New beads filed:** none
+**Beads closed:** none
+**Cross-link discipline:** No wiki pages touched.
+
+**Next sub-batch:** Batch 5d — docs/gas-city/crew-specialization-design.md.
+
+-> (no wiki pages touched)
