@@ -776,3 +776,28 @@ Flagging is cheap; Kimberly decides when to actually schedule.
 - none — the sole drift finding was already filed.
 
 **Batch 9 yield:** 0 new findings on 1/1 files. 1 pre-existing finding confirmed. CLEANUP.md is a well-maintained summary reference with one stale row (gt done self-nuke claim).
+
+## [2026-04-16 00:30] stage | Phase 3.Batch 10 (Sweep 2: docs/ root — 11 files)
+
+**Actor:** wiki-curator subagent (Sweep 2 docs process)
+**Unit:** 11 docs/ root files processed (10a-10k), 11 commits landed, 1 wiki page annotated.
+**Duration:** one dispatch
+
+**What went well:**
+- The triage question "does this file make verifiable gastown code behavior claims?" continues to efficiently separate claim-rich files from conceptual/marketing docs. 6 of 11 files had zero findings (glossary, overview, why-these-features, wasteland, otel-data-model, phase4-acceptance, agent-provider-integration).
+- The docs/ root files are generally well-maintained. The 3 findings across 11 files (2.7 per file average findings rate: 27%) came from: INSTALLING.md (rigs/ directory), HOOKS.md (stale known-gap), reference.md (gt done self-nuke + gt stop phantom command).
+- Forward-looking/aspirational docs (why-these-features.md, agent-provider-integration.md) honestly self-label their planned features, so no implementation-status findings were needed.
+- The INSTALLING.md `rigs/` directory drift was the only finding requiring a new wiki annotation. All other findings were either already filed (done.md self-nuke) or docs-only errors without a wiki page to annotate.
+
+**What didn't:**
+- reference.md (767 lines) required reading the full file to check all claims. A two-pass approach (grep for gastown-specific terms first) would have been faster since the file has large sections of JSON examples and configuration tables that don't make verifiable code claims.
+- The `gt stop --all` phantom command in reference.md is a docs error without a clear wiki page to annotate. It should probably be noted on down.md or shutdown.md as a "docs reference drift" but the current schema doesn't have a clean place for "docs X incorrectly references command Y."
+
+**What to change next time:**
+- For dense reference docs (700+ lines), pre-scan with grep for specific command names and behavioral verbs ("nukes", "kills", "creates") to find claim-dense sections before reading the full file.
+- Consider a "docs-only drift" category for cases where the finding can't be attributed to a specific wiki entity page (like `gt stop --all` being a phantom command).
+
+**Follow-ups filed:**
+- none — findings annotated inline or already filed.
+
+**Batch 10 yield:** 3 findings across 11 files (10d: 1 drift on install.md, 10e: 1 drift in HOOKS.md docs-only, 10j: 2 drift in reference.md both pre-existing/docs-only). 1 wiki page annotated (install.md). Finding rate: 27% of files had findings, but only 1 new wiki annotation was needed — most drift was already captured or docs-only.
