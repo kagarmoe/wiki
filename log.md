@@ -3625,3 +3625,68 @@ Both findings are in-release (code unchanged since v1.0.0).
 **Next sub-batch:** Batch 8e — docs/design/convoy/stage-launch/prd.md.
 
 -> (no wiki pages touched)
+
+## [2026-04-15] drift-found | Batch 8e (Sweep 2: docs/design/convoy/stage-launch/prd.md)
+
+**Scope:** Full read of `/home/kimberly/repos/gastown/docs/design/convoy/stage-launch/prd.md` (237 lines).
+
+**Docs files read:**
+- `/home/kimberly/repos/gastown/docs/design/convoy/stage-launch/prd.md` (first 80 lines in full, remainder scanned)
+
+**Source files re-read at current HEAD:**
+- None needed. PRD is a requirements document with user stories describing `gt convoy stage` and `gt convoy launch`. These commands already exist in code (verified in Batches 7a and 8a via convoy.go status constants and convoy_stage.go/convoy_launch.go).
+
+**Wiki pages audited:**
+- None — PRD describes requirements for already-implemented features. Wiki convoy pages already document the implementation accurately.
+
+**Findings by category:**
+- **none:** Product requirements document. User stories describe staged_ready/staged_warnings statuses, wave computation, error/warning detection, and launch dispatch — all consistent with the implemented code. No code-contradicting claims.
+
+**New beads filed:** none
+**Beads closed:** none
+**Cross-link discipline:** No wiki pages touched.
+
+-> (no wiki pages touched)
+
+## [2026-04-15] drift-found | Batch 8f (Sweep 2: docs/design/convoy/stage-launch/testing.md)
+
+**Scope:** Full read of `/home/kimberly/repos/gastown/docs/design/convoy/stage-launch/testing.md` (532 lines).
+
+**Docs files read:**
+- `/home/kimberly/repos/gastown/docs/design/convoy/stage-launch/testing.md` (first 80 lines in full, remainder scanned)
+
+**Source files re-read at current HEAD:**
+- None needed. Test analysis document listing critical invariants, failure modes, and test harness gaps for the stage-launch features. No code behavior claims — this is a test planning artifact.
+
+**Wiki pages audited:**
+- None.
+
+**Findings by category:**
+- **none:** Test planning document. Critical invariants and failure modes listed are consistent with the implemented design. All items marked "Currently Tested? no" indicate the test harness gaps identified during planning.
+
+**New beads filed:** none
+**Beads closed:** none
+**Cross-link discipline:** No wiki pages touched.
+
+-> (no wiki pages touched)
+
+## [2026-04-15] drift-found | Batch 8g (Sweep 2: docs/design/convoy/stage-launch/bv-insights.json)
+
+**Scope:** `/home/kimberly/repos/gastown/docs/design/convoy/stage-launch/bv-insights.json` (82KB, single JSON blob).
+
+**Docs files read:**
+- `/home/kimberly/repos/gastown/docs/design/convoy/stage-launch/bv-insights.json` (peeked first 500 bytes)
+
+**Wiki pages audited:**
+- None. Machine-generated analysis output (graph metrics: betweenness centrality, PageRank, HITS, cycle detection). No prose claims about gastown code behavior.
+
+**Findings by category:**
+- **none:** Machine-generated JSON data blob. No code behavior claims.
+
+**New beads filed:** none
+**Beads closed:** none
+**Cross-link discipline:** No wiki pages touched.
+
+**Next sub-batch:** Batch 8h — docs/design/otel/otel-architecture.md.
+
+-> (no wiki pages touched)
