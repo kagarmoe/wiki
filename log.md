@@ -3235,3 +3235,27 @@ Both findings are in-release (code unchanged since v1.0.0).
 **Next sub-batch:** Batch 5f — docs/examples/agent-validation.formula.toml.
 
 -> (no wiki pages touched)
+
+## [2026-04-15] drift-found | Batch 5f (Sweep 2: docs/examples/agent-validation.formula.toml)
+
+**Scope:** Full read of `/home/kimberly/repos/gastown/docs/examples/agent-validation.formula.toml` (372 lines).
+
+**Docs files read:**
+- `/home/kimberly/repos/gastown/docs/examples/agent-validation.formula.toml` (in full, 372 lines)
+
+**Source files re-read at current HEAD:**
+- None needed. The file is a TOML formula template — a self-documenting workflow definition, not prose claims about code behavior.
+
+**Wiki pages audited:**
+- None. The file is a polecat self-test formula with 7 sequential steps (verify-context, verify-lifecycle, verify-hook, verify-tools, verify-mail, execute-task, report-and-complete). It documents the formula structure (steps with `id`, `needs`, `title`, `description`) and common CLI usage patterns. All claims are illustrative usage examples rather than code-behavior assertions.
+
+**Findings by category:**
+- **none:** Example TOML formula. Self-documenting workflow definition, not verifiable code claims.
+
+**New beads filed:** none
+**Beads closed:** none
+**Cross-link discipline:** No wiki pages touched.
+
+**Next sub-batch:** Batch 5g — docs/examples/rig-settings.example.json.
+
+-> (no wiki pages touched)
