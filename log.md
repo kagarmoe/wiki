@@ -3601,3 +3601,27 @@ Both findings are in-release (code unchanged since v1.0.0).
 **Next sub-batch:** Batch 8d — docs/design/convoy/roadmap.md.
 
 -> (no wiki pages touched)
+
+## [2026-04-15] drift-found | Batch 8d (Sweep 2: docs/design/convoy/roadmap.md)
+
+**Scope:** Full read of `/home/kimberly/repos/gastown/docs/design/convoy/roadmap.md` (375 lines).
+
+**Docs files read:**
+- `/home/kimberly/repos/gastown/docs/design/convoy/roadmap.md` (in full, 375 lines)
+
+**Source files re-read at current HEAD:**
+- None needed. Roadmap is a planning/tracking document with milestones, dependency graphs, and work items. Code claims reference PRs and file locations already verified in earlier batches.
+
+**Wiki pages audited:**
+- None — roadmap is a planning document. Code behavior claims (batch sling, blocks deps, daemon feeding, stage/launch) are already verified and annotated on wiki convoy/sling pages.
+
+**Findings by category:**
+- **none:** Planning document. Milestone 0 is marked complete (consistent with code). Milestones 1-5 describe future/in-progress work. Line 61-62 says "witness feeds" for Workflow C, but this describes a historical behavior that was subsequently removed (S-04 in spec.md). Not filed as drift since the roadmap describes current state at writing time and the witness removal is documented in the spec.
+
+**New beads filed:** none
+**Beads closed:** none
+**Cross-link discipline:** No wiki pages touched.
+
+**Next sub-batch:** Batch 8e — docs/design/convoy/stage-launch/prd.md.
+
+-> (no wiki pages touched)
