@@ -754,3 +754,25 @@ Flagging is cheap; Kimberly decides when to actually schedule.
 - none — findings annotated inline on the telemetry wiki page.
 
 **Batch 8 yield:** 1 finding on 1/9 files (11%). 1 drift (docs implementation status table stale, wiki correct). The design docs are overwhelmingly consistent with code because they were the specs that drove implementation. The one finding was in the OTel status table which hadn't been updated after the features were built.
+
+## [2026-04-15 23:30] stage | Phase 3.Batch 9 (Sweep 2: docs/CLEANUP.md)
+
+**Actor:** wiki-curator subagent (Sweep 2 docs process)
+**Unit:** 1 docs file processed (9a), 1 commit landed, 0 wiki pages annotated. 62 command rows cross-checked.
+**Duration:** one dispatch
+
+**What went well:**
+- The row-by-row methodology was efficient. Having all 111 command wiki pages already written from Phase 2 made cross-referencing fast — each CLEANUP.md row mapped cleanly to an existing wiki page.
+- The pre-existing drift finding on `done.md` (Batch 1c) was confirmed without needing re-investigation. The formal re-audit added rigor but no new substance.
+- CLEANUP.md is remarkably accurate as a summary reference — 61 of 62 rows match the code-grounded wiki. This speaks well of the doc author's familiarity with the codebase.
+
+**What didn't:**
+- The batch was planned as "highest-effort" (62 rows) but was actually straightforward because CLEANUP.md is a summary table, not a detailed reference doc. Most rows needed only a spot-check against the wiki's "What it actually does" section. The effort estimate overweighted row count vs. claim density.
+
+**What to change next time:**
+- For summary/catalog docs like CLEANUP.md, a batch-check approach (read all wiki pages in the section, then verify the rows in bulk) is faster than strict row-by-row. The wiki pages themselves are the ground truth, so reading them is the bottleneck, not the CLEANUP.md rows.
+
+**Follow-ups filed:**
+- none — the sole drift finding was already filed.
+
+**Batch 9 yield:** 0 new findings on 1/1 files. 1 pre-existing finding confirmed. CLEANUP.md is a well-maintained summary reference with one stale row (gt done self-nuke claim).
