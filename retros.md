@@ -860,3 +860,40 @@ Flagging is cheap; Kimberly decides when to actually schedule.
 - **Implementation-status findings:** 7 (4 unbuilt: mol-mall, witness-AT, sandboxed-execution, factory-worker-API; 3 partial: plugin-system, federation, formula-resolution)
 - **Wiki pages annotated:** 0
 - **Finding rate:** 100% (all aspirational files have implementation-status findings by definition)
+
+## [2026-04-16] phase | Phase 3 — Drift
+
+**Scope:** Audited 271 units (211 entity pages in Sweep 1, 60 docs files in Sweep 2) for drift between gastown code and its documentation surfaces (Cobra Long text, docs/*.md, README). Produced the consolidated drift index at gastown/drift/README.md with 73 total findings: 52 Section 1 rows (upstream corrections for Phase 6), 21 Section 2 rows (wiki self-maintenance, all already fixed).
+**Duration:** 2026-04-14 -> 2026-04-16 (3 days, 13 batches across 76 sub-batch log entries)
+**Stages logged:** 12 batch-level stage retros (Batches 1-12) in this file
+
+**Patterns across stages:**
+- The sibling-file audit step (checking for `*_<name>.go` files with `AddCommand` registrations) was the single most productive methodology addition. It surfaced ~12 wiki-stale findings that parent-file-only reading would have missed. This became the mandatory first step of every Sweep 1 audit.
+- Sweep 2's docs-file audit had a bimodal yield: factual docs (guides, reference) had low drift rates (0-1 findings per file); aspirational docs (design/, vision) had near-100% rates (every aspirational doc is an implementation-status finding by definition). The bimodal pattern suggests Phase 6 should treat these as two separate work streams.
+- All 21 wiki-stale findings were `phase-2-incomplete`, not churn. Zero churn was found. This means gastown's codebase has been completely stable since Phase 2 (April 11-14), and all wiki errors were our own synthesis mistakes.
+
+**What went well:**
+- The code-first verification discipline held across all 13 batches. Every finding was grounded in re-read source at HEAD. No finding was filed based on stale Phase 2 citations.
+- The drift taxonomy (9 categories + fix tiers) proved stable. No new categories were needed beyond what the writing-entity-pages skill defined. Two compound patterns were documented (cobra-drift + wiki-stale, cobra-drift + implementation-status) but fit the existing framework.
+- The two-sweep architecture worked: Sweep 1 (entity pages) built the per-entity audit trail; Sweep 2 (docs files) caught cross-entity and docs-only drift. Together they covered the full documentation surface.
+- All findings are in-release (present at v1.0.0). Phase 6 can upstream immediately without waiting for a release cycle.
+
+**What didn't:**
+- Phase 2's sibling-file blind spot was pervasive (21 of 21 wiki-stale findings were phase-2-incomplete). Phase 2's methodology of reading only the parent `.go` file systematically missed subcommand registrations from sibling files with their own `init()` blocks. This was a structural gap in Phase 2, not a random miss.
+- The Sweep 2 sub-batch granularity was too fine for aspirational docs. Batches 12a-12g processed 7 files that all had the same finding category (implementation-status), each with its own log entry, retro entry, and commit. A bulk-audit model for uniform-finding batches would have been more efficient.
+- Some Sweep 2 batches had duplicated findings in their log entries (e.g., Batch 11c/11d shared the same persistent-polecat-pool finding, Batch 11f/11g shared the watchdog-chain.md dead reference). This was an artifact of the per-file serial dispatch model where context from the previous batch leaked into the current one.
+
+**Schema / skill changes surfaced:**
+- The writing-entity-pages skill's sibling-file audit step was added mid-Phase-3 (Batch 1b) and should be promoted from a Phase-3-specific procedure to a permanent Phase 2 methodology entry for any future mapping work.
+- The wiki-stale sub-distinction (churn vs phase-2-incomplete) was added mid-Phase-3 (Batch 1b) and proved essential for understanding whether findings were external drift or our own errors.
+
+**Recommendations for next phase:**
+- Phase 4 (Coverage / Completeness) should build on Phase 3's entity page annotations to identify code features with no documentation coverage. The `phase3_audited` frontmatter on all 211 entity pages is the starting baseline.
+- Phase 5 (Audience classification) should tag the 52 Section 1 rows with audience labels before Phase 6 executes them, to prioritize user-facing drift over internal/developer-facing drift.
+- Phase 6 should use the Section 3 meta-patterns to batch similar fixes into single PRs (especially the hand-maintained Long text enumeration pattern affecting 10+ commands).
+
+**Outstanding follow-ups:**
+- Phase 6 work-list: 52 upstream correction rows ready for execution
+- Phase 5 audience tagging: not yet scheduled
+
+**For Kimberly retro discussion:** Phase 2's sibling-file blind spot is worth discussing. It affected 21 pages and was structural (not random). If we ever run Phase 2 on another repo, the sibling-file audit must be part of the mapping methodology from day one.

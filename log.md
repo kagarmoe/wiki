@@ -4434,3 +4434,15 @@ Both findings are in-release (code unchanged since v1.0.0).
 - **implementation-status: partial:** 1 finding. Basic formula resolution exists (embedded formulas in binary, formula overlays with rig > town precedence). The three-tier model (Tier 1: project formulas, Tier 2: town/rig overrides, Tier 3: system/embedded) is partially implemented — Tier 2 overlays and Tier 3 embedded both work. Tier 1 (project-committed formulas) and Mol Mall integration are not implemented. The doc's self-labeled "Partially implemented" is accurate. Fix tier: preserve-as-vision for unbuilt tiers. Severity: incomplete. Release position: in-release.
 
 -> (no wiki pages touched)
+
+## [2026-04-16] drift-found | Batch 13 (Consolidated drift index)
+
+**Scope:** Aggregated all Phase 3 findings from Batches 1-12 into the partitioned drift index at gastown/drift/README.md.
+
+**Section 1 (Phase 6 corrections list):** 52 rows across 42 entity/docs sources. Breakdown: cobra-drift 30, drift (wiki-annotated) 9, drift (docs-only) 10, implementation-status-unbuilt 7, implementation-status-partial 3, implementation-status-vestigial 1.
+**Section 2 (Wiki self-maintenance):** 21 rows, all fixed during Sweep 1. wiki-stale 21 (phase-2-incomplete 21, churn 0).
+**Section 3 (Phase 6 meta-patterns):** 4 cross-cutting patterns (hand-maintained Long text enumerations, stale completion flow diagrams, dead doc references, semantic cross-command references).
+
+**Beads closed:** wiki-ytq (Phase 3 epic), wiki-vxl (Batch 1 anchor).
+
+-> [gastown/drift/README.md](gastown/drift/README.md)
