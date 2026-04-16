@@ -3947,3 +3947,12 @@ Both findings are in-release (code unchanged since v1.0.0).
 - **none:** Comprehensive technical reference. All architecture claims (mTLS, CA management, /v1/exec, /v1/git, admin API, auto-discovered allowlists) match wiki's code-grounded pages. No contradictions found.
 
 -> (no wiki pages touched)
+
+## [2026-04-15] drift-found | Batch 10i (Sweep 2: docs/phase4-minimum-fix-acceptance.md)
+
+**Scope:** Full read of `/home/kimberly/repos/gastown/docs/phase4-minimum-fix-acceptance.md` (39 lines). Meta-document: Phase 4 test verification commands and PR draft.
+
+**Findings by category:**
+- **none:** Testing/PR artifact. No code behavior claims about gastown commands. Purely procedural.
+
+-> (no wiki pages touched)
