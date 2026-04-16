@@ -5,6 +5,7 @@ status: partial
 topic: gastown
 created: 2026-04-11
 updated: 2026-04-15
+audit_log: "Sweep 1 (2026-04-14), Sweep 2 Batch 5a (2026-04-15), Sweep 2 Batch 7a (2026-04-15)"
 sources:
   - /home/kimberly/repos/gastown/internal/convoy/operations.go
   - /home/kimberly/repos/gastown/internal/convoy/multi_store.go
@@ -13,8 +14,8 @@ sources:
   - /home/kimberly/repos/gastown/internal/cmd/convoy_launch.go
 tags: [concept, convoy, cross-rig, tracking, work-unit, multi-stage, launch]
 phase3_audited: 2026-04-14
-phase3_findings: [drift]
-phase3_severities: [wrong]
+phase3_findings: [drift, drift]
+phase3_severities: [wrong, wrong]
 phase3_findings_post_release: false
 ---
 
@@ -284,9 +285,14 @@ Explicit answer for future readers:
 ## Docs claim
 
 ### Source
+- `/home/kimberly/repos/gastown/docs/concepts/convoy.md` (lines 63-76)
 - `/home/kimberly/repos/gastown/docs/skills/convoy/SKILL.md` (lines 38-60)
 
-### Verbatim
+### Verbatim (docs/concepts/convoy.md)
+> "OPEN ──(all issues close)──► LANDED/CLOSED"
+> States listed: `open` ("Active tracking, work in progress") and `closed` ("All tracked issues closed, notification sent"). No mention of `staged_ready` or `staged_warnings`.
+
+### Verbatim (docs/skills/convoy/SKILL.md)
 > ```
 > += EVENT-DRIVEN FEEDER (5s) =+
 > |                              |
@@ -306,6 +312,15 @@ Explicit answer for future readers:
 - **Release position:** `in-release`
 
 **Note:** The wiki pages for [internal/convoy](../packages/convoy.md) and this concept page already describe the architecture correctly — the wiki is not affected. The drift is docs-internal (the SKILL.md's architecture section contradicts its own source-files table).
+
+### docs/concepts/convoy.md omits staged_ready and staged_warnings states
+- **Claim source:** `docs/concepts/convoy.md` (lines 66-76, lifecycle diagram and state table)
+- **Docs claim:** "OPEN ──(all issues close)──► LANDED/CLOSED" with only two states listed: `open` and `closed`.
+- **Code does:** `/home/kimberly/repos/gastown/internal/cmd/convoy.go:97-102` defines four statuses: `open`, `closed`, `staged_ready`, `staged_warnings`. The staged statuses are the pre-launch states created by `gt convoy stage`. Transitions are validated by `validateConvoyStatusTransition` at `convoy.go:129-163`: `staged_* → open` is launch, `staged_* → closed` is cancel. The full lifecycle is stage → launch → feed → land, not just open → closed.
+- **Category:** `drift`
+- **Severity:** `wrong`
+- **Fix tier:** `docs` — the concepts doc should include the staged states and the full lifecycle.
+- **Release position:** `in-release`
 
 ## Notes / open questions
 

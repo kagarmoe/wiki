@@ -3363,3 +3363,32 @@ Both findings are in-release (code unchanged since v1.0.0).
 **Batch 6 complete.** 2 files processed, 0 findings. Retro follows.
 
 -> (no wiki pages touched)
+
+## [2026-04-15] drift-found | Batch 7a (Sweep 2: docs/concepts/convoy.md)
+
+**Scope:** Full read of `/home/kimberly/repos/gastown/docs/concepts/convoy.md` (251 lines).
+
+**Docs files read:**
+- `/home/kimberly/repos/gastown/docs/concepts/convoy.md` (in full, 251 lines)
+
+**Source files re-read at current HEAD:**
+- `/home/kimberly/repos/gastown/internal/cmd/convoy.go` (lines 97-102, status constants; lines 129-163, validateConvoyStatusTransition; lines 384, --from-epic flag; lines 827-838, auto-reopen on add)
+- `/home/kimberly/repos/gastown/internal/cmd/sling.go` (lines 45, 127-128, 154-155, auto-convoy on sling)
+
+**Wiki pages audited:**
+- [gastown/concepts/convoy.md](gastown/concepts/convoy.md) — existing `phase3_findings: [drift]` updated to `[drift, drift]`
+
+**Findings by category:**
+- **drift:** 1 new finding. The docs/concepts/convoy.md lifecycle section (lines 63-76) shows only two states (`open`, `closed`) and a simple `OPEN → CLOSED` lifecycle. Code at `convoy.go:97-102` defines four statuses: `open`, `closed`, `staged_ready`, `staged_warnings`. The staged states are the pre-launch phase created by `gt convoy stage`, validated by `validateConvoyStatusTransition` at `convoy.go:129-163`. The wiki already correctly documents all four states and the full stage → launch → feed → land lifecycle.
+
+**Additional observations (not findings):**
+- The docs/concepts/convoy.md accurately describes: convoy vs swarm distinction, cross-rig tracking, `--from-epic` flag (verified at convoy.go:384), auto-convoy on sling (verified at sling.go:45,127), `--notify` for subscribers, `tracks` non-blocking relation, stranded convoy concept. These claims are all consistent with code and wiki.
+- The docs file says "Adding issues to a closed convoy requires reopening first" (line 101-103) with a manual `bd update` command, but code at convoy.go:827-838 shows automatic reopening when `gt convoy add` is used on a closed convoy. The docs file's own line 69 ("auto-reopens") is the correct behavior. Minor internal inconsistency in the docs file but not filed as a separate finding since the auto-reopen claim at line 69 is correct.
+
+**New beads filed:** none
+**Beads closed:** none
+**Cross-link discipline:** Docs claim section updated on convoy concept page. All `file:line` refs freshly verified at HEAD.
+
+**Next sub-batch:** Batch 7b — docs/concepts/integration-branches.md.
+
+-> [gastown/concepts/convoy.md](gastown/concepts/convoy.md)
