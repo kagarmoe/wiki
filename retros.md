@@ -456,3 +456,27 @@ Flagging is cheap; Kimberly decides when to actually schedule.
 
 - Whether to run a second retrospective after Batches 2-4 (the originally-planned gate) or skip to Sweep 2 — decide at Batch 4 close based on yield and friction
 - Phase 4 scoping for Phase-2-incomplete re-audit — informational input from Batch 1 data, not actionable until Phase 4 planning begins
+
+## [2026-04-15 12:00] stage | 3.2.2a — Platform services packages Sweep 1
+
+**Actor:** wiki-curator subagent (Phase 3 Batch 2a dispatch)
+**Unit:** 9 package pages audited (cli, config, session, style, telemetry, ui, util, version, workspace), 1 wiki-stale finding, 1 commit
+**Duration:** one dispatch
+
+**What went well:**
+- Package-file audit was fast and clean — all 9 packages matched their wiki `sources:` listings (except the one `orphan_windows.go` omission in util.md). Phase 2's package methodology was more thorough than its command methodology for file enumeration.
+- Zero code churn since v1.0.0 across all 9 packages made release-position verification trivial — a single `git log --oneline v1.0.0..HEAD` for all directories returned empty.
+- Line-number verification was high-confidence: multiple key function locations (SessionConfig:36, StartSession:144, CleanupOrphanedClaudeProcesses:768, isBuildBranch:241) matched Phase 2 citations exactly.
+
+**What didn't:**
+- Very low yield (11%, 1/9) suggests these clean, stable packages were not worth the full per-file re-read treatment. The "high-leverage" candidates (config, session, util) turned out to have no drift despite their complexity — Phase 2 did a good job on them.
+- The dispatch template's "expected candidates" list (config presets, session PrefixRegistry, util orphan simplification, telemetry opt-in, version guard list) all checked out with no findings. The prediction model was too optimistic about package-level drift.
+
+**What to change next time:**
+- For future package sub-batches where `git log v1.0.0..HEAD` returns zero commits for all directories, consider a fast-path: annotate frontmatter, spot-check 2-3 high-risk claims per page, skip full re-read. The full re-read adds thoroughness but little yield when source hasn't moved.
+- The `orphan_windows.go` omission pattern (body describes file, frontmatter doesn't list it) may recur on other packages with platform-specific build-tag files. Watch for `*_windows.go` / `*_unix.go` splits in future sub-batches.
+
+**Follow-ups filed:**
+- none — lessons are purely informational
+
+**For Kimberly retro discussion:** The 11% yield on packages vs 32% on commands suggests packages may not need the full Sweep 1 treatment. Worth discussing whether Batches 2b-2f should use the fast-path for zero-churn packages.

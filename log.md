@@ -2490,3 +2490,82 @@ Post-Batch-1 retrospective with Kimberly. Eight sub-batches (1a-1h) audited all 
 **Observation (not a decision):** Phase-2-incomplete is the dominant wiki-stale root cause. Phase 2 treated `sources:` as "files I was aware of" rather than "files I read for cobra registrations." This is a Phase 4 input signal for re-audit scoping.
 
 → [.claude/skills/writing-entity-pages/SKILL.md](.claude/skills/writing-entity-pages/SKILL.md), [.claude/plans/2026-04-14-phase3-drift.md](.claude/plans/2026-04-14-phase3-drift.md)
+
+## [2026-04-15] lint | Batch 2a wiki-stale finding (util.md sources frontmatter)
+
+**Scope:** 1 wiki-stale finding surfaced during Batch 2a (Sweep 1 packages/ Platform services) package-file audit.
+
+**Finding:**
+
+- **util.md** — `sources:` frontmatter omitted `orphan_windows.go`. The file is a Windows stub (58 lines, type definitions + no-op functions) and was correctly described in the page body ("orphan_windows.go — stub implementations that return empty results"), but was not listed in frontmatter. Fixed by adding `/home/kimberly/repos/gastown/internal/util/orphan_windows.go` to `sources:`.
+  - **Category:** `wiki-stale`
+  - **Severity:** `incomplete`
+  - **Phase 2 root cause:** `phase-2-incomplete` (heuristic determination — Phase 2 read the file and described it in the body but did not list it in frontmatter; the file existed at Phase 2 time at v1.0.0).
+  - **Release position:** `in-release`
+
+→ [gastown/packages/util.md](gastown/packages/util.md)
+
+## [2026-04-15] drift-found | Batch 2a (Sweep 1 packages/ Platform services — 9 pages)
+
+**Scope:** Sweep 1 promotion of Phase 2 notes to v1.2 annotations across all 9 Platform services package pages. Every page received `phase3_audited` / `phase3_findings` / `phase3_severities` / `phase3_findings_post_release` frontmatter. One page surfaced a `wiki-stale` finding (logged separately above); the other 8 were audited with `phase3_findings: [none]`.
+
+**Source files re-read at current HEAD** (no changes since v1.0.0 for any of these packages — `git log --oneline v1.0.0..HEAD` for all 9 package directories returned zero commits):
+- `/home/kimberly/repos/gastown/internal/cli/name.go` (verified: single file, wiki matches)
+- `/home/kimberly/repos/gastown/internal/config/agents.go` (lines 1-45: agent preset enum verified — 10 presets match wiki)
+- `/home/kimberly/repos/gastown/internal/config/` (all 9 files spot-verified: loader.go resolveConfigMu + Load/Save pairs, types.go ~67 KB, env.go IdentityEnvVars, cost_tier.go 3 tiers, directives.go LoadRoleDirective, overseer.go DetectOverseer, roles.go go:embed, operational.go LoadOperationalConfig)
+- `/home/kimberly/repos/gastown/internal/session/` (all 11 files: identity.go package doc "polecat" still stale as Phase 2 noted; lifecycle.go SessionConfig:36, StartResult:115, StartSession:144, StopSession:344, KillExistingSession:427 — all match; names.go factories; registry.go PrefixRegistry; pidtrack.go; stale.go; startup.go; town.go; window_tint.go; agent_logging_{unix,windows}.go)
+- `/home/kimberly/repos/gastown/internal/style/style.go` (in full, 60 lines — all line refs verified)
+- `/home/kimberly/repos/gastown/internal/style/table.go` (spot-verified)
+- `/home/kimberly/repos/gastown/internal/telemetry/telemetry.go` (lines 1-130: Init returns (nil,nil) when no env vars, DefaultMetricsURL/DefaultLogsURL both localhost, ExportInterval 30s, IsActive at line 92)
+- `/home/kimberly/repos/gastown/internal/telemetry/recorder.go` (spot-verified: 23 counters + 1 histogram)
+- `/home/kimberly/repos/gastown/internal/telemetry/subprocess.go` (spot-verified: SetProcessOTELAttrs, OTELEnvForSubprocess)
+- `/home/kimberly/repos/gastown/internal/ui/` (all 4 files: styles.go init() at line 15, terminal.go capability detection, pager.go ToPager, markdown.go RenderMarkdown)
+- `/home/kimberly/repos/gastown/internal/util/` (all 9 files: atomic.go, exec.go, exec_unix.go, exec_windows.go, orphan.go 894 lines, orphan_windows.go 58-line stub, path.go, slice.go, url.go)
+- `/home/kimberly/repos/gastown/internal/version/stale.go` (Commit:18, StaleBinaryInfo:22-30, SetCommit:249, isBuildBranch:241 main/master/carry/*, onlyBeadsChanges:220 GH#2596)
+- `/home/kimberly/repos/gastown/internal/workspace/find.go` (in full, 194 lines — all functions at cited lines)
+
+Release-position verification: all 9 package directories had zero commits between v1.0.0 and HEAD. All source is byte-identical. All findings are `in-release`.
+
+**Docs files read:** none (Sweep 1).
+
+**Wiki pages audited:**
+- [cli](gastown/packages/cli.md) — `phase3_findings: [none]`
+- [config](gastown/packages/config.md) — `phase3_findings: [none]`
+- [session](gastown/packages/session.md) — `phase3_findings: [none]`
+- [style](gastown/packages/style.md) — `phase3_findings: [none]`
+- [telemetry](gastown/packages/telemetry.md) — `phase3_findings: [none]`
+- [ui](gastown/packages/ui.md) — `phase3_findings: [none]`
+- [util](gastown/packages/util.md) — `phase3_findings: [wiki-stale]`
+- [version](gastown/packages/version.md) — `phase3_findings: [none]`
+- [workspace](gastown/packages/workspace.md) — `phase3_findings: [none]`
+
+**Findings by category:**
+
+- **drift:** 0 (Sweep 1; no `docs/` files read).
+- **cobra drift:** 0 (packages have no Cobra Long text — structurally impossible).
+- **compound drift:** 0.
+- **implementation-status:** 0. No aspirational, partial, or vestigial behavior found.
+- **wiki-stale:** 1 finding on util.md (sources frontmatter missing `orphan_windows.go`). Severity: `incomplete`. Root cause: `phase-2-incomplete`. Release position: `in-release`.
+- **gap:** 0.
+- **none:** 8 pages.
+
+**Judgment calls:**
+
+1. **session.md stale package doc comment.** `// Package session provides polecat session lifecycle management.` at `identity.go:1` / `lifecycle.go:1` is stale (code covers all roles). Phase 2 already documents this in Notes bullet 1. NOT promoted to Drift because it's an in-code doc comment, not a `docs/` or Cobra claim. Candidate for Phase 6 code PR but not Phase 3 scope.
+2. **util.md orphan.go "~1000 lines"** vs actual 894 lines. Not wiki-stale — wiki used deliberate `~` approximation.
+3. **config.md `AgentOmp` credit wording.** Wiki paraphrases; source says "Inspired by." Close enough — not wiki-stale.
+4. **No `docs/*.md` about these packages.** Checked; `drift` category structurally inapplicable for Sweep 1 on these pages.
+
+**Yield:** 1/9 pages (11%), below the 15-25% estimate. Expected given zero code churn since v1.0.0 and Phase 2's thorough package-level methodology.
+
+**Next sub-batch:** Batch 2b — Data layer packages (Phase 2 Batch 5).
+
+→ [gastown/packages/cli.md](gastown/packages/cli.md),
+  [gastown/packages/config.md](gastown/packages/config.md),
+  [gastown/packages/session.md](gastown/packages/session.md),
+  [gastown/packages/style.md](gastown/packages/style.md),
+  [gastown/packages/telemetry.md](gastown/packages/telemetry.md),
+  [gastown/packages/ui.md](gastown/packages/ui.md),
+  [gastown/packages/util.md](gastown/packages/util.md),
+  [gastown/packages/version.md](gastown/packages/version.md),
+  [gastown/packages/workspace.md](gastown/packages/workspace.md)
