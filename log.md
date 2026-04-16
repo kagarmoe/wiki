@@ -3819,3 +3819,21 @@ Both findings are in-release (code unchanged since v1.0.0).
 - **none:** High-level glossary. All definitions consistent with wiki's code-grounded pages. No code behavior claims that contradict wiki or code.
 
 -> (no wiki pages touched)
+
+## [2026-04-15] drift-found | Batch 10b (Sweep 2: docs/overview.md)
+
+**Scope:** Full read of `/home/kimberly/repos/gastown/docs/overview.md` (204 lines). Conceptual overview of Gas Town architecture: role taxonomy, convoys, crew vs polecats, dogs, cross-rig work, directory structure, identity/attribution, propulsion principle.
+
+**Docs files read:**
+- `/home/kimberly/repos/gastown/docs/overview.md` (in full, 204 lines)
+
+**Source files re-read at current HEAD:**
+- `/home/kimberly/repos/gastown/internal/cmd/rig.go` (line 670 — confirmed `.repo.git/` bare repo description)
+
+**Wiki pages audited:**
+- Spot-checked against: commands/boot.md, commands/convoy.md, commands/crew.md, commands/polecat.md, commands/dog.md, commands/rig.md, concepts/convoy.md, concepts/rig.md, roles/*.md
+
+**Findings by category:**
+- **none:** Overview is a high-level conceptual document. All claims (role taxonomy, crew vs polecat semantics, dog vs crew distinction, directory structure with `.repo.git/`, identity attribution, propulsion principle) are consistent with wiki's code-grounded pages. No code behavior claims that contradict wiki or code.
+
+-> (no wiki pages touched)
