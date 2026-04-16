@@ -4,7 +4,7 @@ type: workflow
 status: partial
 topic: gastown
 created: 2026-04-11
-updated: 2026-04-11
+updated: 2026-04-14
 sources:
   - /home/kimberly/repos/gastown/internal/cmd/convoy.go
   - /home/kimberly/repos/gastown/internal/cmd/convoy_stage.go
@@ -14,6 +14,10 @@ sources:
   - /home/kimberly/repos/gastown/internal/refinery/engineer.go
   - /home/kimberly/repos/gastown/internal/cmd/close.go
 tags: [workflow, multi-step, convoy, launch, feed, land, cross-rig]
+phase3_audited: 2026-04-14
+phase3_findings: [none]
+phase3_severities: []
+phase3_findings_post_release: false
 ---
 
 # convoy-launch

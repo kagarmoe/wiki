@@ -4,7 +4,7 @@ type: file
 status: verified
 topic: gastown
 created: 2026-04-11
-updated: 2026-04-11
+updated: 2026-04-14
 sources:
   - /home/kimberly/repos/gastown/plugins/dolt-snapshots/plugin.md
   - /home/kimberly/repos/gastown/plugins/dolt-snapshots/main.go
@@ -12,6 +12,10 @@ sources:
   - /home/kimberly/repos/gastown/plugins/dolt-snapshots/run.sh
   - /home/kimberly/repos/gastown/plugins/dolt-snapshots/go.mod
 tags: [plugin, dolt, snapshots, convoy, go-plugin, event-gate]
+phase3_audited: 2026-04-14
+phase3_findings: [none]
+phase3_severities: []
+phase3_findings_post_release: false
 ---
 
 # dolt-snapshots plugin

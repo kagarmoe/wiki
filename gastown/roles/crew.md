@@ -4,11 +4,15 @@ type: role
 status: partial
 topic: gastown
 created: 2026-04-11
-updated: 2026-04-11
+updated: 2026-04-14
 sources:
   - /home/kimberly/repos/gastown/internal/crew/
   - /home/kimberly/repos/gastown/internal/cmd/crew.go
 tags: [role, agent, crew, persistent, user-managed, full-clone, rig-level]
+phase3_audited: 2026-04-14
+phase3_findings: [none]
+phase3_severities: []
+phase3_findings_post_release: false
 ---
 
 # crew (role)

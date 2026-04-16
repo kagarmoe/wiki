@@ -4,11 +4,15 @@ type: concept
 status: partial
 topic: gastown
 created: 2026-04-11
-updated: 2026-04-11
+updated: 2026-04-14
 sources:
   - /home/kimberly/repos/gastown/internal/config/directives.go
   - /home/kimberly/repos/gastown/internal/cmd/directive.go
 tags: [concept, directive, role-override, prime-time, town-level, rig-level, overlay, markdown]
+phase3_audited: 2026-04-14
+phase3_findings: [wiki-stale]
+phase3_severities: [wrong]
+phase3_findings_post_release: false
 ---
 
 # directive
@@ -125,28 +129,25 @@ This means:
   `GT_RIG` pair that `detectSender` and session naming
   use.
 
-## CLI surface: parent-only stub
+## CLI surface
 
 The `gt directive` command
 (`/home/kimberly/repos/gastown/internal/cmd/directive.go`)
-is a **parent-only stub**: the file wires up `directiveCmd`
-as a cobra parent with `RunE: requireSubcommand`, but
-**no subcommands are added** in the visible source. The
-`Long` text advertises three subcommands — `show <role>`,
-`edit <role>`, `list` — but the registration for them is
-not in `directive.go`.
-
-This is the "directive implementation vs CLI stub"
-asymmetry: the **config-loader side is fully implemented**
-(`config/directives.go`) and consumed by the prime path,
-but the **CLI management side is unfinished**. Operators
-can create directives by hand (write a markdown file in
-the right directory), and the agents will read them. They
-just can't list, show, or edit them through `gt directive
-<subcommand>` in the currently mapped source.
+wires up `directiveCmd` as a cobra parent with
+`RunE: requireSubcommand`. The three subcommands —
+`show <role>`, `edit <role>`, `list` — are wired in
+sibling files (`directive_show.go`, `directive_edit.go`,
+`directive_list.go`), each registering itself on
+`directiveCmd` in its own `init()`. Both the config-loader
+side (`config/directives.go`) and the CLI management side
+are implemented.
 
 See the [`gt directive` command page](../commands/directive.md)
-for the stub analysis.
+for the full CLI analysis. (Phase 3 Batch 4 wiki-stale
+correction: the Phase 2 concept page incorrectly described
+the CLI as a "parent-only stub" with no wired subcommands.
+The command page was corrected in Phase 3 Batch 1b; this
+concept page is now aligned.)
 
 ## How it's realized in the code
 
@@ -209,14 +210,16 @@ for the stub analysis.
 
 ## Notes / open questions
 
-- **Missing CLI wiring.** `directive.go:38-40` calls
-  `rootCmd.AddCommand(directiveCmd)` but does NOT call
-  `directiveCmd.AddCommand(...)` for any subcommands.
-  The `show`, `edit`, `list` advertised in the Long text
-  are not wired up in this file. They may be defined in
-  another file not yet mapped, or may simply be
-  unimplemented. A `grep directiveCmd.AddCommand` across
-  `internal/cmd/` is a reasonable next pass.
+- ~~**Missing CLI wiring.**~~ Phase 3 Batch 4 wiki-stale
+  correction: the `show`, `edit`, `list` subcommands ARE
+  wired via sibling files (`directive_show.go`,
+  `directive_edit.go`, `directive_list.go`), each adding
+  itself to `directiveCmd` in its own `init()`. This was
+  confirmed in Phase 3 Batch 1b on the command page; the
+  concept page's original claim was wrong at Phase 2 time.
+  **Phase 2 root cause:** phase-2-incomplete — Phase 2
+  read only `directive.go` in isolation without checking
+  sibling files for `AddCommand` calls.
 - **No runtime enforcement.** Directives are prompt
   instructions; the LLM may or may not follow them. A
   stricter system would enforce directive-declared

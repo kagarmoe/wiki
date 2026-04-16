@@ -3011,3 +3011,94 @@ All three are in-release (zero commits between v1.0.0 and HEAD across all audite
   [gastown/inventory/go-packages.md](gastown/inventory/go-packages.md),
   [gastown/inventory/README.md](gastown/inventory/README.md),
   [gastown/inventory/repo-root.md](gastown/inventory/repo-root.md)
+
+## [2026-04-14] lint | Batch 4 wiki-stale findings (polecat.md pending-role-page claims, directive.md parent-only-stub claim)
+
+Two wiki-stale findings fixed inline during Batch 4:
+
+1. **`gastown/roles/polecat.md`** — Notes section claimed "The Witness role page is pending" and "The Refinery role page is pending." Both pages exist (created in the same Phase 2 Batch 6). **Phase 2 root cause:** phase-2-incomplete — the polecat page was written before the witness and refinery role pages landed in the same batch; the polecat page was not updated with forward links afterwards.
+
+2. **`gastown/concepts/directive.md`** — "CLI surface: parent-only stub" section and Notes bullet claimed `gt directive` had no wired subcommands. The command page `gastown/commands/directive.md` was corrected in Phase 3 Batch 1b (sibling files `directive_show.go`, `directive_edit.go`, `directive_list.go` wire the subcommands via `init()`). The concept page propagated the same Phase 2 error and is now aligned. **Phase 2 root cause:** phase-2-incomplete — Phase 2 read only `directive.go` without checking sibling files.
+
+Both findings are in-release (code unchanged since v1.0.0).
+
+## [2026-04-14] drift-found | Batch 4 (Sweep 1 roles/ + concepts/ + workflows/ + binaries/ + plugins/ — 22 pages)
+
+**Scope:** Phase 3 Sweep 1 sub-batch 4 (final Sweep 1 batch): audited 8 roles/ pages, 7 concepts/ pages, 2 workflows/ pages, 3 binaries/ pages, and 2 plugins/ pages. Single batch (not sub-batched).
+
+**Methodology:** Cross-reference audit against Batches 1-3 findings. These pages are domain-centric and make claims about code behavior via cross-references to command and package pages already audited in earlier batches. The primary audit question is: does this page make claims that contradict what Batches 1-3 found? Secondary: are Notes/open questions that reference "pending" pages still accurate?
+
+**Source files re-read:** None required for this batch. Role/concept/workflow/binary/plugin pages are synthesis pages that cross-reference command and package pages — the source files were already re-read in Batches 1-3. The cross-reference audit checked wiki page consistency, not source-to-wiki consistency (which was already verified in prior batches).
+
+**Docs files read:** None (Sweep 1).
+
+**Wiki pages audited (22):**
+
+| Page | phase3_findings | Notes |
+|---|---|---|
+| [witness.md](gastown/roles/witness.md) | `[none]` | Foreground vestigial claim at lines 123-127 is accurate and consistent with Batch 1d's cobra-drift + vestigial finding on the command page. No contradictions. |
+| [polecat.md](gastown/roles/polecat.md) | `[wiki-stale]` | Two Notes bullets claimed witness and refinery role pages were "pending" — both pages exist. Fixed inline. |
+| [mayor.md](gastown/roles/mayor.md) | `[none]` | All cross-references to command/package pages consistent with Batch 1d findings. |
+| [crew.md](gastown/roles/crew.md) | `[none]` | Cross-references consistent. 13-subcommand count matches Batch 1d. |
+| [deacon.md](gastown/roles/deacon.md) | `[none]` | 15-subcommand count matches Batch 1d. Cross-references consistent. |
+| [dog.md](gastown/roles/dog.md) | `[none]` | 9-subcommand count matches Batch 1d. Cross-references consistent. |
+| [refinery.md](gastown/roles/refinery.md) | `[none]` | "Foreground mode is deprecated" claim is consistent with command page (which says `--foreground` is still live but deprecated). 11-subcommand count matches Batch 1d. |
+| [reaper.md](gastown/roles/reaper.md) | `[none]` | Cross-references to command and package pages consistent. |
+| [convoy.md](gastown/concepts/convoy.md) | `[none]` | 12-subcommand count matches Batch 1c. Cross-references to convoy command page consistent. |
+| [directive.md](gastown/concepts/directive.md) | `[wiki-stale]` | "Parent-only stub" section contradicted Batch 1b correction on command page. Fixed inline. |
+| [formula.md](gastown/concepts/formula.md) | `[none]` | Cross-references consistent. Four formula types match package page. |
+| [identity.md](gastown/concepts/identity.md) | `[none]` | `detectSender` chain description consistent with all role pages. |
+| [molecule.md](gastown/concepts/molecule.md) | `[none]` | 11-subcommand count consistent. Cross-references accurate. |
+| [rig.md](gastown/concepts/rig.md) | `[none]` | Layered config, AgentDirs, lifecycle states all consistent with package/command pages. |
+| [wisp.md](gastown/concepts/wisp.md) | `[none]` | Promotion criteria, reaper behavior, refinery MR filtering all consistent with package pages. |
+| [convoy-launch.md](gastown/workflows/convoy-launch.md) | `[none]` | 8-step workflow consistent with all role/package pages it references. |
+| [polecat-lifecycle.md](gastown/workflows/polecat-lifecycle.md) | `[none]` | 9-state lifecycle consistent with polecat role, command, and package pages. |
+| [gt.md](gastown/binaries/gt.md) | `[none]` | 111 commands, 7 groups, self-kill gate, sibling binaries all consistent with Batch 1 findings. |
+| [gt-proxy-server.md](gastown/binaries/gt-proxy-server.md) | `[none]` | mTLS, allowlist, exec handler all match cited sources. No contradictions. |
+| [gt-proxy-client.md](gastown/binaries/gt-proxy-client.md) | `[none]` | Wire protocol, env var contract, fallback behavior all match cited sources. |
+| [plugins/README.md](gastown/plugins/README.md) | `[none]` | 14-plugin inventory consistent. Gate types, execution types match. |
+| [plugins/dolt-snapshots.md](gastown/plugins/dolt-snapshots.md) | `[none]` | Go binary modes, SQL operations, test coverage all match cited sources. |
+
+**Findings by category:**
+- **wiki-stale:** 2 findings on 2 pages (polecat.md, directive.md). Both phase-2-incomplete. Both in-release.
+- **none:** 20 pages audited with no findings.
+
+**Yield:** 2/22 pages (9%). Within the plan's 5-15% estimate.
+
+**Cross-reference audit results:**
+- **witness.md (role) vs Batch 1d finding:** The role page's description of foreground mode as vestigial (lines 123-127) is **accurate** and consistent with the cobra-drift + implementation-status-vestigial finding on `commands/witness.md`. No correction needed.
+- **polecat.md (role) vs Batch 1d finding:** No contradictions on command behavior. Only finding was stale "pending" claims about sibling role pages.
+- **directive.md (concept) vs Batch 1b finding:** The concept page propagated the same Phase 2 parent-only-file error that Batch 1b corrected on the command page. Now aligned.
+- **All subcommand counts on role pages** (crew: 13, deacon: 15, dog: 9, refinery: 11, convoy: 12) match Batch 1 findings.
+
+**Sweep 1 completion stats:**
+- Batch 1 (commands/): 111 pages, 8 sub-batches
+- Batch 2 (packages/): 61 pages, 6 sub-batches
+- Batch 3 (files/ + inventory/): 17 pages, 1 batch
+- Batch 4 (roles/ + concepts/ + workflows/ + binaries/ + plugins/): 22 pages, 1 batch
+- **Total Sweep 1: 211 pages audited.** All Phase 2 entity pages now have `phase3_audited` frontmatter.
+
+**Next step:** Sweep 1 retrospective gate (plan revision checkpoint between Sweep 1 and Sweep 2). Not a batch — no commits, no log entry. Then Batch 5 begins Sweep 2.
+
+-> [gastown/roles/witness.md](gastown/roles/witness.md),
+  [gastown/roles/polecat.md](gastown/roles/polecat.md),
+  [gastown/roles/mayor.md](gastown/roles/mayor.md),
+  [gastown/roles/crew.md](gastown/roles/crew.md),
+  [gastown/roles/deacon.md](gastown/roles/deacon.md),
+  [gastown/roles/dog.md](gastown/roles/dog.md),
+  [gastown/roles/refinery.md](gastown/roles/refinery.md),
+  [gastown/roles/reaper.md](gastown/roles/reaper.md),
+  [gastown/concepts/convoy.md](gastown/concepts/convoy.md),
+  [gastown/concepts/directive.md](gastown/concepts/directive.md),
+  [gastown/concepts/formula.md](gastown/concepts/formula.md),
+  [gastown/concepts/identity.md](gastown/concepts/identity.md),
+  [gastown/concepts/molecule.md](gastown/concepts/molecule.md),
+  [gastown/concepts/rig.md](gastown/concepts/rig.md),
+  [gastown/concepts/wisp.md](gastown/concepts/wisp.md),
+  [gastown/workflows/convoy-launch.md](gastown/workflows/convoy-launch.md),
+  [gastown/workflows/polecat-lifecycle.md](gastown/workflows/polecat-lifecycle.md),
+  [gastown/binaries/gt.md](gastown/binaries/gt.md),
+  [gastown/binaries/gt-proxy-server.md](gastown/binaries/gt-proxy-server.md),
+  [gastown/binaries/gt-proxy-client.md](gastown/binaries/gt-proxy-client.md),
+  [gastown/plugins/README.md](gastown/plugins/README.md),
+  [gastown/plugins/dolt-snapshots.md](gastown/plugins/dolt-snapshots.md)

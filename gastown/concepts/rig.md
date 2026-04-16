@@ -4,13 +4,17 @@ type: concept
 status: partial
 topic: gastown
 created: 2026-04-11
-updated: 2026-04-11
+updated: 2026-04-14
 sources:
   - /home/kimberly/repos/gastown/internal/rig/types.go
   - /home/kimberly/repos/gastown/internal/rig/config.go
   - /home/kimberly/repos/gastown/internal/rig/manager.go
   - /home/kimberly/repos/gastown/internal/cmd/rig.go
 tags: [concept, rig, workspace, container, layered-config, polecats, crew, refinery, witness, mayor]
+phase3_audited: 2026-04-14
+phase3_findings: [none]
+phase3_severities: []
+phase3_findings_post_release: false
 ---
 
 # rig

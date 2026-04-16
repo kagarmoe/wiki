@@ -4,11 +4,15 @@ type: role
 status: partial
 topic: gastown
 created: 2026-04-11
-updated: 2026-04-11
+updated: 2026-04-14
 sources:
   - /home/kimberly/repos/gastown/internal/witness/
   - /home/kimberly/repos/gastown/internal/cmd/witness.go
 tags: [role, agent, witness, per-rig, polecat-monitor, patrol, mountain-eater]
+phase3_audited: 2026-04-14
+phase3_findings: [none]
+phase3_severities: []
+phase3_findings_post_release: false
 ---
 
 # witness (role)

@@ -4,11 +4,15 @@ type: role
 status: partial
 topic: gastown
 created: 2026-04-11
-updated: 2026-04-11
+updated: 2026-04-14
 sources:
   - /home/kimberly/repos/gastown/internal/polecat/
   - /home/kimberly/repos/gastown/internal/cmd/polecat.go
 tags: [role, agent, polecat, ephemeral, witness-managed, persistent-identity, worktree, rig-level]
+phase3_audited: 2026-04-14
+phase3_findings: [wiki-stale]
+phase3_severities: [wrong]
+phase3_findings_post_release: false
 ---
 
 # polecat (role)
@@ -248,12 +252,19 @@ The implementation is in [`internal/polecat`](../packages/polecat.md).
   have to infer "is this polecat done, idle, or stuck?" from
   timestamps alone. With agent-reported state, the Witness only
   needs the freshness check.
-- The Witness role page is pending. Currently the Witness shows
-  up as a participant in the polecat's lifecycle but is not
-  documented at the role level.
-- The Refinery role page is pending. Currently the Refinery
-  shows up as the owner of remote branch cleanup but is not
-  documented at the role level.
+- ~~The Witness role page is pending.~~ The
+  [witness role page](witness.md) now exists; see it for the
+  full per-rig polecat health monitor documentation.
+  (Phase 3 Batch 4 wiki-stale correction: these bullets were
+  accurate at Phase 2 time but the role pages were created
+  later in the same Phase 2 batch — the polecat page was
+  written before the witness and refinery role pages landed.
+  **Phase 2 root cause:** phase-2-incomplete — the pages were
+  created in the same batch but the polecat page wasn't
+  updated with forward links after the sibling pages landed.)
+- ~~The Refinery role page is pending.~~ The
+  [refinery role page](refinery.md) now exists; see it for the
+  per-rig merge queue processor documentation.
 - Pool-initialised idle polecats have `agent_state="idle"`,
   which is not one of the four states listed in the polecat
   Long help (working / stalled / zombie / nuked). It's a

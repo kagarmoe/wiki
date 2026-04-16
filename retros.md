@@ -633,3 +633,33 @@ Flagging is cheap; Kimberly decides when to actually schedule.
 - none -- lessons are purely informational
 
 **Batch 3 yield:** 5 findings on 4/17 pages (24%). 2 drift + 3 wiki-stale. All in-release. Within the plan's 10-20% estimate (slightly above). The two pre-flagged drift items (Go version disagreement, goreleaser brew claim) were the only substantive findings; the three wiki-stale items were minor counting errors.
+
+## [2026-04-14 23:00] stage | 3.1.4 — Sweep 1 roles/concepts/workflows/binaries/plugins (Batch 4, Sweep 1 final)
+
+**Actor:** general-purpose subagent dispatched by main orchestrator for Phase 3 Batch 4
+**Unit:** 22 pages audited across 5 categories (8 roles, 7 concepts, 2 workflows, 3 binaries, 2 plugins). 2 wiki-stale findings on 2 pages; 20 pages tagged `phase3_findings: [none]`. One commit. Sweep 1 complete.
+**Duration:** one dispatch
+
+**What went well:**
+
+- **Cross-reference audit methodology was the right approach for this batch.** Instead of re-reading source files (already done in Batches 1-3), the audit checked whether domain-level synthesis pages made claims that contradicted earlier batch findings. This was efficient — the 22 pages took less time to audit than a single Batch 1 sub-batch of 11 command pages, because the verification was wiki-to-wiki rather than wiki-to-source.
+- **The witness.md (role) vs Batch 1d finding check was clean.** The plan specifically flagged this as a candidate: "Does the role page make claims about foreground operation?" The role page at lines 123-127 correctly describes foreground mode as vestigial, consistent with the cobra-drift + vestigial finding on the command page. No correction needed. The plan's pre-flagging was accurate.
+- **The directive.md (concept) wiki-stale finding was a genuine cross-batch consistency catch.** Batch 1b corrected the command page but the concept page was never updated. This is exactly the kind of finding that a cross-reference audit is designed to surface: two pages describing the same entity with contradictory claims, where only one was corrected in an earlier batch.
+- **Yield landed at 9% (2/22), within the plan's 5-15% estimate.** The plan's expectation that domain-centric pages have low drift surface was confirmed. Both findings were wiki-stale (phase-2-incomplete), not code-docs drift — consistent with the plan's note that "most drift will surface in Sweep 2 when docs/ files are read."
+
+**What didn't:**
+
+- **The polecat.md "pending" claims were a trivially detectable error that Phase 2 should have caught.** The witness and refinery role pages were created in the same Phase 2 Batch 6. The polecat page's Notes bullets were accurate at the moment they were written (mid-batch), but by the time the batch committed, the pages existed. A post-batch consistency check within Phase 2 would have caught this. Not a Phase 3 problem, but worth noting for future mapping phases.
+- **No source re-reads were performed.** The cross-reference audit is efficient but does not catch source-level churn since Phase 2. If any of these 22 pages cite source `file:line` refs that have moved since Phase 2, this batch did not detect it. The plan's design accepts this tradeoff: "most drift will surface in Sweep 2." Revisit if the Sweep 1 retrospective gate finds gaps.
+
+**What to change next time:**
+
+- **For future batches with synthesis-heavy pages:** the cross-reference audit methodology (check wiki-to-wiki consistency rather than re-reading all source files) is appropriate when the source files have already been verified in earlier batches. Document this as a permissible methodology variant in the plan or skill.
+- **Phase 2 post-batch consistency check:** consider adding a "forward-link scan" step at the end of each Phase 2 batch that checks whether newly created pages are referenced accurately by pages written earlier in the same batch. Would have caught the polecat.md "pending" error.
+
+**Follow-ups filed:**
+- none -- both findings were fixed inline; lessons are informational
+
+**Batch 4 yield:** 2 findings on 2/22 pages (9%). 2 wiki-stale (both phase-2-incomplete). All in-release. Within the plan's 5-15% estimate.
+
+**Sweep 1 complete.** All 211 Phase 2 entity pages now have `phase3_audited` frontmatter. Total Sweep 1 findings across all 4 batches are logged individually in each batch's log entry. Next: Sweep 1 retrospective gate, then Sweep 2 (Batch 5+).

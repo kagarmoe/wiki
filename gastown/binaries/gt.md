@@ -4,7 +4,7 @@ type: binary
 status: partial
 topic: gastown
 created: 2026-04-11
-updated: 2026-04-11
+updated: 2026-04-14
 sources:
   - /home/kimberly/repos/gastown/cmd/gt/main.go
   - /home/kimberly/repos/gastown/internal/cmd/root.go
@@ -12,6 +12,10 @@ sources:
   - /home/kimberly/repos/gastown/internal/cli/name.go
   - /home/kimberly/repos/gastown/Makefile
 tags: [cli, build, root-command]
+phase3_audited: 2026-04-14
+phase3_findings: [none]
+phase3_severities: []
+phase3_findings_post_release: false
 ---
 
 # gt
