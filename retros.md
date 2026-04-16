@@ -663,3 +663,27 @@ Flagging is cheap; Kimberly decides when to actually schedule.
 **Batch 4 yield:** 2 findings on 2/22 pages (9%). 2 wiki-stale (both phase-2-incomplete). All in-release. Within the plan's 5-15% estimate.
 
 **Sweep 1 complete.** All 211 Phase 2 entity pages now have `phase3_audited` frontmatter. Total Sweep 1 findings across all 4 batches are logged individually in each batch's log entry. Next: Sweep 1 retrospective gate, then Sweep 2 (Batch 5+).
+
+## [2026-04-15 20:00] stage | Phase 3.Batch 5 (Sweep 2 validation: 8 docs files)
+
+**Actor:** wiki-curator subagent (Sweep 2 fact process)
+**Unit:** 8 docs files processed (5a-5h), 8 commits landed, 1 wiki page annotated.
+**Duration:** one dispatch
+
+**What went well:**
+- The Sweep 2 workflow is clean and fast for small files. Per-file commit discipline works smoothly.
+- The "is this file making gastown-specific code behavior claims?" triage question is effective. 7 of 8 files were correctly identified as no-finding early (research, design, examples), saving significant verification time.
+- The one finding (5a: convoy SKILL.md event-driven feeder misattribution to operations.go) was a genuine drift — the SKILL.md's architecture section contradicts its own source-files table. The wiki already had the correct attribution, demonstrating that Sweep 1's code-first grounding produced accurate pages.
+
+**What didn't:**
+- The validation batch was heavily skewed toward no-finding files (7/8). This doesn't test the full Sweep 2 workflow for finding-rich files. The real test comes in Batches 6-12 where `docs/design/` and `docs/concepts/` files make dense claims about gastown internals.
+- Research files (5b, 5c) and design docs (5d) are categorically different from `docs/` reference files — they don't make verifiable code claims. The plan could have predicted this and grouped them as a "no-finding fast path" sub-batch rather than giving them the full treatment.
+
+**What to change next time:**
+- For future batch planning: pre-classify files into "claim-rich" (skill guides, concept docs, reference docs) vs "claim-light" (research, design, examples, config templates). Claim-light files can be processed in bulk with abbreviated log entries.
+- The log entry format works but is verbose for no-finding files. Consider a compressed format for files with zero findings: one paragraph instead of the full batch entry template.
+
+**Follow-ups filed:**
+- none — lessons are informational. The Sweep 2 workflow validated successfully.
+
+**Batch 5 yield:** 1 finding on 1/8 files (12.5%). 1 drift (docs wrong, wiki correct). The finding was in the only claim-rich file (convoy SKILL.md). All example/research/design files had zero findings as expected.

@@ -3283,3 +3283,27 @@ Both findings are in-release (code unchanged since v1.0.0).
 **Next sub-batch:** Batch 5h — docs/examples/town-settings.example.json.
 
 -> (no wiki pages touched)
+
+## [2026-04-15] drift-found | Batch 5h (Sweep 2: docs/examples/town-settings.example.json)
+
+**Scope:** Full read of `/home/kimberly/repos/gastown/docs/examples/town-settings.example.json` (102 lines).
+
+**Docs files read:**
+- `/home/kimberly/repos/gastown/docs/examples/town-settings.example.json` (in full, 102 lines)
+
+**Source files re-read at current HEAD:**
+- None needed. Example config file — self-documenting structure.
+
+**Wiki pages audited:**
+- None. The file is a commented JSON example showing town-level settings (agent definitions, role_agents mapping, cli_theme, timeouts, worker_status thresholds, feed_curator config, disabled_patrols). No prose claims about code behavior. No `gastown/config/` wiki pages exist to compare against.
+
+**Findings by category:**
+- **none:** Example configuration file. No verifiable code claims.
+
+**New beads filed:** none
+**Beads closed:** none
+**Cross-link discipline:** No wiki pages touched.
+
+**Batch 5 complete.** 8 files processed. Retro follows.
+
+-> (no wiki pages touched)
