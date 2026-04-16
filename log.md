@@ -4005,3 +4005,21 @@ Both findings are in-release (code unchanged since v1.0.0).
 **This entry supersedes** the informal `[2026-04-14] drift-found | docs/agent-provider-integration.md` entry earlier in this log.
 
 -> (no wiki pages touched)
+
+## [2026-04-15] drift-found | Batch 11a (Sweep 2: docs/design/tmux-keybindings.md)
+
+**Scope:** Full read of `/home/kimberly/repos/gastown/docs/design/tmux-keybindings.md` (74 lines). Design doc for Gas Town tmux keybinding system: session cycle groups, other bindings, setup mechanism, implementation details.
+
+**Docs files read:**
+- `/home/kimberly/repos/gastown/docs/design/tmux-keybindings.md` (in full, 74 lines)
+
+**Source files re-read at current HEAD:**
+- `/home/kimberly/repos/gastown/internal/tmux/tmux.go` (lines 3280-3557 — confirmed `SetCycleBindings`, `SetFeedBinding` at C-b a, `SetAgentsBinding` at C-b g)
+- `/home/kimberly/repos/gastown/internal/tmux/tmux.go` (lines 3419-3430 — confirmed `sessionPrefixPattern()` from `config.AllRigPrefixes()`)
+
+**Wiki pages spot-checked:** packages/tmux.md, commands/cycle.md
+
+**Findings by category:**
+- **none:** All claims verified. Cycle groups (Town, Crew, Rig ops) match wiki's cycle.md. `ConfigureGasTownSession()` confirmed at tmux.go:3111. `sessionPrefixPattern()` confirmed at tmux.go:3426. Bindings C-b n/p, C-b a, C-b g all confirmed in code. The `if-shell` guard mechanism and fallback preservation confirmed.
+
+-> (no wiki pages touched)
