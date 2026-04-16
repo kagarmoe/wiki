@@ -4004,7 +4004,7 @@ Both findings are in-release (code unchanged since v1.0.0).
 
 **This entry supersedes** the informal `[2026-04-14] drift-found | docs/agent-provider-integration.md` entry earlier in this log.
 
--> (no wiki pages touched)
+-> (no wiki pages touched — Batch 10k terminal)
 
 ## [2026-04-15] drift-found | Batch 11a (Sweep 2: docs/design/tmux-keybindings.md)
 
@@ -4021,5 +4021,23 @@ Both findings are in-release (code unchanged since v1.0.0).
 
 **Findings by category:**
 - **none:** All claims verified. Cycle groups (Town, Crew, Rig ops) match wiki's cycle.md. `ConfigureGasTownSession()` confirmed at tmux.go:3111. `sessionPrefixPattern()` confirmed at tmux.go:3426. Bindings C-b n/p, C-b a, C-b g all confirmed in code. The `if-shell` guard mechanism and fallback preservation confirmed.
+
+-> (no wiki pages touched)
+
+## [2026-04-15] drift-found | Batch 11b (Sweep 2: docs/design/dog-execution-model.md)
+
+**Scope:** Full read of `/home/kimberly/repos/gastown/docs/design/dog-execution-model.md` (83 lines). Design doc describing the two dog execution models (imperative Go vs formula dispatch) and the target architecture post-testcontainers migration.
+
+**Docs files read:**
+- `/home/kimberly/repos/gastown/docs/design/dog-execution-model.md` (in full, 83 lines)
+
+**Source files re-read at current HEAD:**
+- `/home/kimberly/repos/gastown/internal/daemon/handler.go` (line 39-41 — confirmed `handleDogs()` dispatches plugins)
+- `/home/kimberly/repos/gastown/internal/daemon/daemon.go` (lines 505-821 — confirmed Doctor, Reaper tickers as imperative Go)
+
+**Wiki pages spot-checked:** roles/dog.md, commands/dog.md, packages/dog.md
+
+**Findings by category:**
+- **none:** All claims verified. Five imperative Go dogs (Doctor, Reaper, JSONL Backup, Dolt Backup, Compactor) match code. Janitor removal confirmed. The `handleDogs()` dispatch path confirmed at `handler.go:41`. The "future dogs default to plugin" and "do not migrate working imperative dogs" principles are architectural guidance consistent with current code. Wiki's dog role page documents the plugin dispatch model correctly.
 
 -> (no wiki pages touched)
