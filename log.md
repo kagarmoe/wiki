@@ -4456,3 +4456,29 @@ Revisited the wiki-stale log placement question from the Sweep 1 retrospective (
 **Effective immediately for all future phases.** Writing-entity-pages skill updated: wiki-stale row now says "Log under `drift-found` verb."
 
 → [.claude/skills/writing-entity-pages/SKILL.md](.claude/skills/writing-entity-pages/SKILL.md)
+
+## [2026-04-16] drift-found | Batch 14 (Gap enumeration: missing entities + subcommand coverage)
+
+**Scope:** Systematic code-to-wiki gap enumeration across all gastown packages (68 directories), binaries (3), root files (14), and subcommands (384 non-root registrations).
+
+**Missing entity pages (Sweep G1):** 6 gap findings — all Go packages with no wiki page:
+- `internal/agent` (shared agent types + generic StateManager, 62 lines)
+- `internal/agent/provider` (JSON-RPC provider types for LLM communication, 799 lines)
+- `internal/boot` (Boot watchdog package, daemon-tick logic, 237 lines)
+- `internal/checkpoint` (session checkpointing for crash recovery, 350 lines)
+- `internal/connection` (address parsing for agent/rig/polecat routing, 689 lines)
+- `internal/proxy` (mTLS CA management for sandboxed execution, 1,363 lines)
+
+**Subcommand coverage (Sweep G2):** 384 non-root subcommands across 62 parent commands; 380 covered, 4 gap (all need parent expansion, none need own page):
+- `gt formula overlay show/edit/list` — 3 sub-subcommands missing from formula.md
+- `gt patrol scan` — 1 subcommand missing from patrol.md
+
+**Deliberately excluded entities (with rationale):**
+- `internal/cmd` — CLI wiring layer; every command already has its own wiki page
+- `internal/scheduler/capacity` — sub-package; parent `scheduler.md` covers it
+- `internal/templates/commands` — helper sub-package; parent `templates.md` covers it
+- `internal/tui/convoy` — UI sub-package; parent `tui.md` covers it
+- `internal/tui/feed` — UI sub-package; parent `tui.md` covers it
+- `codecov.yml`, `renovate.json`, `go.sum`, `.gitignore` — CI/tooling config with no runtime behavior
+
+→ [gastown/drift/gaps.md](gastown/drift/gaps.md)

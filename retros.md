@@ -897,3 +897,23 @@ Flagging is cheap; Kimberly decides when to actually schedule.
 - Phase 5 audience tagging: not yet scheduled
 
 **For Kimberly retro discussion:** Phase 2's sibling-file blind spot is worth discussing. It affected 21 pages and was structural (not random). If we ever run Phase 2 on another repo, the sibling-file audit must be part of the mapping methodology from day one.
+
+## [2026-04-16] stage | Phase 3 Batch 14 — Gap enumeration (Sweeps G1 + G2)
+
+**Actor:** wiki-curator subagent
+**Unit:** Systematic code-to-wiki gap enumeration: 68 Go package directories, 3 binaries, 14 root files, 384 non-root subcommands across 62 parent commands.
+**Duration:** One dispatch.
+
+**What went well:**
+- The enumeration was efficient. Comparing `find internal/ -type d` output against `ls gastown/packages/*.md` immediately identified the 11 package directories without wiki pages. The classification decisions (6 gap, 5 excluded) were straightforward because the exclusion criteria are clear: sub-packages covered by parent pages don't need their own pages.
+- Subcommand coverage was overwhelmingly good (380 of 384 covered, 98.9%). Phase 3 Sweep 1's sibling-file audit had already fixed the major subcommand blind spots. Only 4 subcommands across 2 parents (formula overlay tree + patrol scan) were genuinely missing from wiki pages.
+- The known gaps from the plan (agent, agent/provider, boot, checkpoint, connection, proxy) were all confirmed. No surprises in the opposite direction — no packages that should have been excluded were given pages.
+
+**What didn't:**
+- The initial grep-based subcommand matching was brittle. Searching for lowercased command names in wiki pages produced false negatives because wiki pages use different casing/formatting (e.g., `mark-read` vs `markread`). Had to fall back to more precise term searches. A future methodology should normalize both code and wiki names to the same format before comparing.
+- Checking 62 parent commands one-by-one was tedious even with scripting. A dedicated tool that parses cobra command trees and compares against wiki tables would be more reliable.
+
+**Actionable follow-ups:**
+- Batch 15: integrate these 10 gap findings into the drift index (gastown/drift/README.md)
+- Future phase: create the 6 missing package pages (agent, agent/provider, boot, checkpoint, connection, proxy)
+- Future phase: expand formula.md and patrol.md to cover their missing subcommands
