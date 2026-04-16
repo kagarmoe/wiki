@@ -3876,3 +3876,25 @@ Both findings are in-release (code unchanged since v1.0.0).
 **Cross-link discipline:** install.md forward-links to drift/README.md already present.
 
 -> [gastown/commands/install.md](gastown/commands/install.md)
+
+## [2026-04-15] drift-found | Batch 10e (Sweep 2: docs/HOOKS.md)
+
+**Scope:** Full read of `/home/kimberly/repos/gastown/docs/HOOKS.md` (251 lines). Centralized hooks management documentation covering architecture, commands, registry, known gaps.
+
+**Docs files read:**
+- `/home/kimberly/repos/gastown/docs/HOOKS.md` (in full, 251 lines)
+
+**Source files re-read at current HEAD:**
+- `/home/kimberly/repos/gastown/internal/cmd/tap_guard_dangerous.go` (lines 14-42 — confirmed `dangerous-command` subcommand exists and is registered on `tapGuardCmd`)
+
+**Wiki pages audited:**
+- [gastown/commands/hooks.md](gastown/commands/hooks.md) — subcommand list, architecture, config structure all match between HOOKS.md and wiki. No new annotation needed.
+- [gastown/commands/tap.md](gastown/commands/tap.md) — already documents `tap_guard_dangerous.go` as a registered subcommand.
+
+**Findings by category:**
+- **drift:** 1 finding. HOOKS.md "Known Gap #2" (line 187-189) states "`gt tap guard dangerous-command` is referenced in the registry but does not exist yet." This is wrong — `tap_guard_dangerous.go` exists at HEAD and at v1.0.0, registers `dangerous-command` on `tapGuardCmd` via `init()` at `:41-42`, and implements the guard with 10+ dangerous patterns. The wiki's tap.md already correctly lists this file. Fix tier: docs. Severity: wrong. Release position: in-release.
+- **none (verified):** Architecture (base + overrides), subcommand descriptions (sync, diff, base, override, list, scan, init, registry, install), per-matcher merge semantics, default base config — all consistent with wiki hooks.md and code. The 7 registry hooks and agent hook mechanism table are plausible and not contradicted by wiki.
+
+**No wiki page annotation needed** — the wiki already correctly documents the `dangerous-command` guard. The stale claim is only in `docs/HOOKS.md`.
+
+-> (no wiki pages touched)
