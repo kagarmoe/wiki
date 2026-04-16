@@ -4130,3 +4130,23 @@ Both findings are in-release (code unchanged since v1.0.0).
 - **none (verified):** Two-level beads architecture (town at `~/gt/.beads/`, rig at `<rig>/mayor/rig/.beads/`) confirmed. Agent bead storage table confirmed via `agent_ids.go` and doctor integration tests. Directory structure matches code. Dolt SQL Server on port 3307 confirmed. `routes.jsonl` routing confirmed. Beads redirects with `ResolveBeadsDir()` confirmed. Six-stage data lifecycle (CREATE→LIVE→CLOSE→DECAY→COMPACT→FLATTEN) confirmed at `lifecycle_defaults.go:4`. Deployment artifacts table consistent with `goreleaser.yml` and wiki.
 
 -> (no wiki pages touched)
+
+## [2026-04-15] drift-found | Batch 11g (Sweep 2: docs/design/property-layers.md)
+
+**Scope:** Full read of `/home/kimberly/repos/gastown/docs/design/property-layers.md` (414 lines). Design doc for Gas Town's multi-level configuration system: four property layers (wisp/rig-bead/town/system), override vs stacking semantics, rig lifecycle (park/dock), daemon integration, operational state events, directives/overlays as property-layer extensions.
+
+**Docs files read:**
+- `/home/kimberly/repos/gastown/docs/design/property-layers.md` (in full, 414 lines)
+
+**Source files re-read at current HEAD:**
+- `/home/kimberly/repos/gastown/internal/cmd/rig_config.go` (lines 17-59 — confirmed `gt rig config show/set` with wisp/bead layers)
+- `/home/kimberly/repos/gastown/internal/cmd/rig_park.go` (lines 18-44 — confirmed `gt rig park/unpark`)
+- `/home/kimberly/repos/gastown/internal/wisp/` (confirmed wisp package exists)
+
+**Wiki pages spot-checked:** commands/rig.md, concepts/directive.md, packages/config.md
+
+**Findings by category:**
+- **drift:** 1 finding. Doc line 355 references `[Watchdog Chain](watchdog-chain.md)` but no `watchdog-chain.md` exists in `docs/design/`. The closest equivalent is `dog-infrastructure.md`. Fix tier: docs. Severity: wrong. Release position: in-release.
+- **none (verified):** Four property layers (wisp/rig-bead/town/system) confirmed in `rig_config.go` Long text. Override semantics (first non-nil wins) and stacking semantics (integers add) confirmed. Park/unpark/dock/undock commands confirmed. Directive and overlay integration as property-layer extensions confirmed. Operational state events pattern consistent with beads architecture.
+
+-> (no wiki pages touched)
