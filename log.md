@@ -3913,3 +3913,20 @@ Both findings are in-release (code unchanged since v1.0.0).
 - **none:** Feature guide with honest Phase 1 status label. All claims consistent with wiki and code.
 
 -> (no wiki pages touched)
+
+## [2026-04-15] drift-found | Batch 10g (Sweep 2: docs/otel-data-model.md)
+
+**Scope:** Full read of `/home/kimberly/repos/gastown/docs/otel-data-model.md` (299 lines). OTel data model reference — identity hierarchy, events, indexed attributes, env vars.
+
+**Docs files read:**
+- `/home/kimberly/repos/gastown/docs/otel-data-model.md` (in full, 299 lines)
+
+**Overlap with Batch 8i:** The root `docs/otel-data-model.md` is a DIFFERENT file from `docs/design/otel/otel-data-model.md` (audited in 8i). Diff shows divergent content — root version is simpler, has no stale "Roadmap" markers, and describes the model as-is. The design version has implementation status tracking with stale entries (already filed as drift in 8h).
+
+**Wiki pages audited:**
+- [gastown/packages/telemetry.md](gastown/packages/telemetry.md) — already annotated with drift from 8h. Root version consistent with code (no stale roadmap claims).
+
+**Findings by category:**
+- **none:** Data model reference describes attribute shapes and events without contradicting code or wiki. No implementation-status claims. Env vars table is plausible and consistent with telemetry package documentation.
+
+-> (no wiki pages touched)
