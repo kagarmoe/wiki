@@ -2811,3 +2811,103 @@ Phase 3 Sweep 1 sub-batch 2e: audited 3 package pages under `gastown/packages/` 
 -> [gastown/packages/daemon.md](gastown/packages/daemon.md),
   [gastown/packages/tmux.md](gastown/packages/tmux.md),
   [gastown/packages/runtime.md](gastown/packages/runtime.md)
+
+## [2026-04-14] drift-found | Batch 2f (Sweep 1 packages/ Supporting libraries — 24 pages; Batch 2 complete)
+
+Phase 3 Sweep 1 sub-batch 2f: audited 24 package pages under `gastown/packages/` covering Phase 2 Batch 9 (Supporting libraries). **This is the final sub-batch of Batch 2. All 61 package pages now have `phase3_audited` frontmatter.**
+
+**Churn:** Zero commits between v1.0.0 and HEAD across all 24 packages (`git log --oneline v1.0.0..HEAD -- internal/<pkg>/` returned empty for every package). Fast-path applied: frontmatter + Notes section review + spot-check of pre-flagged findings.
+
+**Source files re-read:**
+- `/home/kimberly/repos/gastown/internal/wrappers/wrappers.go:1-2` (ABOUTME header), `:26` (Install slice), `:48` (Remove slice) — verified gt-gemini present in code but absent from ABOUTME
+- `/home/kimberly/repos/gastown/internal/protocol/refinery_handlers.go:52-71` (HandleMergeReady — confirmed no-op, neutral)
+- `/home/kimberly/repos/gastown/internal/krc/krc.go:325-340` (MinRetainCount — confirmed unenforced, neutral: no docs claim enforcement)
+- `/home/kimberly/repos/gastown/internal/tui/feed/mq_source.go:1-30` (confirmed deprecated stub, already documented in tui.md)
+- `/home/kimberly/repos/gastown/internal/quota/keychain.go:255-257` (validateTokenHTTP — confirmed dead code, never called, neutral: no docs claim)
+- Package-file audit: `ls internal/<pkg>/*.go | grep -v _test.go` for all 24 packages. All file counts match wiki `sources:` frontmatter.
+
+**Pre-flagged findings from Phase 2 Batch 9 — disposition:**
+
+| Pre-flagged item | Page | Disposition |
+|---|---|---|
+| `protocol.md` HandleMergeReady no-op | protocol.md | **Neutral.** Notes bullet accurately describes the no-op. No docs/Cobra claim says HandleMergeReady triggers active merge behavior. |
+| `krc.md` MinRetainCount unenforced | krc.md | **Neutral.** Notes bullet accurately describes the gap. No docs claim enforcement. |
+| `feed.md` mq_source.go deprecated stub | tui.md (not feed.md) | **Neutral.** `mq_source.go` is in `internal/tui/feed/`, not `internal/feed/`. Already documented in tui.md Notes as "MQEventSource is a zombie." |
+| `quota.md` validateTokenHTTP dead code | quota.md | **Neutral.** Function defined but never called. No docs claim it is used. |
+| `wrappers.md` ABOUTME lists 2, code installs 3 | wrappers.md | **Promoted to cobra-drift.** ABOUTME header (`wrappers.go:2`) says "gt-codex and gt-opencode"; code installs 3 including gt-gemini. In-code docstring contradicts code. Upgraded Phase 2 Drift section to v1.2 schema. Demoted two non-drift observations (duplicated slice, BinDir error semantics) from Drift to Notes. |
+| `hookutil.md` IsAutonomousRole literal "boot" | hookutil.md | **Neutral.** No docs claim consistency with constants. |
+| `shell.md` DetectShell zsh fallback | shell.md | **Neutral.** Notes already document this. No docs claim full shell coverage. |
+| `git.md` 2,300-line wrapper, Phase 2 missed files? | git.md | **No miss.** 3 non-test .go files match wiki sources exactly. |
+| `web.md` gtPath hardcoded | web.md | **Neutral.** Notes already document this. Deliberate design choice. |
+
+**Pages audited (24):**
+
+| Page | phase3_findings | Notes |
+|---|---|---|
+| [wrappers.md](gastown/packages/wrappers.md) | `[cobra-drift]` | ABOUTME header omits gt-gemini. v1.2 Drift section added. Severity: wrong. Fix tier: code. Release position: in-release. |
+| [acp.md](gastown/packages/acp.md) | `[none]` | 4 files match. 3 Notes bullets neutral. |
+| [hooks.md](gastown/packages/hooks.md) | `[none]` | 3 files match. 3 Notes bullets neutral. |
+| [krc.md](gastown/packages/krc.md) | `[none]` | 3 files match. 3 Notes bullets neutral (MinRetainCount stays neutral). |
+| [protocol.md](gastown/packages/protocol.md) | `[none]` | 5 files match. 3 Notes bullets neutral (HandleMergeReady stays neutral). |
+| [quota.md](gastown/packages/quota.md) | `[none]` | 6 files match. 3 Notes bullets neutral (validateTokenHTTP stays neutral). |
+| [testutil.md](gastown/packages/testutil.md) | `[none]` | 4 files match. 2 Notes bullets neutral. |
+| [wasteland.md](gastown/packages/wasteland.md) | `[none]` | 3 files match. 4 Notes bullets neutral. |
+| [web.md](gastown/packages/web.md) | `[none]` | 7 files match. 4 Notes bullets neutral. |
+| [agentlog.md](gastown/packages/agentlog.md) | `[none]` | 3 files match. 4 Notes bullets neutral. |
+| [constants.md](gastown/packages/constants.md) | `[none]` | 1 file matches. 3 Notes bullets neutral. |
+| [feed.md](gastown/packages/feed.md) | `[none]` | 1 file matches. 4 Notes bullets neutral. |
+| [git.md](gastown/packages/git.md) | `[none]` | 3 files match. 5 Notes bullets neutral. |
+| [github.md](gastown/packages/github.md) | `[none]` | 2 files match. 5 Notes bullets neutral. |
+| [shell.md](gastown/packages/shell.md) | `[none]` | 1 file matches. 5 Notes bullets neutral. |
+| [suggest.md](gastown/packages/suggest.md) | `[none]` | 1 file matches. 4 Notes bullets neutral. |
+| [townlog.md](gastown/packages/townlog.md) | `[none]` | 1 file matches. 5 Notes bullets neutral. |
+| [activity.md](gastown/packages/activity.md) | `[none]` | 1 file matches. 2 Notes bullets neutral. |
+| [estop.md](gastown/packages/estop.md) | `[none]` | 1 file matches. 2 Notes bullets neutral. |
+| [hookutil.md](gastown/packages/hookutil.md) | `[none]` | 1 file matches. 2 Notes bullets neutral. |
+| [scheduler.md](gastown/packages/scheduler.md) | `[none]` | 4 capacity files match. 3 Notes bullets neutral. |
+| [state.md](gastown/packages/state.md) | `[none]` | 1 file matches. 2 Notes bullets neutral. |
+| [templates.md](gastown/packages/templates.md) | `[none]` | 3 files match (incl. commands/provision.go). 3 Notes bullets neutral. |
+| [tui.md](gastown/packages/tui.md) | `[none]` | 14 non-test .go files across convoy/ and feed/ dirs. 3 Notes bullets neutral. mq_source.go stub already documented. |
+
+**Yield:** 1/24 pages (4%). The sole finding is wrappers.md's ABOUTME header omitting gt-gemini — an in-code docstring drift that Phase 2 had already identified but not classified under the Phase 3 taxonomy.
+
+**Batch 2 aggregate stats (6 sub-batches, 61 pages):**
+
+| Sub-batch | Pages | Findings | Yield |
+|---|---|---|---|
+| 2a (Platform services) | 9 | 1 wiki-stale | 11% |
+| 2b (Data layer) | 8 | 2 wiki-stale | 25% |
+| 2c (Agent runtime) | 13 | 0 | 0% |
+| 2d (Diagnostics) | 4 | 2 (1 drift + 1 wiki-stale + 1 impl-status) | 50% |
+| 2e (Long-running) | 3 | 0 | 0% |
+| 2f (Supporting libraries) | 24 | 1 cobra-drift | 4% |
+| **Batch 2 total** | **61** | **6 findings across 5 pages** | **8%** |
+
+Batch 2 overall yield (8%) is below the plan's 15-25% estimate, confirming that packages without Cobra Long text have structurally low drift surfaces. The dominant finding type was wiki-stale (3 findings) followed by cobra-drift (1), drift (1), and implementation-status (1). Pre-flagged items from Phase 2 had a 20% promotion rate (1 promoted out of 5 actionable flags, plus 4 that resolved as neutral).
+
+**Batch 2 complete. Next: Batch 3 (files/ + inventory/).**
+
+-> [gastown/packages/wrappers.md](gastown/packages/wrappers.md),
+  [gastown/packages/acp.md](gastown/packages/acp.md),
+  [gastown/packages/hooks.md](gastown/packages/hooks.md),
+  [gastown/packages/krc.md](gastown/packages/krc.md),
+  [gastown/packages/protocol.md](gastown/packages/protocol.md),
+  [gastown/packages/quota.md](gastown/packages/quota.md),
+  [gastown/packages/testutil.md](gastown/packages/testutil.md),
+  [gastown/packages/wasteland.md](gastown/packages/wasteland.md),
+  [gastown/packages/web.md](gastown/packages/web.md),
+  [gastown/packages/agentlog.md](gastown/packages/agentlog.md),
+  [gastown/packages/constants.md](gastown/packages/constants.md),
+  [gastown/packages/feed.md](gastown/packages/feed.md),
+  [gastown/packages/git.md](gastown/packages/git.md),
+  [gastown/packages/github.md](gastown/packages/github.md),
+  [gastown/packages/shell.md](gastown/packages/shell.md),
+  [gastown/packages/suggest.md](gastown/packages/suggest.md),
+  [gastown/packages/townlog.md](gastown/packages/townlog.md),
+  [gastown/packages/activity.md](gastown/packages/activity.md),
+  [gastown/packages/estop.md](gastown/packages/estop.md),
+  [gastown/packages/hookutil.md](gastown/packages/hookutil.md),
+  [gastown/packages/scheduler.md](gastown/packages/scheduler.md),
+  [gastown/packages/state.md](gastown/packages/state.md),
+  [gastown/packages/templates.md](gastown/packages/templates.md),
+  [gastown/packages/tui.md](gastown/packages/tui.md)

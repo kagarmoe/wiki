@@ -4,12 +4,16 @@ type: package
 status: verified
 topic: gastown
 created: 2026-04-11
-updated: 2026-04-11
+updated: 2026-04-14
 sources:
   - /home/kimberly/repos/gastown/internal/templates/templates.go
   - /home/kimberly/repos/gastown/internal/templates/townroot.go
   - /home/kimberly/repos/gastown/internal/templates/commands/provision.go
 tags: [package, templates, embed, roles, supervisor, claude-md]
+phase3_audited: 2026-04-14
+phase3_findings: [none]
+phase3_severities: []
+phase3_findings_post_release: false
 ---
 
 # internal/templates

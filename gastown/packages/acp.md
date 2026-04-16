@@ -4,13 +4,17 @@ type: package
 status: verified
 topic: gastown
 created: 2026-04-11
-updated: 2026-04-11
+updated: 2026-04-14
 sources:
   - /home/kimberly/repos/gastown/internal/acp/proxy.go
   - /home/kimberly/repos/gastown/internal/acp/proxy_unix.go
   - /home/kimberly/repos/gastown/internal/acp/proxy_windows.go
   - /home/kimberly/repos/gastown/internal/acp/propulsion.go
 tags: [package, acp, jsonrpc, mayor, ide, proxy, agent-client-protocol]
+phase3_audited: 2026-04-14
+phase3_findings: [none]
+phase3_severities: []
+phase3_findings_post_release: false
 ---
 
 # internal/acp

@@ -4,13 +4,17 @@ type: package
 status: verified
 topic: gastown
 created: 2026-04-11
-updated: 2026-04-11
+updated: 2026-04-14
 sources:
   - /home/kimberly/repos/gastown/internal/wrappers/wrappers.go
   - /home/kimberly/repos/gastown/internal/wrappers/scripts/gt-codex
   - /home/kimberly/repos/gastown/internal/wrappers/scripts/gt-gemini
   - /home/kimberly/repos/gastown/internal/wrappers/scripts/gt-opencode
 tags: [package, wrappers, install, shell-scripts, embed]
+phase3_audited: 2026-04-14
+phase3_findings: [cobra-drift]
+phase3_severities: [wrong]
+phase3_findings_post_release: false
 ---
 
 # internal/wrappers
@@ -95,30 +99,35 @@ development get written verbatim to `~/bin/`.
 
 ## Docs claim
 
-The ABOUTME header (`wrappers.go:1-2`) describes the package as managing
-"wrapper scripts for non-Claude agentic coding tools" and lists
-`gt-codex` and `gt-opencode` specifically. The header is **slightly out
-of date**: the actual wrapper list also includes `gt-gemini`
-(`wrappers.go:26, 48`). Low-stakes doc drift.
+### Source
+- `/home/kimberly/repos/gastown/internal/wrappers/wrappers.go:1-2` — ABOUTME header
+
+### Verbatim
+> ABOUTME: Manages wrapper scripts for non-Claude agentic coding tools.
+> ABOUTME: Provides gt-codex and gt-opencode wrappers that run gt prime first.
 
 ## Drift
 
-- **ABOUTME comment vs. wrapper list.** The header says "Provides
-  gt-codex and gt-opencode wrappers" (`wrappers.go:2`). The code
-  installs three wrappers: `gt-codex`, `gt-gemini`, `gt-opencode`
-  (`wrappers.go:26`). Comment drift; harmless but noted.
-- **Wrapper list duplicated in `Install` and `Remove`.** Two copies of
-  the same slice (`wrappers.go:26` and `:48`) that must stay in sync.
-  Trivially refactorable into a package-level `var wrapperNames = [...]`
-  but not currently done.
-- **`BinDir()` returns `""` on error, `binPath()` returns an error.**
-  The two helpers have different error semantics for the same underlying
-  call. A caller that accidentally uses `BinDir()` for a write target
-  will fail with "open : no such file or directory" instead of a
-  meaningful home-dir error.
+### ABOUTME header omits gt-gemini wrapper
+- **Claim source:** ABOUTME header at `wrappers.go:1-2`
+- **Docs claim:** "Provides gt-codex and gt-opencode wrappers" — lists two wrappers.
+- **Code does:** Installs three wrappers: `gt-codex`, `gt-gemini`, `gt-opencode` (`wrappers.go:26`). The `gt-gemini` script exists in `scripts/` and is embedded via `embed.FS`.
+- **Category:** `cobra drift` (in-code docstring contradicts code)
+- **Severity:** `wrong`
+- **Fix tier:** `code` (update ABOUTME header to list all three wrappers)
+- **Release position:** `in-release` (`gt-gemini` existed at v1.0.0; the ABOUTME header was already incomplete at that tag)
 
 ## Notes / open questions
 
+- Wrapper list duplicated in `Install` and `Remove` — two copies of the
+  same slice (`wrappers.go:26` and `:48`) that must stay in sync.
+  Trivially refactorable into a package-level `var wrapperNames = [...]`
+  but not currently done.
+- `BinDir()` returns `""` on error while `binPath()` returns an error.
+  Different error semantics for the same underlying call. A caller that
+  accidentally uses `BinDir()` for a write target will fail with
+  "open : no such file or directory" instead of a meaningful
+  home-dir error.
 - `~/bin` is assumed to be on `$PATH`. The package doesn't check this.
   `gt install` or `gt doctor` is the right place to warn the user, not
   here.

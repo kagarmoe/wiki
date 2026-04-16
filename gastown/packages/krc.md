@@ -4,12 +4,16 @@ type: package
 status: verified
 topic: gastown
 created: 2026-04-11
-updated: 2026-04-11
+updated: 2026-04-14
 sources:
   - /home/kimberly/repos/gastown/internal/krc/krc.go
   - /home/kimberly/repos/gastown/internal/krc/decay.go
   - /home/kimberly/repos/gastown/internal/krc/autoprune.go
 tags: [package, platform-service, ttl, events, pruning, ephemeral-data]
+phase3_audited: 2026-04-14
+phase3_findings: [none]
+phase3_severities: []
+phase3_findings_post_release: false
 ---
 
 # internal/krc

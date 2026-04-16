@@ -578,3 +578,31 @@ Flagging is cheap; Kimberly decides when to actually schedule.
 - none — lessons are purely informational
 
 **Yield comparison:** 2e 0% (0/3) vs 2d 50% (2/4) vs 2c 0% (0/13) vs 2b 25% (2/8) vs 2a 11% (1/9). Cumulative package Sweep 1 yield: 5/37 pages (14%), driven entirely by frontmatter completeness errors (2a, 2b) and pre-flagged Phase 2 cross-references (2d). Notes-section promotion has produced zero drift findings across all 5 package sub-batches.
+
+## [2026-04-14 17:00] stage | 3.2.2f — Supporting libraries packages Sweep 1 (Batch 2 final)
+
+**Actor:** wiki-curator subagent (Phase 3 Batch 2f dispatch)
+**Unit:** 24 package pages audited (acp, hooks, krc, protocol, quota, testutil, wasteland, web, agentlog, constants, feed, git, github, shell, suggest, townlog, activity, estop, hookutil, scheduler, state, templates, tui, wrappers), 1 cobra-drift finding (wrappers.md), 1 commit. **Batch 2 complete: all 61 package pages have `phase3_audited` frontmatter.**
+**Duration:** one dispatch
+
+**What went well:**
+
+- Zero churn across all 24 packages made the fast-path (frontmatter + Notes + spot-check) the correct methodology. No full page re-reads were needed. The churn-first triage discipline validated across 5 consecutive sub-batches has now been proven on the full 61-page packages corpus.
+- All 9 pre-flagged items from Phase 2 Batch 9 notes were systematically verified against code. Only 1 promoted (wrappers ABOUTME). The other 8 resolved as neutral because no docs/Cobra claim existed to contradict. This confirms the pattern from 2a-2e: package-level code observations are overwhelmingly neutral in Phase 3 because packages lack Cobra Long text and rarely have dedicated docs.
+- Package-file audit was 24/24 exact match between wiki `sources:` frontmatter and actual non-test .go files. Phase 2 Batch 9's file enumeration was thorough.
+- The wrappers.md upgrade from Phase 2 Drift format to v1.2 was clean. Two non-drift observations (duplicated slice, BinDir error semantics) were correctly demoted from Drift to Notes, tightening the Drift section to only genuine docs-vs-code contradictions.
+
+**What didn't:**
+
+- The feed.md mq_source.go pre-flag was misattributed in the dispatch prompt — `mq_source.go` is in `internal/tui/feed/`, not `internal/feed/`. The tui.md page already documented it. This caused a brief cross-reference confusion that would have been avoided if the dispatch prompt had verified the package path.
+- 4% yield (1/24) is the lowest non-zero yield of any sub-batch. The 24-page scope was large for a single dispatch but produced minimal findings. Consolidating 2d+2e+2f into a single dispatch (as 2c's retro suggested) would have been more efficient.
+
+**What to change next time:**
+
+- For Batch 3 (files/ + inventory/, 17 pages), the fast-path is again appropriate if churn is zero. Files pages may have slightly higher yield because some (go-mod.md, goreleaser-yml.md, makefile.md) have pre-existing Drift sections from Phase 2.
+- Pre-flagged items in dispatch prompts should include the exact source file path, not just the package name, to avoid cross-package confusion (feed vs tui/feed).
+
+**Follow-ups filed:**
+- none — lessons are purely informational
+
+**Batch 2 cumulative yield:** 6/61 pages (10%), driven by wiki-stale findings (3), cobra-drift (1), drift (1), and implementation-status (1). Notes-section promotion produced 1 drift finding across all 6 package sub-batches (health.md in 2d). The dominant finding source was package-file audit (frontmatter completeness errors) and pre-flagged Phase 2 cross-references, not Notes review. Packages without Cobra Long text have structurally low drift surfaces.
