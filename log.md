@@ -4648,3 +4648,13 @@ Drafted corrections for all 61 drift findings from the drift index Section 1, gr
 **Remaining:** 4 large packages still partial; 2 gap beads deferred to release sync.
 
 → gastown/drift/README.md, gastown/drift/corrections.md
+
+## [2026-04-17] lint | Phase 7 Batch 1: Correction validation + ambiguity audit
+
+**Correction validation:** Spot-checked 18 of 61 corrections against gastown HEAD (`9f962c4a`). All 18 valid — verbatim quotes match, code citations accurate, suggested replacements correct. No line-number drift from recent reaper commits.
+
+**Ambiguity audit:** 12 findings across docs and Cobra Long text. 6 in docs files (reference.md, overview.md, CLEANUP.md, agent-provider-integration.md), 6 in Cobra Long text (witness.go, config.go, refinery.go, rig.go). Notable pattern: 4 findings trace to the persistent polecat model (gt-hdf8) — docs/Long text still describe the old self-nuke model in places not covered by corrections.md.
+
+**New drift not in corrections.md:** reference.md lifecycle section (lines 258-259) and reference.md env table (line 284) both contain stale claims about polecat behavior. witness.go parent Long text (lines 32-39, 55-57) describes the old self-cleaning model.
+
+→ gastown/drift/corrections-audit.md

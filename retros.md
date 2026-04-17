@@ -1179,3 +1179,28 @@ Flagging is cheap; Kimberly decides when to actually schedule.
 - beads.md, daemon.md, doltserver.md, polecat.md expansion — tracked as remaining partial status (no new bead; existing pages note their gaps)
 - wiki-7u4 (bitbucket package) — deferred to release sync
 - wiki-w71 (6 new docs files) — deferred to release sync
+
+## [2026-04-17] stage | 7.1 — Correction validation + ambiguity audit
+
+**Actor:** wiki-curator (main session)
+**Unit:** Spot-checked 18/61 corrections against gastown HEAD; audited 15 docs files + 6 Cobra Long text blocks for ambiguity.
+**Duration:** one dispatch
+
+### What went well
+
+- **All 18 sampled corrections valid.** Phase 6 corrections were drafted from Phase 3 wiki annotations with exact file:line citations. Even after recent gastown commits (reaper refactoring), none of the cited line numbers had shifted. The Phase 3 investment in precise citations continues to compound.
+- **Ambiguity audit found a real pattern.** 4 of 12 findings trace to the same root cause (persistent polecat model not reflected in all docs/Long text). This kind of systematic gap is more useful than scattered one-offs.
+
+### What didn't go well
+
+- **reference.md has stale claims not covered by corrections.md.** The lifecycle section (lines 258-259) and env table (line 284) both have stale polecat behavior claims. These should have been caught in Phase 6 Sweep 2 but weren't — reference.md was only partially scanned.
+- **witness.go parent Long text also stale.** The self-cleaning model description (lines 32-39, 55-57) contradicts the persistent polecat model but isn't in corrections.md. The witness.go correction only addresses `--foreground`.
+
+### What to change next time
+
+- **When drafting corrections for a pattern, grep for all instances.** The persistent-polecat pattern affects done.md, CLEANUP.md, reference.md, witness.go parent Long, and witness.go start Long. Phase 6 caught 2 of 5. A `grep -r "nuke\|self-clean\|self-nuk"` would have caught all.
+- **reference.md should get a dedicated full-file audit.** It's 767 lines and aggregates claims from many sources. Partial scans miss things.
+
+### Follow-ups filed
+
+- None yet — corrections-audit.md records the findings for Kimberly's review. New corrections for reference.md and witness.go parent Long text should be added to corrections.md if Kimberly approves.
