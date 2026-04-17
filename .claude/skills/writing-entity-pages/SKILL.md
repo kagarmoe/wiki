@@ -351,6 +351,53 @@ Equivalently: `phase3_audited` is the opt-in marker. A page without `phase3_audi
 | Using Obsidian wikilinks (`[[...]]`) | Use relative markdown links `[text](path/to/page.md)`. |
 | Absolute path inside a wiki link | Absolute paths are for external source refs (backticked code, not links). Wiki links use relative markdown. |
 
+## Self-check
+
+Run before committing any new or updated entity page.
+
+### Coverage checklist
+
+- [ ] YAML frontmatter has all required fields (`title`, `type`, `status`, `topic`, `created`, `updated`, `sources`, `tags`)
+- [ ] Phase 3+ fields present if page was audited (`phase3_audited`, `phase3_findings`, `phase3_severities`, `phase3_findings_post_release`)
+- [ ] Phase 5 `phase5_audience` field present if command page
+- [ ] `## What it actually does` section has `file:line` citations (not uncited assertions)
+- [ ] `file:line` refs verified against CURRENT HEAD (not copied from existing wiki)
+- [ ] `## Docs claim` quotes are verbatim (character-exact against source)
+- [ ] `## Drift` findings have all structured fields (Claim source, Docs claim, Code does, Category, Severity, Fix tier, Release position)
+- [ ] `## Implementation status` findings have all fields (Status, Severity, Docs describe, Code provides, Release position, Fix tier, Resolution)
+- [ ] Forward link to `../drift/README.md` present on pages with Drift/Implementation status sections
+- [ ] Backlink check run (`grep -rn "<entity-name>" gastown/`)
+- [ ] Wiki-stale findings have `**Phase 2 root cause:** churn | phase-2-incomplete`
+- [ ] Drift category matches the Code → Cobra → Docs authority hierarchy
+- [ ] Page committed with batch-entry `log.md` entry
+
+### Self-check questions
+
+1. **"Did I re-read the source file at current HEAD before citing it?"** — Answer should be "yes, at `<commit-sha>`." If you copied a `file:line` from the existing wiki page, you skipped this.
+2. **"Is every Docs claim quote verbatim?"** — Diff each quote against its source. If any word differs, fix or flag.
+3. **"Does my drift category match the authority hierarchy?"** — Cobra wrong → `cobra drift` (fix tier: code). Docs wrong → `drift` (fix tier: docs). Both wrong → `compound drift`.
+
+### Verification commands
+
+```bash
+# Frontmatter field count (expect ≥8 for any entity page)
+head -20 <page> | grep -c "^[a-z_]"
+
+# Uncited assertions check (expect >0 for pages with ## What it actually does)
+grep -c '\.go:\|file:line' <page>
+
+# Backlink check — find existing pages that mention this entity
+grep -rn "$(basename <page> .md)" ~/repos/gt-wiki/gastown/ | grep -v "$(basename <page>)"
+```
+
+### Example: good page vs bad page
+
+**Bad (uncited, paraphrased, missing fields):**
+> `## What it actually does` — "gt runs the main CLI loop and dispatches subcommands." No `file:line`. `## Docs claim` paraphrases the Long text instead of quoting verbatim. `## Drift` section has Category but no Severity, Fix tier, or Release position.
+
+**Good (cited, verbatim, complete):**
+> `## What it actually does` — "The root command registers all subcommands via `addCommands()` at `internal/cmd/root.go:42-68` and checks `BuiltProperly` at `internal/cmd/root.go:96-106`." `## Docs claim` quotes the Long text character-exact with source ref. `## Drift` section has all 7 structured fields.
+
 ## Reference
 
 - **Schema version and project coordination:** [CLAUDE.md](../../../CLAUDE.md)

@@ -146,6 +146,47 @@ A release sync is not itself a phase — it's a recurring maintenance pass that 
 - **Large releases** (major version bump, many files moved or renamed): create a dedicated plan file at `.claude/plans/YYYY-MM-DD-release-sync-v<version>.md` that references the active phase plan and specifies which batches feed findings back into the phase plan.
 - **Decision threshold:** if the diff touches >20 wiki pages or introduces >5 new entities, write a dedicated plan file. Otherwise fold into the active phase plan.
 
+## Self-check
+
+Run after completing a release sync batch.
+
+### Coverage checklist
+
+- [ ] Delta is tag-to-tag (not `HEAD@{1}` or "last commit")
+- [ ] Release marker exists and was updated to new tag
+- [ ] Diff triaged into: new entities, modified entities, removed entities, internal refactors
+- [ ] Scope proposal presented to Kimberly BEFORE touching files
+- [ ] Every updated page's `file:line` citations re-read at the NEW release tag (not the old one)
+- [ ] Removed entities marked `status: vestigial` (not deleted)
+- [ ] Batch-per-commit discipline followed (one change cluster = one commit = one log entry)
+- [ ] Cross-link checks run on every touched page
+- [ ] Phase-specific fields updated per active phase
+
+### Self-check questions
+
+1. **"Is my delta tag-to-tag?"** — Answer should name both tags (e.g. "v1.0.0..v1.1.0"). If one end is a branch or `HEAD`, you broke the contract.
+2. **"Did I re-read every cited source at the new tag?"** — If you copied any `file:line` from the existing wiki page without verifying, you skipped code-first verification.
+3. **"Did I propose scope to Kimberly before editing?"** — Release syncs are not autonomous. If you started editing without her approval, stop and propose.
+
+### Verification commands
+
+```bash
+# Confirm tag-to-tag delta (expect a specific commit count)
+git -C ~/repos/gastown log --oneline <old-tag>..<new-tag> | wc -l
+
+# Verify release marker is updated
+grep "gastown_release:" ~/repos/gt-wiki/gastown/README.md
+
+# Check no pages were deleted (only vestigial marking allowed)
+git diff --cached --diff-filter=D --name-only | grep "gastown/"
+```
+
+### Example: good sync vs bad sync
+
+**Bad:** `git log origin/main~10..HEAD` as the delta, no scope proposal, monolithic commit touching 15 pages, removed entity page deleted from disk.
+
+**Good:** `git -C ~/repos/gastown log v1.0.0..v1.1.0 --stat` as the delta, scope proposal filed and approved, 3 commits (new entities batch, modified entities batch, vestigial marking batch), removed entity marked `status: vestigial` with `## Implementation status` citing removal commit.
+
 ## Reference
 
 - `workflow.md` — full 11-step runbook with commands, templates, and worked examples.

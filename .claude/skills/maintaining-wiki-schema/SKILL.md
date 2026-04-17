@@ -186,6 +186,45 @@ Periodically or on request, scan the wiki for:
 | Splitting a long page without updating cross-links | When splitting an entity page (e.g. a command with many subcommands), update every existing backlink to point at the right child page. Run the backlink check from the writing-entity-pages skill before committing. |
 | Writing a schema decision in a commit message instead of log.md | Commit messages are terse; `log.md` decision entries are the durable record. The commit message can reference `log.md` line numbers, but the decision lives in log.md. |
 
+## Self-check
+
+Run after any schema change or lint pass.
+
+### Coverage checklist
+
+- [ ] Schema change has a `decision` entry in `log.md`
+- [ ] Schema version bumped in CLAUDE.md header (if applicable; minor wording refinements don't bump)
+- [ ] All affected skills updated in the same commit (cross-skill coherence)
+- [ ] Lint pass produced FINDINGS, not silent fixes
+- [ ] Lint findings handed to Kimberly (or filed as beads) before acting
+- [ ] Retroactive vs non-retroactive distinction honored (new fields are opt-in by default)
+- [ ] CLAUDE.md only changed for coordination-surface changes (reference content lives in skills)
+
+### Self-check questions
+
+1. **"Is there a `decision` entry in `log.md` for this change?"** — `grep "decision |" log.md | tail -3` should include your change. If not, you forgot the entry.
+2. **"Did I update every skill this change touches?"** — A drift taxonomy change affects `writing-entity-pages`; a new label affects `tracking-wiki-work`. List the affected skills explicitly.
+3. **"Is this retroactive or opt-in?"** — Default is opt-in. If you're requiring a retrofit of existing pages, that needs explicit Kimberly approval and a decision entry saying so.
+
+### Verification commands
+
+```bash
+# Recent decisions should include this change
+grep "decision |" ~/repos/gt-wiki/log.md | tail -3
+
+# Schema version matches the decision entry
+grep "Schema version:" ~/repos/gt-wiki/CLAUDE.md
+
+# Cross-skill coherence: all skills committed together
+git diff --cached --name-only | grep "skills/"
+```
+
+### Example: good schema change vs bad schema change
+
+**Bad:** Add a new page type `protocol` to `writing-entity-pages/SKILL.md`, commit, no `log.md` entry, no version bump, `maintaining-wiki-schema` not updated.
+
+**Good:** Add `protocol` to `writing-entity-pages/SKILL.md` Page Types section, bump schema version in CLAUDE.md, append `## [YYYY-MM-DD] decision | Schema vX.Y+1: add page type 'protocol'` to `log.md`, commit all three files together.
+
 ## Reference
 
 - **Wiki schema and coordination:** [CLAUDE.md](../../../CLAUDE.md)

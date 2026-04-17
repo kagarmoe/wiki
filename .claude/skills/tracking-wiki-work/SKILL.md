@@ -231,6 +231,43 @@ bd dep add wiki-aaa wiki-bbb
 | Closing a bead without a reason when the reason matters | Use `bd close <id> --reason="..."` to preserve the audit trail. |
 | Filing a drift finding as a bead instead of annotating the entity page | Drift findings live inline on the entity page's `## Drift` section. The bead (if any) tracks the audit work that surfaces the drift, not the drift itself. |
 
+## Self-check
+
+Run after filing, claiming, or closing any bead for wiki work.
+
+### Coverage checklist
+
+- [ ] `BEADS_ACTOR=wiki-curator` prefix on every bd command
+- [ ] Bead description follows format (absolute wiki paths, `file:line` source refs, plan reference, acceptance criteria)
+- [ ] Labels include topic (`gastown`) + work type (`wiki-investigation` | `wiki-content` | `drift` | `phase3`) + phase label
+- [ ] Priority is numeric `0`-`4`, not `"high"` / `"medium"` / `"low"`
+- [ ] Cross-tool handoff: `wants-wiki-entry` label for agent→Kimberly; `→ handed to bd-<id>` for Kimberly→agent
+- [ ] Bead created BEFORE work began (not retroactively after the fact)
+- [ ] Bead closed with `--reason` explaining what was done
+- [ ] No `bd edit` used (blocks agents — use `bd update --description=` instead)
+
+### Self-check questions
+
+1. **"Did I use `wiki-curator` as the actor?"** — Run `bd show <id>` and verify the actor field. If it shows your git user, you forgot the prefix.
+2. **"Does the bead description include wiki paths AND source refs?"** — Both are required. A description with only prose is incomplete.
+3. **"Is the task in exactly one tracker?"** — If both a bead and an Obsidian Tasks checkbox exist for the same work, one is stale.
+
+### Verification commands
+
+```bash
+# Verify actor and labels on the bead you just filed/closed
+BEADS_ACTOR=wiki-curator bd show <id>
+
+# Check for duplicate tracking (bead + checkbox for same work)
+grep -rn "bd-<id>" ~/repos/gt-wiki/ | head -5
+```
+
+### Example: good bead vs bad bead
+
+**Bad:** `bd create --title="Fix drift" --type=task` — no actor prefix, no description, no labels, no priority.
+
+**Good:** `BEADS_ACTOR=wiki-curator bd create --title="Phase 3 Batch 1c: audit hooks.md for cobra drift" --description="Audit ~/repos/gt-wiki/gastown/commands/hooks.md against internal/cmd/hooks*.go. Plan: .claude/plans/2026-04-15-phase3-drift.md Batch 1c. Acceptance: all Phase 3 sections populated, backlink check passed." --type=task --priority=2` followed by `bd update <id> --labels=gastown,drift,phase3`.
+
 ## Reference
 
 - **Wiki schema and coordination:** [CLAUDE.md](../../../CLAUDE.md)
