@@ -4567,3 +4567,39 @@ The drift index now covers: wrong (Phase 3 drift), missing (Phase 3 gaps), AND i
 **Key edge cases:** status (user, despite PolecatSafe + GroupDiag), prime (agent, despite GroupDiag), version/info/thanks (user, despite GroupDiag), heartbeat (agent, despite GroupDiag), dashboard (dev, operator-maintainer tool).
 
 → gastown/commands/*.md (111 pages), gastown/drift/README.md
+
+## [2026-04-16] ingest | Phase 6 Batch 1 (6 missing package pages)
+
+**Sources read:**
+- `/home/kimberly/repos/gastown/internal/agent/state.go` (62 lines)
+- `/home/kimberly/repos/gastown/internal/agent/provider/acp.go` (516 lines)
+- `/home/kimberly/repos/gastown/internal/agent/provider/provider.go` (283 lines)
+- `/home/kimberly/repos/gastown/internal/boot/boot.go` (237 lines)
+- `/home/kimberly/repos/gastown/internal/checkpoint/checkpoint.go` (222 lines)
+- `/home/kimberly/repos/gastown/internal/checkpoint/squash.go` (128 lines)
+- `/home/kimberly/repos/gastown/internal/connection/address.go` (138 lines)
+- `/home/kimberly/repos/gastown/internal/connection/connection.go` (171 lines)
+- `/home/kimberly/repos/gastown/internal/connection/local.go` (190 lines)
+- `/home/kimberly/repos/gastown/internal/connection/registry.go` (190 lines)
+- `/home/kimberly/repos/gastown/internal/proxy/ca.go` (194 lines)
+- `/home/kimberly/repos/gastown/internal/proxy/denylist.go` (45 lines)
+- `/home/kimberly/repos/gastown/internal/proxy/exec.go` (228 lines)
+- `/home/kimberly/repos/gastown/internal/proxy/git.go` (363 lines)
+- `/home/kimberly/repos/gastown/internal/proxy/server.go` (533 lines)
+
+**Total source lines read:** 3,500 across 15 files.
+
+**Pages created (6):**
+- `gastown/packages/agent.md` — generic StateManager[T] for agent state persistence
+- `gastown/packages/agent-provider.md` — JSON-RPC 2.0 / ACP provider types (799 lines, 2 files)
+- `gastown/packages/boot.md` — Boot watchdog lifecycle (flock, tmux spawn, degraded mode)
+- `gastown/packages/checkpoint.md` — checkpoint read/write/capture + WIP commit squashing
+- `gastown/packages/connection.md` — Address parsing, Connection interface, MachineRegistry, LocalConnection
+- `gastown/packages/proxy.md` — mTLS CA, deny list, exec/git handlers, rate limiting, push authorization
+
+**Key observations:**
+- `internal/agent`, `internal/agent/provider`, and `internal/connection` have zero external importers at current HEAD — newly introduced infrastructure not yet wired into the runtime.
+- `internal/boot` imported by daemon, doctor, and CLI; `internal/checkpoint` imported by CLI and prime commands; `internal/proxy` imported by `gt-proxy-server` binary.
+- All 6 packages fill gaps identified in Phase 3 Batch 14 (gaps.md Section A1).
+
+→ gastown/packages/agent.md, gastown/packages/agent-provider.md, gastown/packages/boot.md, gastown/packages/checkpoint.md, gastown/packages/connection.md, gastown/packages/proxy.md, index.md

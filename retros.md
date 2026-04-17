@@ -1067,3 +1067,34 @@ Flagging is cheap; Kimberly decides when to actually schedule.
 - Fix user-facing drift first (18 findings), then agent (11), then dev (7). Zero internal findings.
 - The 24 non-command findings (concepts, packages, files, docs) should be batched separately since they don't carry audience tags.
 - Meta-pattern PRs (Section 3) should be prioritized alongside user-facing fixes since they affect 10+ user-facing commands.
+
+---
+
+## Phase 6 Batch 1: 6 missing package pages
+
+**Date:** 2026-04-16
+**Scope:** Write entity pages for the 6 Go packages identified as gaps in Phase 3 Batch 14.
+**Source lines read:** 3,500 across 15 files.
+
+### Pages written
+
+| Package | File | Lines | Source files | Importers |
+|---|---|---|---|---|
+| `internal/agent` | `agent.md` | 62 | 1 (state.go) | 0 (not yet wired) |
+| `internal/agent/provider` | `agent-provider.md` | 799 | 2 (acp.go, provider.go) | 0 (not yet wired) |
+| `internal/boot` | `boot.md` | 237 | 1 (boot.go) | 3 (daemon, doctor, cmd) |
+| `internal/checkpoint` | `checkpoint.md` | 350 | 2 (checkpoint.go, squash.go) | 4 (cmd x3, prime) |
+| `internal/connection` | `connection.md` | 689 | 4 (address, connection, local, registry) | 0 (not yet wired) |
+| `internal/proxy` | `proxy.md` | 1,363 | 5 (ca, denylist, exec, git, server) | 1 (gt-proxy-server) |
+
+### Findings
+
+- 3 of 6 packages (`agent`, `agent/provider`, `connection`) have zero external importers — pre-integration infrastructure.
+- `connection` package stubs SSH support explicitly (`registry.go:180`): "ssh connections not yet implemented." The federation feature is scaffolded but not built.
+- `proxy` is the most complex package (1,363 lines) with mTLS, deny list, git smart-HTTP, exec sandboxing, rate limiting, and branch-scoped push authorization. All five files were read in full.
+- `boot` and `checkpoint` have command pages with the same base name — the `type: package` frontmatter distinguishes them.
+
+### Process notes
+
+- All 6 gaps from Phase 3 Batch 14 Section A1 are now filled. The 5 "deliberately excluded" sub-packages remain excluded per the Phase 3 rationale.
+- Phase 6 Batch 1 closes the package coverage gap entirely.
