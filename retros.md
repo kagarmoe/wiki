@@ -1122,3 +1122,26 @@ Flagging is cheap; Kimberly decides when to actually schedule.
 
 - **beads.md needs a dedicated expansion pass** for the remaining 12 files (escalation, delegation, rig, dog, sling_context, mr, handoff, fields, agent_ids, config_yaml, stale_pid, and beads.go middle third). Consider splitting into a separate batch rather than bundling with other work.
 - **daemon.md deep dives could be split into separate pages** if they grow further — each of the four files is larger than most standalone packages.
+
+## [2026-04-16] stage | Phase 6 Batch 3 — Upstream correction drafts
+
+**Agent:** wiki-curator (subagent)
+**Phase/Batch:** 6/3
+**Duration:** single session
+**Scope:** 61 corrections drafted in gastown/drift/corrections.md
+
+### What went well
+
+- **Wiki entity pages had everything needed.** Every Phase 3 Drift section contained verbatim quotes, exact file:line citations, code descriptions, and fix-tier recommendations. No gastown source re-reads were necessary — the Phase 3 annotations were complete enough to draft corrections directly.
+- **Meta-pattern grouping worked.** The Phase 3 retrospective decision to identify cross-cutting patterns (hand-maintained enumerations, dead doc refs, stale completion flows) paid off here. Group 1 alone batches 11 corrections into one PR pattern.
+- **Single-file output is cleaner than per-finding files.** The original plan suggested a `corrections/` directory with per-finding files. A single `corrections.md` grouped by meta-pattern is more reviewable for PR batching.
+
+### What was hard
+
+- **Counting is tricky.** The drift index says 52 rows but 60 findings (some pages have 2+ findings). The corrections file has 61 because Group 4 includes a few items that are annotations rather than code changes. Keeping counts consistent across the drift index summary stats and the corrections file required care.
+- **Group 4 is heterogeneous.** The "implementation-status" findings range from "add a status callout to a design doc" (straightforward) to "this entire feature doesn't exist" (where the callout is just one line but the context requires understanding what's built vs not). The suggested callout text had to be specific enough to be useful.
+
+### What to change
+
+- **Batch 4 should cross-reference corrections.md rows back to drift index PR reference column.** As Kimberly files PRs, the drift index should track which corrections have been submitted.
+- **Consider generating the Group 1 corrections programmatically in a future pass.** The hand-maintained enumeration pattern is so uniform that a script could detect Long-text subcommand lists and compare them against registered subcommands.

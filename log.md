@@ -4624,3 +4624,19 @@ Expanded 6 wiki pages with content grounded in source reads.
 - `gastown/packages/polecat.md` — session_manager.Start() 15-step pipeline walkthrough (pre-flight through observability), Stop() kill semantics.
 
 → gastown/commands/formula.md, gastown/commands/patrol.md, gastown/packages/beads.md, gastown/packages/daemon.md, gastown/packages/doltserver.md, gastown/packages/polecat.md
+
+## [2026-04-16] ingest | Phase 6 Batch 3: Upstream correction drafts
+
+Drafted corrections for all 61 drift findings from the drift index Section 1, grouped by meta-pattern for efficient PR batching.
+
+**Methodology:** Read each entity page's Drift and Docs claim sections to extract verbatim quotes and code citations. No gastown source files were re-read — all data came from Phase 3 wiki annotations.
+
+**Corrections by group:**
+- Group 1: Hand-maintained Long text enumerations — 11 corrections (account, crew, doctor, hooks, mail, molecule, namepool, quota, reaper, tap x2)
+- Group 2: Stale Long text claims — 19 corrections (activity, assign, boot, callbacks, changelog, config, down, git-init, init, install x2, plugin, repair, shell, status, uninstall, warrant, witness, wrappers)
+- Group 3: Docs file corrections — 19 corrections (done/CLEANUP.md, install/INSTALLING.md, convoy/SKILL.md x2, identity.md, go-mod/Dockerfiles, goreleaser-yml, health.go, telemetry/otel-architecture.md, plus 10 Sweep 2 docs-only findings)
+- Group 4: Implementation-status preservation callouts — 12 corrections (7 unbuilt design docs, 3 partial design docs, 1 vestigial flag, 1 unused package)
+
+**Total: 61 corrections** across 52 entity pages and 10 standalone docs file findings.
+
+→ gastown/drift/corrections.md
