@@ -4,7 +4,7 @@ type: package
 status: partial
 topic: gastown
 created: 2026-04-11
-updated: 2026-04-15
+updated: 2026-04-16
 phase3_audited: 2026-04-15
 phase3_findings: [none]
 phase3_severities: []
@@ -13,7 +13,7 @@ phase4_audited: 2026-04-16
 phase4_findings: [incomplete]
 sources:
   - /home/kimberly/repos/gastown/internal/polecat/manager.go
-  - /home/kimberly/repos/gastown/internal/polecat/session_manager.go
+  - /home/kimberly/repos/gastown/internal/polecat/session_manager.go  # full read Phase 6
   - /home/kimberly/repos/gastown/internal/polecat/types.go
   - /home/kimberly/repos/gastown/internal/polecat/heartbeat.go
   - /home/kimberly/repos/gastown/internal/polecat/namepool.go
@@ -277,11 +277,49 @@ Source:
 - `polecatSlot(polecat)` (`session_manager.go:202-219`) — unique
   integer slot index for port offsetting and resource isolation
   when multiple polecats run in parallel (gh#954).
-- `Start(polecat, opts)` (`session_manager.go:222-543`) — ~320
-  lines. The polecat-side of session creation, including issue
-  hooking, beacon construction, and `session.StartSession`
-  invocation.
-- `Stop(polecat, force)` (`session_manager.go:549-577`).
+- `Start(polecat, opts)` (`session_manager.go:222-538`) — ~320
+  lines. The full session creation pipeline, in order:
+  1. **Pre-flight**: check polecat exists, detect stale sessions
+     (dead pane process -> kill and proceed,
+     `session_manager.go:237-243`, fix gt-jn40ft).
+  2. **Issue validation**: verify issue exists and is not
+     tombstoned BEFORE creating session
+     (`session_manager.go:254-258`).
+  3. **Agent config resolution**: `--agent` override uses
+     `ResolveAgentConfigWithOverride`; default path uses
+     `ResolveRoleAgentConfig` (`session_manager.go:269-278`).
+     Fix for gt-1j3m: Codex polecats sat idle because Claude's
+     `ReadyPromptPrefix` was used for readiness detection.
+  4. **Beacon + startup command**: `FormatStartupBeacon` builds
+     the initial prompt, `BuildStartupCommandFromConfig` builds
+     the shell command. `BD_DOLT_AUTO_COMMIT=off` prepended
+     (gt-5cc2p, `session_manager.go:328`). Auto-checkout fresh
+     branch if on default branch (hq-h01n8 zombie loop fix,
+     `session_manager.go:345-356`).
+  5. **Env injection**: `GT_RIG`, `GT_POLECAT`, `GT_ROLE`,
+     `GT_POLECAT_PATH`, `GT_TOWN_ROOT`, `GT_RUN` (UUID),
+     `POLECAT_SLOT`, `GT_BRANCH` prepended
+     (`session_manager.go:360-372`).
+  6. **tmux session creation**: `NewSessionWithCommand`
+     (`session_manager.go:376`), then `SetEnvironment` for all
+     `AgentEnv` vars, `GT_AGENT` fallback, `GT_PANE_ID` for
+     ZFC liveness (gt-qmsx, `session_manager.go:430-432`).
+  7. **Post-create**: issue hook, theme, pane-died hook, wait
+     for command start, accept startup dialogs, wait for runtime
+     ready (prompt-based or delay-based,
+     `session_manager.go:450-459`), startup nudge delivery with
+     `verifyStartupNudgeDelivery` retry for Mode B race
+     (GH#1379, `session_manager.go:489-491`).
+  8. **Verification**: session survival check
+     (`session_manager.go:498-504`); `GT_AGENT` validation
+     (kill if unset — witness would misidentify as zombie,
+     `session_manager.go:509-516`).
+  9. **Observability**: PID tracking, initial heartbeat touch,
+     optional JSONL log streaming, GASTA root span
+     (`session_manager.go:519-536`).
+- `Stop(polecat, force)` (`session_manager.go:549-577`) — graceful
+  Ctrl-C first, then `KillSessionWithProcesses` to ensure orphan
+  bash processes from Claude's Bash tool are killed.
 - `IsRunning`, `Status`, `List`, `ListPolecats`, `Attach`,
   `Capture`, `CaptureSession`, `Inject`, `StopAll`
   (`session_manager.go:578-769`) — the rest of the session
@@ -374,6 +412,9 @@ Source:
 
 ## Notes / open questions
 
+- `session_manager.go` is now deeply grounded (full read in Phase 6
+  Batch 2). The `Start()` method's 15-step pipeline documents the
+  full journey from name allocation to first heartbeat.
 - `manager.go` at ~2400 lines is the largest file in the
   agent-runtime layer. A future split by concern (Dolt retries,
   worktree management, name pool integration, beads

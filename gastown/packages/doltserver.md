@@ -4,15 +4,15 @@ type: package
 status: partial
 topic: gastown
 created: 2026-04-11
-updated: 2026-04-15
+updated: 2026-04-16
 sources:
   - /home/kimberly/repos/gastown/internal/doltserver/doltserver.go
   - /home/kimberly/repos/gastown/internal/doltserver/dolthub.go
   - /home/kimberly/repos/gastown/internal/doltserver/sync.go
   - /home/kimberly/repos/gastown/internal/doltserver/rollback.go
   - /home/kimberly/repos/gastown/internal/doltserver/wisps_migrate.go
-  - /home/kimberly/repos/gastown/internal/doltserver/wl_commons.go
-  - /home/kimberly/repos/gastown/internal/doltserver/wl_charsheet.go
+  - /home/kimberly/repos/gastown/internal/doltserver/wl_commons.go  # full read Phase 6
+  - /home/kimberly/repos/gastown/internal/doltserver/wl_charsheet.go  # partial read Phase 6
   - /home/kimberly/repos/gastown/internal/doltserver/sysproc_unix.go
   - /home/kimberly/repos/gastown/internal/doltserver/sysproc_windows.go
 tags: [package, data-layer, dolt, mysql-server, sql-server, lifecycle, imposter-killing, dolthub, migration, wl-commons]
@@ -323,23 +323,33 @@ these as "imposters" and kills them on sight.
 
 ### DoltHub integration — dolthub.go
 
-- Endpoints (`dolthub.go:14-22`): `dolthubAPIBase` (var, test-
-  overridable) for the REST API, `dolthubRemoteBase` (const) for push/
-  pull.
-- `DoltHubToken()` / `DoltHubOrg()` (`dolthub.go:24-34`) — env-var
-  accessors for `DOLTHUB_TOKEN`, `DOLTHUB_ORG`.
-- `DoltHubRepoName(dbName)` (`dolthub.go:36-44`) — local DB name →
-  DoltHub repo name. Underscores become hyphens; the one special case
-  is `hq` → `gt-hq`.
-- `DoltHubRemoteURL(org, repo)` (`dolthub.go:46-49`).
-- `CreateDoltHubRepo(org, repo, token)` (`dolthub.go:52-96`) — POSTs
-  to `/database` with private visibility; treats `200-299` and
-  "already exists" as success.
-- `AddRemote(dbDir, org, repo)` (`dolthub.go:98-124`) — runs `dolt
-  remote add origin <url>`, idempotent on duplicates.
-- `SetupDoltHubRemote(dbDir, org, dbName, token)`
-  (`dolthub.go:130-149`) — create + add + initial push, fail-fast at
-  each step.
+Source: `/home/kimberly/repos/gastown/internal/doltserver/dolthub.go`.
+
+The DoltHub remote API client. Enables pushing per-rig Dolt databases
+to DoltHub repositories for off-site backup and collaboration.
+
+- **Endpoints** (`dolthub.go:14-22`): `dolthubAPIBase` (var, test-
+  overridable) for the REST API, `dolthubRemoteBase` (const) for
+  push/pull via the Dolt remote protocol.
+- **Credentials** — `DoltHubToken()` / `DoltHubOrg()`
+  (`dolthub.go:24-34`) read `DOLTHUB_TOKEN` and `DOLTHUB_ORG` from
+  the environment. No fallback; callers must set these for remote
+  sync to work.
+- **Repo name mapping** — `DoltHubRepoName(dbName)`
+  (`dolthub.go:36-44`) converts local DB names to DoltHub repo
+  names: underscores become hyphens; the one special case is `hq`
+  to `gt-hq` (avoiding a bare two-letter repo name).
+- **`CreateDoltHubRepo(org, repo, token)`** (`dolthub.go:52-96`) —
+  POSTs to `<apiBase>/database` with private visibility and owner set
+  to the org. Treats HTTP 200-299 and "already exists" as success;
+  any other response is an error. Uses `net/http` directly (no SDK).
+- **`AddRemote(dbDir, org, repo)`** (`dolthub.go:98-124`) — runs
+  `dolt remote add origin <url>` as a subprocess; idempotent on
+  "already exists" errors.
+- **`SetupDoltHubRemote(dbDir, org, dbName, token)`**
+  (`dolthub.go:130-149`) — the full setup flow: create repo on
+  DoltHub, add remote to local DB, initial push. Fail-fast at each
+  step.
 
 ### Sync — sync.go
 
@@ -385,30 +395,77 @@ Layered on top of the Dolt server, the "Wanted List Commons" is a
 **separate schema** (not beads) that implements a
 wanted-list / bounty / stamps / badges / leaderboard system. This is
 a meaningful surprise for a package named "doltserver": it hosts not
-just the server but also a second data model.
+just the server but also a second data model. The database name is
+`wl_commons` (`WLCommonsDB` const, `wl_commons.go:21`). Phase 1
+("wild-west mode"): direct writes to main branch via the local Dolt
+server (`wl_commons.go:5`).
 
-- `WLCommonsStore` interface (`wl_commons.go:24-40`) and concrete
-  `WLCommons` struct (`wl_commons.go:41-79`) wrapping the town root.
-- Types: `WantedItem`, `StampRecord`, `BadgeRecord`, `CharacterSheet`,
-  `GeometryBar`, `SkillEntry`, `StampHighlight`, `Warning`,
-  `Neighbor`, `BridgeConnection`, `CrossClusterStamp`,
-  `LeaderboardEntry`, `TierThreshold` (across
-  `wl_commons.go:81-108`, `wl_charsheet.go:15-127`).
-- Schema init: `EnsureWLCommons(townRoot)` and
-  `initWLCommonsSchema(townRoot)` (`wl_commons.go:127-271`).
-- CRUD: `InsertWanted`, `ClaimWanted`, `SubmitCompletion`,
-  `QueryWanted`, `QueryWantedFull`, `InsertStamp`,
-  `QueryLastStampForSubject`, `QueryStampsForSubject`, `QueryBadges`,
-  `QueryAllSubjects`, `UpsertLeaderboard` (`wl_commons.go:277-` and
-  `wl_charsheet.go:358-473`).
-- Character sheet projection: `AssembleCharacterSheet`,
-  `computeStampGeometry`, `computeSkillCoverage`, `computeTopStamps`,
-  `computeWarnings`, `computeTier` (`wl_charsheet.go:128-332`).
+**Abstraction layer:**
+
+- `WLCommonsStore` interface (`wl_commons.go:24-38`) — 12 methods:
+  `EnsureDB`, `DatabaseExists`, `InsertWanted`, `ClaimWanted`,
+  `SubmitCompletion`, `QueryWanted`, `QueryWantedFull`,
+  `InsertStamp`, `QueryLastStampForSubject`, `QueryStampsForSubject`,
+  `QueryBadges`, `QueryAllSubjects`, `UpsertLeaderboard`.
+- `WLCommons` struct (`wl_commons.go:41`) — concrete implementation
+  wrapping `townRoot`. Each method delegates to the package-level
+  function (e.g., `InsertWanted(w.townRoot, item)`). The interface
+  exists for testability — a fake store is used in test suites.
+
+**Domain types:**
+
+- `WantedItem` (`wl_commons.go:81-97`) — `ID`, `Title`,
+  `Description`, `Project`, `Type`, `Priority`, `Tags` ([]string),
+  `PostedBy`, `ClaimedBy`, `Status`, `EffortLevel`, `EvidenceURL`,
+  `SandboxRequired`, `CreatedAt`, `UpdatedAt`.
+- `StampRecord`, `BadgeRecord` (across `wl_commons.go` and
+  `wl_charsheet.go`) — provenance tokens for work quality.
+- `CharacterSheet`, `GeometryBar`, `SkillEntry`, `StampHighlight`,
+  `Warning`, `Neighbor`, `BridgeConnection`, `CrossClusterStamp`,
+  `LeaderboardEntry`, `TierThreshold` (`wl_charsheet.go:15-127`) —
+  the full character-sheet projection model.
+
+**Schema management:**
+
+- `EnsureWLCommons(townRoot)` and `initWLCommonsSchema(townRoot)`
+  (`wl_commons.go:127-271`) create the `wl_commons` database and
+  its tables (wanted, stamps, badges, leaderboard) if they don't
+  exist. All schema DDL is executed over the local Dolt server
+  connection.
+
+**CRUD operations:**
+
+- `InsertWanted` — inserts a wanted item and commits.
+- `ClaimWanted(townRoot, wantedID, rigHandle)` — sets `claimed_by`
+  and `status=claimed`.
+- `SubmitCompletion(townRoot, completionID, wantedID, rigHandle,
+  evidence)` — records a completion submission.
+- `QueryWanted` / `QueryWantedFull` — single-item lookup; Full
+  variant includes related stamps and completions.
+- `InsertStamp` / `QueryLastStampForSubject` /
+  `QueryStampsForSubject` — stamp CRUD.
+- `QueryBadges(handle)` — badges earned by a handle.
+- `QueryAllSubjects` — distinct subject list for leaderboard.
+- `UpsertLeaderboard(entry)` — insert-or-update leaderboard row.
+
+**Character sheet projection** (`wl_charsheet.go:128-332`):
+
+- `AssembleCharacterSheet` aggregates stamps, skills, warnings,
+  neighbors, and tier into a single `CharacterSheet` projection.
+- `computeStampGeometry` — lays out stamps visually as geometry bars.
+- `computeSkillCoverage` — derives skill entries from stamp history.
+- `computeTopStamps` — picks highlight stamps.
+- `computeWarnings` — generates warnings for missing coverage.
+- `computeTier` — calculates tier from total stamp count against
+  `TierThreshold` thresholds.
 - `RunScorekeeper(store WLCommonsStore) ([]*LeaderboardEntry, error)`
-  (`wl_charsheet.go:474-...`) — aggregates stamps into leaderboard
-  tiers.
-- SQL helpers: `doltSQLQuery`, `parseSimpleCSV`, `parseCSVLine`,
-  `EscapeSQL`, `GenerateWantedID`, `backtickKey`, `isNothingToCommit`.
+  (`wl_charsheet.go:474+`) — aggregates all subjects' stamps into
+  leaderboard entries with computed tiers.
+
+**SQL helpers:** `doltSQLQuery`, `parseSimpleCSV`, `parseCSVLine`,
+`EscapeSQL`, `GenerateWantedID` (SHA-256 of random bytes,
+`wl_commons.go:9-10`), `backtickKey`, `isNothingToCommit`
+(`wl_commons.go:99+`).
 
 ### Internals / Notable implementation
 
@@ -503,13 +560,14 @@ _ = doltserver.Stop(townRoot)
   workspace repair) would aid navigation but is a substantial
   refactor. Test coverage is high (~4460 lines of tests) so the
   refactor is safer than it sounds.
-- **WL Commons is a surprise inhabitant.** Finding wanted-list /
+- **WL Commons is a surprise inhabitant** — now fully grounded in
+  the expanded WL Commons section above. The `WLCommonsStore`
+  interface enables test fakes. Finding wanted-list /
   character-sheet / leaderboard code inside `internal/doltserver`
   suggests either (a) a historical accident — WL Commons reused the
   per-town Dolt server and ended up co-located, or (b) an intentional
-  "this is where town-scoped schemas live" convention. Worth a
-  dedicated decision note. It would be more discoverable as
-  `internal/wlcommons`.
+  "this is where town-scoped schemas live" convention. It would be
+  more discoverable as `internal/wlcommons`.
 - **Imposter killing assumes root control over the host.** If bd is
   running under a different UID, `os.Process.Kill()` will fail
   silently. The package does not surface this case — it just logs

@@ -1,12 +1,16 @@
 ---
 title: gt formula
 type: command
-status: partial
+status: verified
 topic: gastown
 created: 2026-04-11
 updated: 2026-04-16
 sources:
   - /home/kimberly/repos/gastown/internal/cmd/formula.go
+  - /home/kimberly/repos/gastown/internal/cmd/formula_overlay.go
+  - /home/kimberly/repos/gastown/internal/cmd/formula_overlay_show.go
+  - /home/kimberly/repos/gastown/internal/cmd/formula_overlay_edit.go
+  - /home/kimberly/repos/gastown/internal/cmd/formula_overlay_list.go
   - /home/kimberly/repos/gastown/internal/cmd/root.go
 tags: [command, work, formula, molecule, workflow, bd-wrapper]
 phase3_audited: 2026-04-15
@@ -14,7 +18,7 @@ phase3_findings: [none]
 phase3_severities: []
 phase3_findings_post_release: false
 phase4_audited: 2026-04-16
-phase4_findings: [incomplete]
+phase4_findings: [none]
 phase5_audience: agent
 ---
 
@@ -23,7 +27,7 @@ phase5_audience: agent
 Manage [workflow formulas](../concepts/formula.md) — reusable
 [molecule](../concepts/molecule.md) templates (TOML/JSON files) that
 define workflow steps, variables, and composition rules. Parent to
-four subcommands: `list`, `show`, `run`, `create`.
+five subcommands: `list`, `show`, `run`, `create`, `overlay`.
 
 **Also known as:** `gt formulas` (alias, `formula.go:40`).
 **Parent:** [gt](../binaries/gt.md) (root command)
@@ -59,7 +63,8 @@ steps, variables, and composition rules. Formulas can be "poured"
 
 ### Subcommands
 
-Registered in `init()` at `formula.go:179-184`. Four total:
+Registered in `init()` at `formula.go:179-184`, plus the `overlay`
+subtree registered in `formula_overlay.go:34-35`. Five total:
 
 1. **`gt formula list`** (`formulaListCmd`, `formula.go:68-82`)
 
@@ -98,6 +103,65 @@ Registered in `init()` at `formula.go:179-184`. Four total:
    `--type` flag selects between three templates: `task` (default —
    single-step), `workflow` (multi-step with dependencies), `patrol`
    (repeating patrol cycle for wisps).
+
+5. **`gt formula overlay`** (`formulaOverlayCmd`,
+   `formula_overlay.go:7-32`)
+
+   Manage formula overlays — per-formula step overrides stored as
+   TOML files. The parent command is a `requireSubcommand` router
+   with three children. Overlays customize formula steps via
+   `replace`, `append`, or `skip` modes and are applied at prime
+   time when formula steps are displayed.
+
+   **File layout** (from `Long` text, `formula_overlay.go:20-24`):
+   - Town-level: `<townRoot>/formula-overlays/<formula>.toml`
+   - Rig-level: `<townRoot>/<rig>/formula-overlays/<formula>.toml`
+
+   **Resolution:** if a rig-level overlay exists it takes full
+   precedence; town-level is NOT merged
+   (`formula_overlay_show.go:66-73`).
+
+   **Children:**
+
+   **5a. `gt formula overlay show <formula>`**
+   (`formulaOverlayShowCmd`, `formula_overlay_show.go:14-26`)
+
+   Displays the resolved overlay for a formula with source
+   annotation (which file provides it, how many step overrides).
+   Loads and validates the overlay via
+   `formula.LoadFormulaOverlay(formulaName, townRoot, rigName)`
+   (`formula_overlay_show.go:50-53`). Prints the raw TOML file
+   content to stdout (`formula_overlay_show.go:81-88`).
+   `resolveOverlayContext` at `formula_overlay_show.go:94-109`
+   resolves town root and auto-detects rig from cwd.
+
+   Flag: `--rig <name>` (default: auto-detect from cwd).
+
+   **5b. `gt formula overlay edit <formula>`**
+   (`formulaOverlayEditCmd`, `formula_overlay_edit.go:13-29`)
+
+   Opens the overlay file in `$EDITOR` (fallback: `vi`). Creates
+   the directory and file with a commented template if they do not
+   exist (`formula_overlay_edit.go:64-78`). By default edits the
+   rig-level overlay; `--town` forces the town-level overlay
+   (`formula_overlay_edit.go:52-56`). After editing, validates via
+   `formula.LoadFormulaOverlay` and prints a warning on parse
+   errors (`formula_overlay_edit.go:96-98`). Changes take effect
+   at next `gt prime`.
+
+   Flags: `--rig <name>`, `--town` (bool).
+
+   **5c. `gt formula overlay list`**
+   (`formulaOverlayListCmd`, `formula_overlay_list.go:13-23`)
+
+   Lists all overlay files across town and rig levels. Scans the
+   town-level `formula-overlays/` directory and every rig's
+   `formula-overlays/` directory (detecting rigs by the presence
+   of `config.json`, `formula_overlay_list.go:64-65`). Output is a
+   tabular listing of scope, formula name, and file path
+   (`formula_overlay_list.go:92-96`).
+
+   No flags.
 
 ### Flags
 
@@ -142,17 +206,6 @@ Per-subcommand, defined in `init()` at `formula.go:161-185`:
 - [mq](mq.md) — merge-queue formulas are part of the refinery loop
   that consumes the work formulas dispatch.
 - [../binaries/gt.md](../binaries/gt.md) — root.
-
-## Coverage gaps
-
-*Phase 4 audit (2026-04-16):* The `overlay` subcommand tree is entirely
-missing from this page. Source: `formula_overlay.go` (parent),
-`formula_overlay_edit.go`, `formula_overlay_list.go`,
-`formula_overlay_show.go` (347 lines total). The page says "four
-subcommands" but there are five top-level registrations (list, show, run,
-create, overlay), and overlay itself has three children (show, edit, list).
-The overlay feature manages per-formula step overrides via TOML files at
-town-level and rig-level paths.
 
 ## Notes / open questions
 

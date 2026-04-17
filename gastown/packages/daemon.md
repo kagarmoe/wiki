@@ -4,7 +4,7 @@ type: package
 status: partial
 topic: gastown
 created: 2026-04-11
-updated: 2026-04-14
+updated: 2026-04-16
 sources:
   - /home/kimberly/repos/gastown/internal/daemon/daemon.go
   - /home/kimberly/repos/gastown/internal/daemon/types.go
@@ -15,6 +15,10 @@ sources:
   - /home/kimberly/repos/gastown/internal/daemon/pressure.go
   - /home/kimberly/repos/gastown/internal/daemon/log_rotation.go
   - /home/kimberly/repos/gastown/internal/daemon/restart_tracker.go
+  - /home/kimberly/repos/gastown/internal/daemon/dolt.go
+  - /home/kimberly/repos/gastown/internal/daemon/compactor_dog.go
+  - /home/kimberly/repos/gastown/internal/daemon/convoy_manager.go
+  - /home/kimberly/repos/gastown/internal/daemon/jsonl_git_backup.go
   - /home/kimberly/repos/gastown/internal/daemon/signals_unix.go
 tags: [package, daemon, long-running, patrol, supervisor, heartbeat]
 phase3_audited: 2026-04-14
@@ -494,6 +498,130 @@ reimplemented as Go code once the workflow stabilized.
 - Dolt recovery callback triggers an immediate sweep after Dolt
   transitions healthy.
 
+## Deep dives: large subsystem files
+
+### `dolt.go` — DoltServerManager (~47KB)
+
+Source: `/home/kimberly/repos/gastown/internal/daemon/dolt.go`.
+
+The daemon's Dolt server lifecycle manager. `DoltServerManager`
+struct (`dolt.go:116-150`) wraps a `DoltServerConfig` with mutex-
+protected runtime state: `process`, `startedAt`, `lastCheck`,
+backoff counters (`currentDelay`, `restartTimes`, `escalated`),
+identity verification timestamp, health check warnings, and a
+recovery callback (`onRecoveryFn`) invoked when Dolt transitions
+unhealthy-to-healthy.
+
+`DoltServerConfig` (`dolt.go:31-82`) exposes: `Enabled`, `External`
+(daemon monitors only — does not start/stop), `Port`, `Host`,
+`User`, `Password`, `DataDir`, `LogFile`, `AutoRestart`,
+`RestartDelay` (5s default), `MaxRestartDelay` (5m), crash-loop
+window parameters (`MaxRestartsInWindow`=5, `RestartWindow`=10m,
+`HealthyResetInterval`=5m), and `HealthCheckInterval` (30s default).
+
+The health check fires every 30s (`DefaultDoltHealthCheckInterval`,
+`dolt.go:29`) independent of the 3-minute heartbeat, providing fast
+crash detection. When health transitions unhealthy-to-healthy, the
+recovery callback triggers a convoy manager sweep.
+
+The manager implements exponential-backoff restarts with crash-loop
+escalation: after `MaxRestartsInWindow` restarts within
+`RestartWindow`, it stops retrying and escalates instead of spinning.
+The backoff resets after `HealthyResetInterval` of continuous health.
+
+### `compactor_dog.go` — Wisp compaction (~31KB)
+
+Source: `/home/kimberly/repos/gastown/internal/daemon/compactor_dog.go`.
+
+Runs every 24 hours (configurable via `CompactorDogConfig.IntervalStr`).
+Two compaction modes (`compactorDogMode`, `compactor_dog.go:90-97`):
+
+- **Flatten** (default): soft-resets to the root commit on main and
+  commits all data as a single commit. Safe with concurrent writes.
+- **Surgical**: interactive rebase via `DOLT_REBASE` that squashes
+  old commits while preserving recent N as individual picks
+  (`KeepRecent`, default 50). NOT safe with concurrent writes —
+  retries once on graph-change errors (`surgicalMaxRetries=1`,
+  `compactor_dog.go:43-44`).
+
+Default commit threshold: 2000 (`defaultCompactorCommitThreshold`,
+`compactor_dog.go:31`). This was raised from 500 to prevent the
+escalation feedback loop where each compaction failure creates
+beads/escalations that add more commits than the compactor can drain.
+
+After successful compaction, runs `CALL dolt_gc()` with a 5-minute
+timeout (`compactorGCTimeout`, `compactor_dog.go:36`) to reclaim
+unreferenced chunks, then pushes via `DOLT_PUSH` with a 2-minute
+timeout (`compactorPushTimeout`, `compactor_dog.go:38`).
+
+ZFC exemption: executes imperatively in Go rather than via
+agent-driven formula execution because operations require
+`database/sql` connections, transactional state spanning multiple
+queries, cleanup-on-failure error paths, concurrent write retry with
+error classification, and row count integrity verification.
+Observability uses `pourDogMolecule` + `closeStep`/`failStep` on the
+`mol-dog-compactor` formula.
+
+### `convoy_manager.go` — Event-driven convoy delivery (~22KB)
+
+Source: `/home/kimberly/repos/gastown/internal/daemon/convoy_manager.go`.
+
+`ConvoyManager` struct (`convoy_manager.go:53-115`) owns: `townRoot`,
+`scanInterval` (default 30s), a context+cancel pair, a logger,
+per-store `beadsdk.Storage` map (`stores` — "hq" plus per-rig names),
+lazy `openStores` for Dolt-not-ready-at-startup, an `isRigParked`
+predicate, a `gtPath` for subprocess calls, and several
+concurrency-control fields (`started`, `recoveryMode`, `scanMu`,
+`lastEventIDs`, `seeded`, `processedCloses`,
+`processedLifecycleEvents`).
+
+**Two goroutines** started by `Start()`:
+
+1. **Event poll loop** — polls all beads stores (hq + per-rig,
+   skipping parked rigs) every 5 seconds (`eventPollInterval`,
+   `convoy_manager.go:24`) with exponential backoff to 60s on
+   failure. The first poll cycle is warm-up only (advances
+   high-water marks without processing events, preventing burst
+   replay on daemon restart — `seeded` flag). Close events trigger
+   `convoy.CheckConvoysForIssue`. A 1s lookback overlap
+   (`eventPollLookback`) handles same-second-precision transitions.
+   `processedCloses` and `processedLifecycleEvents` sync.Maps
+   deduplicate across stores and poll cycles.
+
+2. **Stranded scan loop** — every 30s, calls `gt convoy stranded
+   --json` and processes each stranded convoy. A 5-minute grace
+   period (`convoyGracePeriod`, `convoy_manager.go:32`) prevents
+   auto-close of newly created convoys before `bd dep add` is
+   visible in Dolt (GH#2303). In recovery mode (Dolt down), scan
+   interval drops to 5s for fast retry.
+
+### `jsonl_git_backup.go` — JSONL backup pipeline (~29KB)
+
+Source: `/home/kimberly/repos/gastown/internal/daemon/jsonl_git_backup.go`.
+
+Runs every 15 minutes (configurable). The pipeline:
+
+1. **Export** each configured database to JSONL via `bd sql --json`
+   against the Dolt server (`jsonlExportTimeout`=60s).
+2. **Scrub** ephemeral data: the `scrubWhereClause`
+   (`jsonl_git_backup.go:52-64`) filters out ephemeral beads,
+   tombstones, infrastructure types (message, event, agent, convoy,
+   molecule, role, merge-request, rig), wisp/convoy ID patterns, test
+   prefixes, and CLI artifacts (`--help`, `Usage:` titles).
+   `testPollutionPatterns` (`jsonl_git_backup.go:34-44`) provide
+   additional regex-based test-data filtering.
+3. **Spike detection** (`defaultSpikeThreshold`=50% delta,
+   `jsonl_git_backup.go:29`) halts the pipeline if issue count
+   changes dramatically between cycles, preventing data-corruption
+   from propagating to the backup.
+4. **Git commit and push** to the backup repo (default
+   `~/.dolt-archive/git/`). Push timeout is 120s
+   (`gitPushTimeout`). After `maxConsecutivePushFailures`=3
+   consecutive failures, the pipeline stops attempting pushes until
+   the next daemon restart.
+
+Observability uses `pourDogMolecule` on `MolDogJSONL`.
+
 ## Notable patterns
 
 - **Flock-based singleton over PID matching.** Every "is the daemon
@@ -619,13 +747,11 @@ spike detection).
 
 ## Notes / open questions
 
-- **`dolt.go` is 47KB and `compactor_dog.go` is 31KB** — unusually
-  large for single files. Worth grounding their internals separately
-  if they start showing up in drift investigations.
-- **`convoy_manager.go` and `jsonl_git_backup.go`** both exceed 20KB
-  and implement substantial subsystems that could reasonably be
-  extracted to their own packages. They haven't been — possibly
-  because they share a lot of daemon-local state.
+- **`dolt.go` (47KB), `compactor_dog.go` (31KB),
+  `convoy_manager.go` (22KB), and `jsonl_git_backup.go` (29KB)**
+  are now grounded in the "Deep dives" section above. They remain
+  unusually large for single files; extracting to their own packages
+  is viable but blocked by shared daemon-local state.
 - **The `doctor_dog.go` patrol pours `mol-dog-doctor` molecules with
   a 5-minute cooldown** (`daemon.go:130-136`) — this is the Option B
   throttling mentioned in the Dolt health code. Molecule pouring is

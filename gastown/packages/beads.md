@@ -4,7 +4,7 @@ type: package
 status: partial
 topic: gastown
 created: 2026-04-11
-updated: 2026-04-15
+updated: 2026-04-16
 sources:
   - /home/kimberly/repos/gastown/internal/beads/beads.go
   - /home/kimberly/repos/gastown/internal/beads/store.go
@@ -370,11 +370,54 @@ where they indicate complexity.
   `ResetAgentBeadForReuse`, `UpdateAgentDescriptionFields`, hook/unhook,
   state transitions, completion handling.
 - **`beads_channel.go` (529 lines)** — channel beads for beads-native
-  messaging. Separate from `internal/channelevents`: channel beads are
-  persisted entities; channel events are file rendezvous.
-- **`beads_group.go` (373 lines)** — group beads (address-list beads).
-- **`beads_queue.go` (398 lines)** — queue beads (work queues that
-  polecats pull from).
+  pub/sub messaging. Separate from `internal/channelevents`: channel
+  beads are persisted entities; channel events are file rendezvous.
+  `ChannelFields` struct (`beads_channel.go:16-24`): `Name`,
+  `Subscribers` (list), `Status` (active/closed),
+  `RetentionCount`, `RetentionHours`, `CreatedBy`, `CreatedAt`.
+  ID format: `hq-channel-<name>` — town-level, channels span rigs
+  (`beads_channel.go:132-134`). Methods:
+  `CreateChannelBead(name, subscribers, createdBy)`,
+  `GetChannelBead(name)`, `GetChannelByID(id)`,
+  `UpdateChannelSubscribers`, `SubscribeToChannel`,
+  `UnsubscribeFromChannel`, `UpdateChannelRetention`,
+  `UpdateChannelStatus`, `DeleteChannelBead`, `ListChannelBeads`,
+  `LookupChannelByName` (ID-first then name-field scan).
+  `EnforceChannelRetention(name)` at `beads_channel.go:386-453`
+  prunes old messages by both count and time limits (on-write
+  cleanup). `PruneAllChannels` at `beads_channel.go:459-529` is
+  the Deacon-patrol backup cleanup with a 10% buffer for count-based
+  pruning to avoid thrashing.
+- **`beads_group.go` (373 lines)** — group beads for mail
+  distribution. `GroupFields` struct (`beads_group.go:41-46`):
+  `Name`, `Members` (addresses, patterns, or nested group names),
+  `CreatedBy`, `CreatedAt`. `ValidateGroupName`
+  (`beads_group.go:23-37`): lowercase alphanumeric + hyphens/
+  underscores, max 64 chars. ID format: `hq-group-<name>` — town-
+  level (`beads_group.go:134-136`). Methods:
+  `CreateGroupBead(name, fields)`, `GetGroupByName(name)`,
+  `GetGroupByID(id)`, `UpdateGroupMembers`, `AddGroupMember`,
+  `RemoveGroupMember`, `DeleteGroupBead`, `ListGroupBeads`,
+  `LookupGroupByName` (ID-first then name-field scan). Groups can
+  nest — a member can be another group name, enabling hierarchical
+  distribution lists.
+- **`beads_queue.go` (398 lines)** — queue beads for work queues.
+  `QueueFields` struct (`beads_queue.go:14-26`): `Name`,
+  `ClaimPattern` (glob-style, e.g., `gastown/polecats/*`), `Status`
+  (active/paused/closed), `MaxConcurrency`, `ProcessingOrder`
+  (fifo/priority), plus count fields (`AvailableCount`,
+  `ProcessingCount`, `CompletedCount`, `FailedCount`), `CreatedBy`,
+  `CreatedAt`. ID format: `hq-q-<name>` (town-level) or
+  `gt-q-<name>` (rig-level) — `beads_queue.go:160-165`. Methods:
+  `CreateQueueBead(id, title, fields)`, `GetQueueBead(id)`,
+  `UpdateQueueFields`, `UpdateQueueCounts`, `UpdateQueueStatus`,
+  `ListQueueBeads`, `DeleteQueueBead`, `LookupQueueByName` (tries
+  both prefixes then name-field scan). `MatchClaimPattern(pattern,
+  identity)` at `beads_queue.go:337-370` implements glob matching
+  (`*` = anyone, `gastown/polecats/*` = any polecat in gastown,
+  `*/witness` = any witness). `FindEligibleQueues(identity)` at
+  `beads_queue.go:373-398` returns all active queues the identity
+  can claim from.
 - **`beads_escalation.go` (442 lines)** — escalation beads (mayor gets
   pinged when a worker is stuck).
 - **`beads_delegation.go` (177 lines)** — delegation tracking via
@@ -382,8 +425,23 @@ where they indicate complexity.
   `Issue.Metadata`. Merge/delete semantics handled by
   `mergeMetadataKey` / `deleteMetadataKey` (`store.go:572-599`).
 - **`beads_merge_slot.go` (219 lines)** — merge-slot tokens for
-  serialized merge execution. A holder acquires the slot, waiters queue
-  up, state lives in the issue metadata.
+  serialized merge execution. The merge slot is a single bead
+  identified by the label `gt:merge-slot` whose `Description` stores
+  a JSON blob `{"holder": "<actor>", "waiters": ["<actor1>", ...]}`
+  (`beads_merge_slot.go:8-10`). `MergeSlotStatus` struct
+  (`beads_merge_slot.go:20-26`) exposes `ID`, `Available`, `Holder`,
+  `Waiters`, `Error`. Key methods: `MergeSlotCreate` creates the
+  bead with empty holder (`beads_merge_slot.go:72-83`);
+  `MergeSlotCheck` reads current status
+  (`beads_merge_slot.go:87-96`); `MergeSlotAcquire(holder,
+  addWaiter)` acquires the slot or adds the caller to the waiters
+  list (`beads_merge_slot.go:103-163`); `MergeSlotRelease(holder)`
+  clears the holder and promotes the first waiter to holder
+  (`beads_merge_slot.go:167-202`); `MergeSlotEnsureExists` is the
+  idempotent create-if-missing wrapper
+  (`beads_merge_slot.go:206-219`). The bd `merge-slot` command was
+  removed in v0.62; this implementation uses standard bead CRUD
+  operations that remain available in v0.62+.
 - **`beads_mr.go` (118 lines)** — merge request beads and merge-gate
   utilities (wispy MRs, usually with the `gt:merge-request` label).
 - **`beads_rig.go` (281 lines)** — rig identity beads. Each rig has a
@@ -395,13 +453,44 @@ where they indicate complexity.
 - **`handoff.go` (269 lines)** — handoff beads and the `pinned` /
   `hooked` status vocabulary. Exports `StatusPinned` and `StatusHooked`
   as untyped strings (re-exported typed in `status.go`).
-- **`molecule.go` (579 lines)** — molecule support: composable workflow
-  templates that expand into a DAG of beads. Detach/burn/squash
+- **`molecule.go` (579 lines)** — molecule support: composable
+  workflow templates that expand into a DAG of beads. Core types:
+  `MoleculeStep` (Ref, Title, Instructions, Needs, WaitsFor, Tier,
+  Type, Backoff — `molecule.go:15-24`); `BackoffConfig` (Base,
+  Multiplier, Max — `molecule.go:28-32`) for cost-saving wait-type
+  steps. `ParseMoleculeSteps(description)` at `molecule.go:70-178`
+  extracts `## Step: <ref>` headers, `Needs:`, `Tier:`, `WaitsFor:`,
+  `Type:`, and `Backoff:` metadata lines from embedded markdown.
+  `InstantiateMolecule(ctx, mol, parent, opts)` at
+  `molecule.go:270-296` implements a **format bridge**: if the
+  molecule has child issues (new format), those children are used as
+  templates via `instantiateFromChildren`
+  (`molecule.go:299-365`); otherwise, steps are parsed from the
+  Description field via `instantiateFromMarkdown`
+  (`molecule.go:368-456`). Both paths create child issues with IDs
+  `{parent.ID}.{step.Ref}`, wire inter-step dependencies, and
+  expand `{{variable}}` template vars via `ExpandTemplateVars`
+  (`molecule.go:227-240`). `ValidateMolecule`
+  (`molecule.go:467-515`) validates the old format only (checks for
+  empty refs, duplicates, unknown Needs, self-dependencies, cycles
+  via DFS). `detectCycles` at `molecule.go:519-574` implements
+  standard DFS cycle detection on the step graph. Detach/burn/squash
   operations call `audit.go`'s `DetachMoleculeWithAudit`.
 - **`catalog.go` (199 lines)** — hierarchical molecule catalog loading.
 - **`audit.go` (115 lines)** — audit log entries for detach/burn/squash
-  operations: `DetachAuditEntry`, `DetachOptions`,
-  `DetachMoleculeWithAudit`. Writes an append-only audit log.
+  operations. `DetachAuditEntry` struct (`audit.go:12-19`):
+  `Timestamp`, `Operation` ("detach"/"burn"/"squash"),
+  `PinnedBeadID`, `DetachedMolecule`, `DetachedBy`, `Reason`,
+  `PreviousState`. `DetachOptions` (`audit.go:22-27`) carries the
+  operation type, agent, and reason. `DetachMoleculeWithAudit`
+  (`audit.go:32-81`) acquires a per-bead advisory file lock
+  (`lockBead`), fetches the pinned bead, parses its attachment
+  fields, writes a JSONL audit entry to `<beadsDir>/audit.log`
+  via `LogDetachAudit` (`audit.go:86-115`), clears the attachment
+  fields in the description, and returns the updated issue. Log
+  errors are non-fatal (warning to stderr). The audit log is
+  append-only JSONL, stored in the resolved `.beads` directory
+  (follows redirect).
 - **`fields.go` (1,057 lines)** — structured-field parsing for issue
   descriptions. The `ParseAgentFields`, `ParseHandoffFields`, and
   similar helpers turn `key: value` blocks in the description into typed
@@ -538,18 +627,18 @@ issue, err := b.Show("hq-cv-abc123")   // routes into hq rig automatically
 
 ## Notes / open questions
 
-- This page is marked `status: partial` because only a small minority of
-  the 28 production files were read in full: `beads.go` (first and last
-  third, enough to see the shape), `store.go` (full), `database.go`
-  (full), `force.go` (full), `status.go` (full), `beads_redirect.go`
-  (first 80 lines), `beads_types.go` (first 150 lines), `beads_agent.go`
-  (first 80 lines), `audit.go` (first 40 lines), and the `routes.go` /
-  `integration.go` headers. The per-domain file descriptions above are
-  grounded in file comments and visible exported symbols rather than a
-  line-by-line reading. Future passes should read the domain files in
-  full when a specific question needs detail (e.g., "how does the merge
-  slot state machine encode waiters?" or "what's the exact molecule
-  detach audit schema?").
+- This page is `status: partial` — coverage was expanded in Phase 6
+  Batch 2 to include full reads of `beads_merge_slot.go`,
+  `molecule.go`, `audit.go`, `beads_channel.go`, `beads_queue.go`,
+  and `beads_group.go`. Earlier reads covered `beads.go` (partial),
+  `store.go` (full), `database.go` (full), `force.go` (full),
+  `status.go` (full), `beads_redirect.go` (partial),
+  `beads_types.go` (partial), `beads_agent.go` (partial),
+  `routes.go` / `integration.go` (headers). Remaining unread in
+  full: `beads_escalation.go`, `beads_delegation.go`, `beads_rig.go`,
+  `beads_dog.go`, `beads_sling_context.go`, `beads_mr.go`,
+  `handoff.go`, `fields.go`, `agent_ids.go`, `config_yaml.go`,
+  `stale_pid.go`, and the bulk of `beads.go` itself.
 - The boundary between `internal/beads` and the upstream
   `github.com/steveyegge/beads` SDK is not static — as the SDK adds
   first-class support for more operations, the corresponding `store*`

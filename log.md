@@ -4603,3 +4603,24 @@ The drift index now covers: wrong (Phase 3 drift), missing (Phase 3 gaps), AND i
 - All 6 packages fill gaps identified in Phase 3 Batch 14 (gaps.md Section A1).
 
 → gastown/packages/agent.md, gastown/packages/agent-provider.md, gastown/packages/boot.md, gastown/packages/checkpoint.md, gastown/packages/connection.md, gastown/packages/proxy.md, index.md
+
+## [2026-04-16] ingest | Phase 6 Batch 2: Expand 5 incomplete pages + 4 subcommand gaps
+
+Expanded 6 wiki pages with content grounded in source reads.
+
+**Source files read (16):**
+- `formula_overlay.go` (36 lines), `formula_overlay_show.go` (109 lines), `formula_overlay_edit.go` (103 lines), `formula_overlay_list.go` (99 lines)
+- `patrol_scan.go` (409 lines)
+- `beads_merge_slot.go` (219 lines), `molecule.go` (579 lines), `audit.go` (115 lines), `beads_channel.go` (529 lines), `beads_queue.go` (398 lines), `beads_group.go` (373 lines)
+- `dolt.go` (first 150 lines), `compactor_dog.go` (first 150 lines), `convoy_manager.go` (first 150 lines), `jsonl_git_backup.go` (first 150 lines)
+- `session_manager.go` (lines 220-570), `wl_commons.go` (first 100 lines)
+
+**Pages expanded (6):**
+- `gastown/commands/formula.md` — overlay subtree (5 subcommands total; overlay parent + show/edit/list children). Status partial → verified.
+- `gastown/commands/patrol.md` — scan subcommand documented (4 subcommands total). Sources updated.
+- `gastown/packages/beads.md` — merge-slot state machine, molecule format bridge + InstantiateMolecule, audit JSONL schema, channel pub/sub lifecycle + retention pruning, queue claim patterns, group nesting. Still partial (12 files unread in full).
+- `gastown/packages/daemon.md` — deep dives for dolt.go (DoltServerManager, health check, backoff), compactor_dog.go (flatten vs surgical modes, threshold), convoy_manager.go (event poll + stranded scan), jsonl_git_backup.go (scrub + spike detection pipeline).
+- `gastown/packages/doltserver.md` — WL Commons fully grounded (WLCommonsStore interface, domain types, schema management, CRUD, character sheet projection, RunScorekeeper). DoltHub integration expanded.
+- `gastown/packages/polecat.md` — session_manager.Start() 15-step pipeline walkthrough (pre-flight through observability), Stop() kill semantics.
+
+→ gastown/commands/formula.md, gastown/commands/patrol.md, gastown/packages/beads.md, gastown/packages/daemon.md, gastown/packages/doltserver.md, gastown/packages/polecat.md

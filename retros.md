@@ -1098,3 +1098,27 @@ Flagging is cheap; Kimberly decides when to actually schedule.
 
 - All 6 gaps from Phase 3 Batch 14 Section A1 are now filled. The 5 "deliberately excluded" sub-packages remain excluded per the Phase 3 rationale.
 - Phase 6 Batch 1 closes the package coverage gap entirely.
+
+## [2026-04-16] stage | Phase 6 Batch 2 — Expand 5 incomplete pages + 4 subcommand gaps
+
+**Agent:** wiki-curator (subagent)
+**Phase/Batch:** 6/2
+**Duration:** single session
+**Scope:** 6 pages expanded, 16 source files read
+
+### What went well
+
+- **Overlay subtree was straightforward.** Four small files, clean Cobra structure. formula.md went from partial to verified in one pass.
+- **patrol_scan.go was a clean gap fill.** The file is self-contained, well-structured with typed output shapes, and slots neatly into the existing patrol.md page structure.
+- **Merge-slot and molecule deep dives paid off.** These were called out as "questions for future passes" in the original beads.md notes. Reading them in full answered the merge-slot state machine question (`{"holder": ..., "waiters": [...]}`) and the molecule format bridge (child issues vs embedded markdown).
+- **Daemon deep dives are high-value.** dolt.go, compactor_dog.go, convoy_manager.go, and jsonl_git_backup.go are the largest files in the daemon package. Grounding their key parameters (thresholds, intervals, retry semantics) makes the wiki page substantially more useful for debugging.
+
+### What was hard
+
+- **beads.md is still partial after this pass.** 12 domain files remain unread in full. The package is simply too large (28 files, 10K+ lines) for complete coverage in a single batch. Honest status: still partial.
+- **session_manager.Start() is a 15-step pipeline.** Documenting it required careful attention to which steps are fixes for which issues (gt-jn40ft, gt-1j3m, gt-5cc2p, hq-h01n8, GH#1379). The issue cross-references are essential context.
+
+### What to change
+
+- **beads.md needs a dedicated expansion pass** for the remaining 12 files (escalation, delegation, rig, dog, sling_context, mr, handoff, fields, agent_ids, config_yaml, stale_pid, and beads.go middle third). Consider splitting into a separate batch rather than bundling with other work.
+- **daemon.md deep dives could be split into separate pages** if they grow further — each of the four files is larger than most standalone packages.

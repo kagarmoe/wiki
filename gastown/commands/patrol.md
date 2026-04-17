@@ -9,6 +9,7 @@ sources:
   - /home/kimberly/repos/gastown/internal/cmd/patrol.go
   - /home/kimberly/repos/gastown/internal/cmd/patrol_new.go
   - /home/kimberly/repos/gastown/internal/cmd/patrol_report.go
+  - /home/kimberly/repos/gastown/internal/cmd/patrol_scan.go
   - /home/kimberly/repos/gastown/internal/cmd/root.go
 tags: [command, diagnostics, patrol, wisp, digest, deacon, witness, refinery]
 phase3_audited: 2026-04-15
@@ -20,8 +21,8 @@ phase5_audience: dev
 
 # gt patrol
 
-Group command for patrol cycle management. Owns three subcommands
-(`new`, `report`, `digest`) that create patrol wisps, close them with
+Group command for patrol cycle management. Owns four subcommands
+(`new`, `report`, `digest`, `scan`) that create patrol wisps, close them with
 a summary, and aggregate ephemeral per-cycle digests into a permanent
 daily summary bead.
 
@@ -46,13 +47,14 @@ gt patrol <subcommand> [flags]
 
 The root `patrolCmd` has no `RunE` of its own — it is a grouping
 command. Running `gt patrol` with no subcommand prints the cobra
-help text. The three subcommands are registered in `init()` at
-`patrol.go:58-62`:
+help text. The four subcommands are registered across `patrol.go:58-62` and
+`patrol_scan.go:59`:
 
 ```go
 patrolCmd.AddCommand(patrolDigestCmd)
 patrolCmd.AddCommand(patrolNewCmd)
 patrolCmd.AddCommand(patrolReportCmd)
+patrolCmd.AddCommand(patrolScanCmd)   // patrol_scan.go:59
 rootCmd.AddCommand(patrolCmd)
 ```
 
@@ -182,6 +184,61 @@ Flags (set in `init()` at `patrol.go:65-68`):
 - `--date YYYY-MM-DD` — explicit target date
 - `--dry-run` — preview without creating
 - `--verbose` / `-v` — verbose output
+
+#### `gt patrol scan`
+
+Source: `/home/kimberly/repos/gastown/internal/cmd/patrol_scan.go` (409 lines).
+
+Runs proactive detection across all polecats in a rig. Bridges the
+`internal/witness` library's detection functions to the CLI, providing a
+single command for the `survey-workers` patrol step. Registered in
+`init()` at `patrol_scan.go:59`.
+
+**Three detection passes** (`patrol_scan.go:155-157`):
+
+1. **Zombie detection** via `witness.DetectZombiePolecats(bd, workDir,
+   rigName, router)` — dead sessions with active agent state, dead
+   agent processes, stuck done-intent, closed beads with live sessions.
+   Zombies are restarted (not nuked) to preserve worktrees.
+2. **Stall detection** via `witness.DetectStalledPolecats(workDir,
+   rigName)` — agents stuck at startup prompts.
+3. **Completion discovery** via `witness.DiscoverCompletions(bd, workDir,
+   rigName, router)` — agent bead metadata indicating `gt done` was
+   called. MR cleanup wisps are created and the refinery is nudged.
+
+**Notification** (`patrol_scan.go:164-169`): with `--notify`, if
+zombies with active work are detected, a `ZOMBIE_DETECTED` mail is
+sent to the rig's witness via `mail.Router.Send`
+(`patrol_scan.go:188-215`). Detection functions themselves do NOT send
+mail — notifications are exclusively handled by the `--notify` flag.
+
+**Output formats:**
+
+- **Human** (`outputPatrolScanHuman`, `patrol_scan.go:298-408`):
+  per-category emoji-annotated output with a summary line.
+- **JSON** (`outputPatrolScanJSON`, `patrol_scan.go:217-296`):
+  structured `PatrolScanOutput` containing `Zombies`, `Stalls`,
+  `Completions`, and `Receipts` sections, each with `checked`/`found`
+  counts and per-item detail.
+
+**Data shapes** (`patrol_scan.go:62-124`):
+
+- `PatrolScanOutput` — top-level: `Rig`, `Timestamp`, `Zombies`,
+  `Stalls`, `Completions`, `Receipts`.
+- `PatrolScanZombieItem` — `Polecat`, `Classification`, `AgentState`,
+  `HookBead`, `CleanupStatus`, `Action`, `WasActive`, `Error`.
+- `PatrolScanStallItem` — `Polecat`, `StallType`, `Action`, `Error`.
+- `PatrolScanCompleteItem` — `Polecat`, `ExitType`, `IssueID`,
+  `MRID`, `Branch`, `Action`, `WispCreated`, `CompletionTime`.
+
+Flags (`patrol_scan.go:54-57`):
+
+| flag | type | default | description |
+|------|------|---------|-------------|
+| `--json` | bool | `false` | Machine-readable output |
+| `--notify` | bool | `false` | Send mail on zombie detection |
+| `--rig` | string | `""` | Rig to scan (default: infer from cwd or `GT_RIG`) |
+| `--verbose` / `-v` | bool | `false` | Verbose output |
 
 ### Data shapes
 
