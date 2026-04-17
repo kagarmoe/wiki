@@ -5,12 +5,12 @@ status: complete
 topic: gastown
 created: 2026-04-15
 updated: 2026-04-16
-phase: 3-4
+phase: 3-5
 ---
 
 # Drift Index
 
-Consolidated index of findings from Phase 3 (Drift audit, Batches 1-14) and Phase 4 (Coverage/Completeness audit, Batches 1-3). Phase 3 audited 271 units (211 entity pages in Sweep 1 + 60 docs files in Sweep 2) and surfaced ~83 findings. Phase 4 audited 94 `status:partial` pages: 89 upgraded to `status:verified`, 5 confirmed incomplete.
+Consolidated index of findings from Phase 3 (Drift audit, Batches 1-14), Phase 4 (Coverage/Completeness audit, Batches 1-3), and Phase 5 (Audience classification of 111 commands). Phase 3 audited 271 units (211 entity pages in Sweep 1 + 60 docs files in Sweep 2) and surfaced ~83 findings. Phase 4 audited 94 `status:partial` pages: 89 upgraded to `status:verified`, 5 confirmed incomplete. Phase 5 classified all 111 command pages by primary audience (user/agent/dev/internal) for Phase 6 prioritization.
 
 **How to read this index:**
 - **Section 1** is the Phase 6 work-list: upstream corrections to the gastown source repo (code edits, docs PRs). Phase 5 (Audience classification) refines it; Phase 6 (Implementation) executes it.
@@ -19,6 +19,7 @@ Consolidated index of findings from Phase 3 (Drift audit, Batches 1-14) and Phas
 - **Section 4** lists missing entity pages (code entities with no corresponding wiki page).
 - **Section 5** records subcommand coverage decisions (384 subcommands systematically classified).
 - **Section 6** lists coverage gaps from Phase 4: pages whose wiki content is incomplete relative to their source code surface.
+- **Section 7** summarizes the Phase 5 audience classification across all 111 command pages.
 
 **Plan:** [../../.claude/plans/2026-04-14-phase3-drift.md](../../.claude/plans/2026-04-14-phase3-drift.md) (gitignored).
 
@@ -30,88 +31,88 @@ Rows requiring upstream fixes to gastown source (code edits, docs PRs). Grouped 
 
 ### Fix tier: code (cobra-drift — edit Long text / in-code docstrings)
 
-| Entity page | Category | Summary | Severity | Release position | PR reference |
-|---|---|---|---|---|---|
-| [account.md](../commands/account.md) | cobra-drift | Parent `Long` text enumerates 4 subcommands; 5 are registered (`switch` omitted) | wrong | in-release | |
-| [activity.md](../commands/activity.md) | cobra-drift | Refinery event type names in Cobra `Long` don't match event constants (`merged` not `merge_complete`, `merge_skipped` not `queue_processed`) | wrong | in-release | |
-| [assign.md](../commands/assign.md) | cobra-drift | `--force` flag is defined but never consumed by `runAssign` | wrong | in-release | |
-| [boot.md](../commands/boot.md) | cobra-drift | Boot is "a special dog" per Cobra `Long`, but is explicitly NOT a dog in the kennel (`manager.go:300`) | wrong | in-release | |
-| [callbacks.md](../commands/callbacks.md) | cobra-drift | `SLING_REQUEST` handler does not "spawn polecat for the work" — it only logs | wrong | in-release | |
-| [changelog.md](../commands/changelog.md) | cobra-drift | `--week` flag is defined but never consulted by `changelogSinceTime` | wrong | in-release | |
-| [config.md](../commands/config.md) | cobra-drift | `config get` `Long` text omits `dolt.port` from its Supported keys list | wrong | in-release | |
-| [crew.md](../commands/crew.md) | cobra-drift | `crewCmd.Long` "Commands:" lists 8; 11 visible subcommands registered (omits `status`, `rename`, `pristine`) | wrong | in-release | |
-| [doctor.md](../commands/doctor.md) | cobra-drift | Cobra `Long` text enumerates a selective subset of the ~80 checks `runDoctor` registers | wrong | in-release | |
-| [down.md](../commands/down.md) | cobra-drift | `downCmd.Long` recommends `gt start` as complement; `gt up` is the actual complement | wrong | in-release | |
-| [git-init.md](../commands/git-init.md) | cobra-drift | `gitInitCmd.Long` lists 3 steps; code performs 4 operations (omits branch-protection hook installation) | wrong | in-release | |
-| [hooks.md](../commands/hooks.md) | cobra-drift | Parent `Long` text enumerates 8 subcommands; `hooks init` is wired but unlisted | wrong | in-release | |
-| [init.md](../commands/init.md) | cobra-drift | `initCmd.Long` lists 4 directories; code creates 5 (and with different paths: `crew` omitted, `refinery/rig/` not `refinery/`, `mayor/rig/` not `mayor/`) | wrong | in-release | |
-| [install.md](../commands/install.md) | cobra-drift | `installCmd.Long` HQ structure lists 3 items; install creates at least 5 directories (omits `deacon/`, `plugins/`) | wrong | in-release | |
-| [install.md](../commands/install.md) | cobra-drift | `installCmd.Long` references non-existent `docs/hq.md` | wrong | in-release | |
-| [mail.md](../commands/mail.md) | cobra-drift | `mailCmd.Long` COMMANDS section lists 4 subcommands; 22 are registered (82% incomplete) | wrong | in-release | |
-| [molecule.md](../commands/molecule.md) | cobra-drift | Parent `Long` hand-maintained subcommand categories omit four step-group members and the `await-signal` shortcut | wrong | in-release | |
-| [namepool.md](../commands/namepool.md) | cobra-drift | `namepoolCmd.Long` "Examples:" shows 6 operations; 8 subcommands registered (omits `create`, `delete`) | wrong | in-release | |
-| [plugin.md](../commands/plugin.md) | cobra-drift | `plugin run` gate check is cooldown-only; other gate types silently fall through as open | wrong | in-release | |
-| [quota.md](../commands/quota.md) | cobra-drift | `quotaCmd.Long` COMMANDS block lists 4 subcommands; 5 registered (omits `watch`) | wrong | in-release | |
-| [reaper.md](../commands/reaper.md) | cobra-drift | `reaperCmd.Long` "When run by a Dog" block lists 4 subcommands; 6 registered (omits `databases`, `run`) | wrong | in-release | |
-| [repair.md](../commands/repair.md) | cobra-drift | Cobra `Long` text lists six repair targets; `runRepair` registers two checks | wrong | in-release | |
-| [shell.md](../commands/shell.md) | cobra-drift | `shell install` silently re-enables Gas Town via `state.Enable(Version)` without mentioning it in `Long` text | wrong | in-release | |
-| [status.md](../commands/status.md) | cobra-drift | `--fast` help text understates what it skips (omits hooks, MQ, per-agent mail — not just mail) | wrong | in-release | |
-| [tap.md](../commands/tap.md) | cobra-drift | Long text omits two implemented subcommands (`list`, `polecat-stop-check`) | wrong | in-release | |
-| [tap.md](../commands/tap.md) | cobra-drift | Long text advertises three unimplemented subcommands (`audit`, `inject`, `check` — all `[planned]`) | wrong | in-release | |
-| [uninstall.md](../commands/uninstall.md) | cobra-drift | `--workspace` is a hardcoded two-location scan (`~/gt`, `~/gastown`); silently no-ops for any other workspace path | wrong | in-release | |
-| [warrant.md](../commands/warrant.md) | cobra-drift | Long text hardcodes `~/gt/warrants/` but code uses `<townRoot>/warrants/` | wrong | in-release | |
-| [witness.md](../commands/witness.md) | cobra-drift | `witness start --foreground` is advertised as functional in `Long` + flag description, but is a no-op notice | wrong | in-release | |
-| [wrappers.md](../packages/wrappers.md) | cobra-drift | ABOUTME header omits `gt-gemini` wrapper (lists 2, code installs 3) | wrong | in-release | |
+| Entity page | Category | Audience | Summary | Severity | Release position | PR reference |
+|---|---|---|---|---|---|---|
+| [account.md](../commands/account.md) | cobra-drift | user | Parent `Long` text enumerates 4 subcommands; 5 are registered (`switch` omitted) | wrong | in-release | |
+| [activity.md](../commands/activity.md) | cobra-drift | dev | Refinery event type names in Cobra `Long` don't match event constants (`merged` not `merge_complete`, `merge_skipped` not `queue_processed`) | wrong | in-release | |
+| [assign.md](../commands/assign.md) | cobra-drift | agent | `--force` flag is defined but never consumed by `runAssign` | wrong | in-release | |
+| [boot.md](../commands/boot.md) | cobra-drift | agent | Boot is "a special dog" per Cobra `Long`, but is explicitly NOT a dog in the kennel (`manager.go:300`) | wrong | in-release | |
+| [callbacks.md](../commands/callbacks.md) | cobra-drift | agent | `SLING_REQUEST` handler does not "spawn polecat for the work" — it only logs | wrong | in-release | |
+| [changelog.md](../commands/changelog.md) | cobra-drift | dev | `--week` flag is defined but never consulted by `changelogSinceTime` | wrong | in-release | |
+| [config.md](../commands/config.md) | cobra-drift | user | `config get` `Long` text omits `dolt.port` from its Supported keys list | wrong | in-release | |
+| [crew.md](../commands/crew.md) | cobra-drift | user | `crewCmd.Long` "Commands:" lists 8; 11 visible subcommands registered (omits `status`, `rename`, `pristine`) | wrong | in-release | |
+| [doctor.md](../commands/doctor.md) | cobra-drift | dev | Cobra `Long` text enumerates a selective subset of the ~80 checks `runDoctor` registers | wrong | in-release | |
+| [down.md](../commands/down.md) | cobra-drift | user | `downCmd.Long` recommends `gt start` as complement; `gt up` is the actual complement | wrong | in-release | |
+| [git-init.md](../commands/git-init.md) | cobra-drift | user | `gitInitCmd.Long` lists 3 steps; code performs 4 operations (omits branch-protection hook installation) | wrong | in-release | |
+| [hooks.md](../commands/hooks.md) | cobra-drift | user | Parent `Long` text enumerates 8 subcommands; `hooks init` is wired but unlisted | wrong | in-release | |
+| [init.md](../commands/init.md) | cobra-drift | user | `initCmd.Long` lists 4 directories; code creates 5 (and with different paths: `crew` omitted, `refinery/rig/` not `refinery/`, `mayor/rig/` not `mayor/`) | wrong | in-release | |
+| [install.md](../commands/install.md) | cobra-drift | user | `installCmd.Long` HQ structure lists 3 items; install creates at least 5 directories (omits `deacon/`, `plugins/`) | wrong | in-release | |
+| [install.md](../commands/install.md) | cobra-drift | user | `installCmd.Long` references non-existent `docs/hq.md` | wrong | in-release | |
+| [mail.md](../commands/mail.md) | cobra-drift | agent | `mailCmd.Long` COMMANDS section lists 4 subcommands; 22 are registered (82% incomplete) | wrong | in-release | |
+| [molecule.md](../commands/molecule.md) | cobra-drift | agent | Parent `Long` hand-maintained subcommand categories omit four step-group members and the `await-signal` shortcut | wrong | in-release | |
+| [namepool.md](../commands/namepool.md) | cobra-drift | user | `namepoolCmd.Long` "Examples:" shows 6 operations; 8 subcommands registered (omits `create`, `delete`) | wrong | in-release | |
+| [plugin.md](../commands/plugin.md) | cobra-drift | user | `plugin run` gate check is cooldown-only; other gate types silently fall through as open | wrong | in-release | |
+| [quota.md](../commands/quota.md) | cobra-drift | user | `quotaCmd.Long` COMMANDS block lists 4 subcommands; 5 registered (omits `watch`) | wrong | in-release | |
+| [reaper.md](../commands/reaper.md) | cobra-drift | dev | `reaperCmd.Long` "When run by a Dog" block lists 4 subcommands; 6 registered (omits `databases`, `run`) | wrong | in-release | |
+| [repair.md](../commands/repair.md) | cobra-drift | dev | Cobra `Long` text lists six repair targets; `runRepair` registers two checks | wrong | in-release | |
+| [shell.md](../commands/shell.md) | cobra-drift | user | `shell install` silently re-enables Gas Town via `state.Enable(Version)` without mentioning it in `Long` text | wrong | in-release | |
+| [status.md](../commands/status.md) | cobra-drift | user | `--fast` help text understates what it skips (omits hooks, MQ, per-agent mail — not just mail) | wrong | in-release | |
+| [tap.md](../commands/tap.md) | cobra-drift | agent | Long text omits two implemented subcommands (`list`, `polecat-stop-check`) | wrong | in-release | |
+| [tap.md](../commands/tap.md) | cobra-drift | agent | Long text advertises three unimplemented subcommands (`audit`, `inject`, `check` — all `[planned]`) | wrong | in-release | |
+| [uninstall.md](../commands/uninstall.md) | cobra-drift | user | `--workspace` is a hardcoded two-location scan (`~/gt`, `~/gastown`); silently no-ops for any other workspace path | wrong | in-release | |
+| [warrant.md](../commands/warrant.md) | cobra-drift | dev | Long text hardcodes `~/gt/warrants/` but code uses `<townRoot>/warrants/` | wrong | in-release | |
+| [witness.md](../commands/witness.md) | cobra-drift | agent | `witness start --foreground` is advertised as functional in `Long` + flag description, but is a no-op notice | wrong | in-release | |
+| [wrappers.md](../packages/wrappers.md) | cobra-drift | — | ABOUTME header omits `gt-gemini` wrapper (lists 2, code installs 3) | wrong | in-release | |
 
 ### Fix tier: docs (upstream docs PR)
 
-| Entity page | Category | Summary | Severity | Release position | PR reference |
-|---|---|---|---|---|---|
-| [done.md](../commands/done.md) | drift | `docs/CLEANUP.md` claims `gt done` self-nukes the worktree and kills its session, but code transitions to IDLE with sandbox preserved | wrong | in-release | |
-| [install.md](../commands/install.md) | drift | `docs/INSTALLING.md` shows `rigs/` in the `gt install` tree, but rigs are top-level directories | wrong | in-release | |
-| [convoy.md](../concepts/convoy.md) | drift | Event-driven feeder misattributed to `operations.go` in `docs/skills/convoy/SKILL.md`; actually `convoy_manager.go:186-247` | wrong | in-release | |
-| [convoy.md](../concepts/convoy.md) | drift | `docs/concepts/convoy.md` omits `staged_ready` and `staged_warnings` states (shows only `open` and `closed`) | wrong | in-release | |
-| [identity.md](../concepts/identity.md) | drift | `docs/concepts/identity.md` claims `GIT_AUTHOR_NAME="gastown/polecats/toast"` (full BD_ACTOR path); code sets it to agent name only (`toast`) | wrong | in-release | |
-| [go-mod.md](../files/go-mod.md) | drift | Go version disagrees across three build paths: `go.mod` 1.25.8, Dockerfile 1.25.6, Dockerfile.e2e 1.26 | wrong | in-release | |
-| [goreleaser-yml.md](../files/goreleaser-yml.md) | drift | Release header advertises `brew install gastown` but no `brews:` block exists in `.goreleaser.yml` | wrong | in-release | |
-| [health.md](../packages/health.md) | drift | Package doc claims Doctor Dog shares this package; only `gt health` imports it | wrong | in-release | |
-| [telemetry.md](../packages/telemetry.md) | drift | `docs/design/otel/otel-architecture.md` claims `RecordMol*`/`RecordBeadCreate`/`RecordAgentInstantiate` don't exist; they do. Says "18 metric instruments"; code has 24 | wrong | in-release | |
+| Entity page | Category | Audience | Summary | Severity | Release position | PR reference |
+|---|---|---|---|---|---|---|
+| [done.md](../commands/done.md) | drift | agent | `docs/CLEANUP.md` claims `gt done` self-nukes the worktree and kills its session, but code transitions to IDLE with sandbox preserved | wrong | in-release | |
+| [install.md](../commands/install.md) | drift | user | `docs/INSTALLING.md` shows `rigs/` in the `gt install` tree, but rigs are top-level directories | wrong | in-release | |
+| [convoy.md](../concepts/convoy.md) | drift | — | Event-driven feeder misattributed to `operations.go` in `docs/skills/convoy/SKILL.md`; actually `convoy_manager.go:186-247` | wrong | in-release | |
+| [convoy.md](../concepts/convoy.md) | drift | — | `docs/concepts/convoy.md` omits `staged_ready` and `staged_warnings` states (shows only `open` and `closed`) | wrong | in-release | |
+| [identity.md](../concepts/identity.md) | drift | — | `docs/concepts/identity.md` claims `GIT_AUTHOR_NAME="gastown/polecats/toast"` (full BD_ACTOR path); code sets it to agent name only (`toast`) | wrong | in-release | |
+| [go-mod.md](../files/go-mod.md) | drift | — | Go version disagrees across three build paths: `go.mod` 1.25.8, Dockerfile 1.25.6, Dockerfile.e2e 1.26 | wrong | in-release | |
+| [goreleaser-yml.md](../files/goreleaser-yml.md) | drift | — | Release header advertises `brew install gastown` but no `brews:` block exists in `.goreleaser.yml` | wrong | in-release | |
+| [health.md](../packages/health.md) | drift | — | Package doc claims Doctor Dog shares this package; only `gt health` imports it | wrong | in-release | |
+| [telemetry.md](../packages/telemetry.md) | drift | — | `docs/design/otel/otel-architecture.md` claims `RecordMol*`/`RecordBeadCreate`/`RecordAgentInstantiate` don't exist; they do. Says "18 metric instruments"; code has 24 | wrong | in-release | |
 
 ### Fix tier: docs (docs-only — no wiki page annotation)
 
 These findings were surfaced during Sweep 2 (docs-file audit) and affect only upstream docs files. No wiki entity page was annotated because the wiki already has the correct information.
 
-| Docs file | Category | Summary | Severity | Release position | Batch | PR reference |
-|---|---|---|---|---|---|---|
-| `docs/design/persistent-polecat-pool.md` | drift | Says `gt polecat pool init <rig>` (space-separated); code registers as `pool-init` (hyphenated) | wrong | in-release | 11c | |
-| `docs/HOOKS.md` | drift | Known Gap #2 claims `gt tap guard dangerous-command` doesn't exist; `tap_guard_dangerous.go` exists at HEAD and v1.0.0 | wrong | in-release | 10e | |
-| `docs/design/directives-and-overlays.md` | drift | "CLI commands are being added" label stale; `gt directive show/edit/list` and `gt formula overlay show/edit/list` all exist | wrong | in-release | 11e | |
-| `docs/design/architecture.md` | drift | MQ implementation phases table says GatesParallel "In progress" and batch-then-bisect "Blocked by Phase 1"; both fully implemented | wrong | in-release | 11f | |
-| `docs/design/architecture.md` | drift | Dead reference to `[Watchdog Chain](watchdog-chain.md)`; no such file exists (closest: `dog-infrastructure.md`) | wrong | in-release | 11f | |
-| `docs/design/property-layers.md` | drift | Dead reference to `[Watchdog Chain](watchdog-chain.md)` | wrong | in-release | 11g | |
-| `docs/design/scheduler.md` | drift | Dead reference to `[Watchdog Chain](watchdog-chain.md)` | wrong | in-release | 11h | |
-| `docs/design/polecat-self-managed-completion.md` | drift | Header says "Status: Design proposal" but all three migration phases are shipped in code | wrong | in-release | 11i | |
-| `docs/design/mail-protocol.md` | drift | Stale Polecat->Witness->Refinery completion flow; polecat now nudges refinery directly (self-managed completion) | wrong | in-release | 11l | |
-| `docs/design/polecat-lifecycle-patrol.md` | drift | Stale cleanup pipeline flow (same as mail-protocol.md); witness no longer required checkpoint | wrong | in-release | 11o | |
+| Docs file | Category | Audience | Summary | Severity | Release position | Batch | PR reference |
+|---|---|---|---|---|---|---|---|
+| `docs/design/persistent-polecat-pool.md` | drift | — | Says `gt polecat pool init <rig>` (space-separated); code registers as `pool-init` (hyphenated) | wrong | in-release | 11c | |
+| `docs/HOOKS.md` | drift | — | Known Gap #2 claims `gt tap guard dangerous-command` doesn't exist; `tap_guard_dangerous.go` exists at HEAD and v1.0.0 | wrong | in-release | 10e | |
+| `docs/design/directives-and-overlays.md` | drift | — | "CLI commands are being added" label stale; `gt directive show/edit/list` and `gt formula overlay show/edit/list` all exist | wrong | in-release | 11e | |
+| `docs/design/architecture.md` | drift | — | MQ implementation phases table says GatesParallel "In progress" and batch-then-bisect "Blocked by Phase 1"; both fully implemented | wrong | in-release | 11f | |
+| `docs/design/architecture.md` | drift | — | Dead reference to `[Watchdog Chain](watchdog-chain.md)`; no such file exists (closest: `dog-infrastructure.md`) | wrong | in-release | 11f | |
+| `docs/design/property-layers.md` | drift | — | Dead reference to `[Watchdog Chain](watchdog-chain.md)` | wrong | in-release | 11g | |
+| `docs/design/scheduler.md` | drift | — | Dead reference to `[Watchdog Chain](watchdog-chain.md)` | wrong | in-release | 11h | |
+| `docs/design/polecat-self-managed-completion.md` | drift | — | Header says "Status: Design proposal" but all three migration phases are shipped in code | wrong | in-release | 11i | |
+| `docs/design/mail-protocol.md` | drift | — | Stale Polecat->Witness->Refinery completion flow; polecat now nudges refinery directly (self-managed completion) | wrong | in-release | 11l | |
+| `docs/design/polecat-lifecycle-patrol.md` | drift | — | Stale cleanup pipeline flow (same as mail-protocol.md); witness no longer required checkpoint | wrong | in-release | 11o | |
 
 ### Fix tier: preserve-as-vision (implementation-status: unbuilt/partial)
 
 These findings are NOT bugs. They describe aspirational or partially-implemented features. Phase 6 action: add "not yet implemented" callouts where the docs don't already have them.
 
-| Source | Category | Summary | Severity | Release position | Batch | PR reference |
-|---|---|---|---|---|---|---|
-| [witness.md](../commands/witness.md) | implementation-status: vestigial | `--foreground` flag kept as runtime notice; patrol loop moved to `mol-witness-patrol` molecule | wrong | in-release | 1d | |
-| [keepalive.md](../packages/keepalive.md) | implementation-status: partial | Package fully implemented (Touch/Read/Age API) but zero importers in codebase | incomplete | in-release | 2b | |
-| `docs/design/dog-infrastructure.md` | implementation-status: unbuilt | Dog Pool Architecture (ShutdownDanceState, DogPool struct, warrant queue, `gt dog dances/warrants/pool status`) — no code | wrong | in-release | 11j | |
-| `docs/design/model-aware-molecules.md` | implementation-status: unbuilt | Entire model-aware molecules feature (per-step model constraints, subscription routing, OpenRouter pricing) — no code; `internal/models/` doesn't exist | wrong | in-release | 11m | |
-| `docs/design/ledger-export-triggers.md` | implementation-status: unbuilt | Entire ledger export trigger system (bead closure triggers, convoy triggers, skill derivation engine, HOP economy) — no code | wrong | in-release | 11n | |
-| `docs/design/mol-mall-design.md` | implementation-status: unbuilt | Mol Mall registry system (public/private/federated registries, HOP URI scheme, formula publishing) — no code beyond embedded formulas | wrong | in-release | 12a | |
-| `docs/design/witness-at-team-lead.md` | implementation-status: unbuilt | Witness-as-AT-team-lead architecture (delegate mode, AT teammate spawning) — no code; depends on Claude Code Agent Teams | wrong | in-release | 12b | |
-| `docs/design/sandboxed-polecat-execution.md` | implementation-status: unbuilt | Sandboxed execution (exitbox container backend, daytona cloud backend, SandboxAdapter interface) — no code; all execution is local tmux | wrong | in-release | 12d | |
-| `docs/design/factory-worker-api.md` | implementation-status: unbuilt | Factory Worker API (7 structured endpoints) — no code; all agent interaction remains tmux-based (28 touch points) | wrong | in-release | 12f | |
-| `docs/design/plugin-system.md` | implementation-status: partial | Core dispatch shipped (`gt dog dispatch --plugin`, `gt plugin` CLI); design doc status label stale ("not yet implemented"). Advanced features (versioning, marketplace) not implemented | incomplete | in-release | 12c | |
-| `docs/design/federation.md` | implementation-status: partial | Federation infrastructure exists (Dolt remotes, wasteland commands); core features (HOP URI, cross-workspace queries, sovereignty model) not implemented | incomplete | in-release | 12e | |
-| `docs/design/formula-resolution.md` | implementation-status: partial | Tier 2 (town/rig overrides) + Tier 3 (embedded) work; Tier 1 (project-committed formulas) + Mol Mall integration not implemented | incomplete | in-release | 12g | |
+| Source | Category | Audience | Summary | Severity | Release position | Batch | PR reference |
+|---|---|---|---|---|---|---|---|
+| [witness.md](../commands/witness.md) | implementation-status: vestigial | agent | `--foreground` flag kept as runtime notice; patrol loop moved to `mol-witness-patrol` molecule | wrong | in-release | 1d | |
+| [keepalive.md](../packages/keepalive.md) | implementation-status: partial | — | Package fully implemented (Touch/Read/Age API) but zero importers in codebase | incomplete | in-release | 2b | |
+| `docs/design/dog-infrastructure.md` | implementation-status: unbuilt | — | Dog Pool Architecture (ShutdownDanceState, DogPool struct, warrant queue, `gt dog dances/warrants/pool status`) — no code | wrong | in-release | 11j | |
+| `docs/design/model-aware-molecules.md` | implementation-status: unbuilt | — | Entire model-aware molecules feature (per-step model constraints, subscription routing, OpenRouter pricing) — no code; `internal/models/` doesn't exist | wrong | in-release | 11m | |
+| `docs/design/ledger-export-triggers.md` | implementation-status: unbuilt | — | Entire ledger export trigger system (bead closure triggers, convoy triggers, skill derivation engine, HOP economy) — no code | wrong | in-release | 11n | |
+| `docs/design/mol-mall-design.md` | implementation-status: unbuilt | — | Mol Mall registry system (public/private/federated registries, HOP URI scheme, formula publishing) — no code beyond embedded formulas | wrong | in-release | 12a | |
+| `docs/design/witness-at-team-lead.md` | implementation-status: unbuilt | — | Witness-as-AT-team-lead architecture (delegate mode, AT teammate spawning) — no code; depends on Claude Code Agent Teams | wrong | in-release | 12b | |
+| `docs/design/sandboxed-polecat-execution.md` | implementation-status: unbuilt | — | Sandboxed execution (exitbox container backend, daytona cloud backend, SandboxAdapter interface) — no code; all execution is local tmux | wrong | in-release | 12d | |
+| `docs/design/factory-worker-api.md` | implementation-status: unbuilt | — | Factory Worker API (7 structured endpoints) — no code; all agent interaction remains tmux-based (28 touch points) | wrong | in-release | 12f | |
+| `docs/design/plugin-system.md` | implementation-status: partial | — | Core dispatch shipped (`gt dog dispatch --plugin`, `gt plugin` CLI); design doc status label stale ("not yet implemented"). Advanced features (versioning, marketplace) not implemented | incomplete | in-release | 12c | |
+| `docs/design/federation.md` | implementation-status: partial | — | Federation infrastructure exists (Dolt remotes, wasteland commands); core features (HOP URI, cross-workspace queries, sovereignty model) not implemented | incomplete | in-release | 12e | |
+| `docs/design/formula-resolution.md` | implementation-status: partial | — | Tier 2 (town/rig overrides) + Tier 3 (embedded) work; Tier 1 (project-committed formulas) + Mol Mall integration not implemented | incomplete | in-release | 12g | |
 
 ---
 
@@ -318,3 +319,43 @@ All 21 wiki-stale findings were `phase-2-incomplete` — Phase 2's mapping metho
 ### Release position
 
 All findings are `in-release` (present at v1.0.0). Zero `post-release` findings.
+
+---
+
+## Section 7: Audience classification (Phase 5)
+
+Phase 5 classified all 111 command pages by primary audience. The Audience column in Section 1 enables Phase 6 to prioritize: user-facing drift is fixed first, then agent, then dev, then internal.
+
+| Audience | Count | Examples |
+|---|---|---|
+| user | 33 | install, up, down, config, status, crew, rig, init, daemon, shell, version, ... |
+| agent | 46 | sling, done, nudge, mail, polecat, mayor, convoy, molecule, hook, broadcast, ... |
+| dev | 28 | doctor, repair, audit, stale, health, vitals, costs, metrics, changelog, ... |
+| internal | 4 | agent-log, nudge-poller, proxy-subcmds, status-line |
+
+### Section 1 audience breakdown
+
+Drift findings by audience (for Phase 6 prioritization):
+
+| Audience | Findings in Section 1 | Priority |
+|---|---|---|
+| user | 18 | Highest — operators encounter these directly |
+| agent | 11 | High — agents see stale help text |
+| dev | 7 | Medium — maintainers can work around inaccuracies |
+| internal | 0 | Low — hidden commands, rarely viewed |
+| — (non-command) | 24 | Varies by entity type |
+
+### Edge-case decisions
+
+| Command | Competing signals | Primary audience | Rationale |
+|---|---|---|---|
+| status | user + agent (PolecatSafe) + dev (GroupDiag) | user | Main status command operators use |
+| prime | agent (PolecatSafe) + dev (GroupDiag) | agent | Context-building command agents run at startup |
+| version | user + agent (PolecatSafe) + dev (GroupDiag) | user | Operators check version |
+| crew, rig | user (GroupWorkspace) + hidden subcommands | user | Hidden subs are implementation detail |
+| heartbeat | dev (GroupDiag) + agent infra | agent | Polecats invoke this, not humans |
+| info | dev (GroupDiag) | user | `--whats-new` is user-facing |
+| thanks | dev (GroupDiag) | user | Credits page for humans |
+| dashboard | dev (GroupDiag) | dev | Convoy tracking TUI for maintainers |
+| scheduler | agent (GroupAgents) | agent | Daemon-facing capacity control |
+| tap | agent (PolecatSafe) + hook handlers | agent | Hook handlers agents invoke |

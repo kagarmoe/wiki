@@ -4,7 +4,7 @@ type: command
 status: verified
 topic: gastown
 created: 2026-04-11
-updated: 2026-04-15
+updated: 2026-04-16
 sources:
   - /home/kimberly/repos/gastown/internal/cmd/molecule.go
   - /home/kimberly/repos/gastown/internal/cmd/molecule_await_event.go
@@ -16,6 +16,7 @@ phase3_audited: 2026-04-15
 phase3_findings: [cobra-drift, wiki-stale]
 phase3_severities: [wrong]
 phase3_findings_post_release: false
+phase5_audience: agent
 ---
 
 # gt molecule

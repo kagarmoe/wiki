@@ -1026,3 +1026,44 @@ Flagging is cheap; Kimberly decides when to actually schedule.
 - Section 1 upstream corrections (52 rows) await Phase 5 audience classification and Phase 6 implementation
 
 **For Kimberly retro discussion:** Phase 2's 94.7% adequacy rate is a strong signal. The wiki's factual coverage is solid; remaining work is depth (5 large packages) and upstream corrections (52 drift findings). Worth discussing whether Phase 5 audience classification or Phase 6 implementation should come next, and whether the 5 incomplete packages should be interleaved or batched separately.
+
+## [2026-04-16] stage | Phase 5 — Audience classification (single batch)
+
+**Work:** Classified all 111 command pages by primary audience. Applied `phase5_audience` frontmatter, added Audience column to drift index Section 1, added Section 7 summary.
+
+**What went well:**
+- The pre-extracted code signals (Hidden, PolecatSafe, GroupID) made classification mechanical for ~95% of commands. Only ~10 needed judgment calls.
+- Single-batch execution was the right call — 111 pages is a lot of edits but zero ambiguity per page.
+- Python script for frontmatter injection was reliable across all 111 pages with zero errors.
+
+**What didn't:**
+- Nothing significant. This was a clean mechanical phase.
+
+**Edge-case reasoning worth preserving:**
+- `status` goes to user despite PolecatSafe + GroupDiag because it's the primary operator status command.
+- `heartbeat` goes to agent despite GroupDiag because only polecats invoke it programmatically.
+- `info` and `thanks` go to user despite GroupDiag — they're display-only commands for humans.
+- Agent-lifecycle commands (boot, callbacks, deacon, mayor, polecat, refinery, witness) go to agent — operators rarely invoke them directly.
+
+## [2026-04-16] phase | Phase 5 complete — Audience classification
+
+**Phase scope:** Classify 111 commands, annotate drift index, enable Phase 6 prioritization.
+
+**Duration:** Single batch, single session.
+
+**What went well:**
+- Clean mechanical execution with pre-extracted signals. The Phase 5 plan was tight and sufficient.
+- The audience distribution (user 33, agent 46, dev 28, internal 4) matches intuition: Gas Town is agent-heavy, with a substantial user-facing surface and solid diagnostic tooling.
+- Section 7 and the Audience column in Section 1 give Phase 6 a clear prioritization axis.
+
+**What didn't:**
+- Nothing. This was the simplest phase so far.
+
+**Schema / skill changes surfaced:**
+- New frontmatter field: `phase5_audience: user|agent|dev|internal` on command pages only.
+- No skill updates needed — audience classification is a one-time annotation, not a recurring workflow.
+
+**Recommendations for Phase 6:**
+- Fix user-facing drift first (18 findings), then agent (11), then dev (7). Zero internal findings.
+- The 24 non-command findings (concepts, packages, files, docs) should be batched separately since they don't carry audience tags.
+- Meta-pattern PRs (Section 3) should be prioritized alongside user-facing fixes since they affect 10+ user-facing commands.

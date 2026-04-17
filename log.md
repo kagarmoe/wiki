@@ -4545,3 +4545,25 @@ Revisited the wiki-stale log placement question from the Sweep 1 retrospective (
 The drift index now covers: wrong (Phase 3 drift), missing (Phase 3 gaps), AND incomplete (Phase 4). Ready for Phase 5 (Audience classification) and Phase 6 (Implementation).
 
 → gastown/drift/README.md
+
+## [2026-04-16] drift-found | Phase 5 (Audience classification: 111 commands)
+
+**Scope:** Classified all 111 command pages by primary audience (user/agent/dev/internal) for Phase 6 prioritization.
+
+**Distribution:**
+- user: 33
+- agent: 46
+- dev: 28
+- internal: 4
+
+**Changes:**
+- Added `phase5_audience:` frontmatter to all 111 command pages under `gastown/commands/`
+- Updated `updated:` date to 2026-04-16 on all 111 pages
+- Added Audience column to all four Section 1 sub-tables in drift index
+- Added Section 7 (Audience classification summary) to drift index with distribution, Section 1 breakdown, and edge-case decisions
+
+**Classification signals used:** `Hidden: true` (strong -> internal), `AnnotationPolecatSafe` (strong -> agent), GroupID (organizational), command descriptions (human judgment). Primary audience assigned per "user > agent > dev > internal" priority rule.
+
+**Key edge cases:** status (user, despite PolecatSafe + GroupDiag), prime (agent, despite GroupDiag), version/info/thanks (user, despite GroupDiag), heartbeat (agent, despite GroupDiag), dashboard (dev, operator-maintainer tool).
+
+→ gastown/commands/*.md (111 pages), gastown/drift/README.md
