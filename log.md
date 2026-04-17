@@ -4667,3 +4667,28 @@ Drafted corrections for all 61 drift findings from the drift index Section 1, gr
 **Phase 7 complete.** All planned phases (3-7) finished.
 
 → gastown/drift/README.md, gastown/drift/corrections-audit.md
+
+## [2026-04-17] lint | Wiki validation: 20 open gastown issues scored
+
+**Scope:** Tested the wiki against 20 open gastown issues (no linked PRs) to measure real-world usefulness.
+
+**Results:** 7 full (35%), 12 partial (60%), 1 miss (5%).
+
+**By round:**
+- Round 1 (#3665, #3661, #3658, #3653, #3652): 0 full, 4 partial, 1 miss
+- Round 2 (#3651, #3648, #3626, #3623, #3614): 2 full, 3 partial, 0 miss
+- Round 3 (#3604, #3570, #3565, #3563, #3562): 2 full, 3 partial, 0 miss
+- Round 4 (#3554, #3539, #3538, #3537, #3516): 3 full, 2 partial, 0 miss
+
+**Key finding:** The wiki's dominant gap is happy-path documentation with missing failure modes (8 of 12 partial scores). The wiki consistently points investigators to the right files but lacks the depth to see specific bugs without reading source.
+
+**Top 5 remediation priorities:**
+1. Add failure-mode annotations to critical paths (polecat remove, refinery stall, nudge delivery)
+2. Document tmux socket consistency (split-brain, stale pane IDs, socket isolation)
+3. Surface daemon warning/error messages (wisp config, connection exhaustion)
+4. Synthesize cross-page asymmetries (witness vs polecat Start() bead creation)
+5. Expand INSTALLING.md drift coverage (npm scope, dolt prereq, rig naming constraints)
+
+**Validation files:** gastown/drift/validation-round{1,2,3,4}.md
+
+→ gastown/drift/
