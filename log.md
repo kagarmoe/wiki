@@ -5146,3 +5146,23 @@ addressed the former; the latter requires a different methodology
 (implementation-detail deepening, not failure-mode analysis).
 
 → gastown/drift/README.md, gastown/drift/validation-retest.md
+
+## [2026-04-17] decision | Schema: add detail_depth frontmatter field
+
+New optional frontmatter field `detail_depth` records per-axis depth scores for entity pages. Populated during the detail-gap depth pass.
+
+**Format (code-grounded pages):**
+```yaml
+detail_depth: {params: 2, data_flow: 1, errors: 0, side_effects: 1}
+```
+
+**Format (synthesis pages):**
+```yaml
+detail_depth: {synthesis: 1, relationships: 2}
+```
+
+Each axis scored 0-2. Complex entities scoring ≤4 total are fixed inline during the depth pass. Simple entities scoring ≤4 are acceptable.
+
+Additive optional field — no schema version bump. Absence means "not yet assessed."
+
+→ [.claude/skills/writing-entity-pages/SKILL.md](.claude/skills/writing-entity-pages/SKILL.md)
