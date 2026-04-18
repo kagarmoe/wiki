@@ -5546,3 +5546,13 @@ Compared beads, doltserver, and mail across connection acquisition, error handli
 - In-process store timeout (30s vs 60s): **undocumented** — SDK path and subprocess path use different timeout thresholds without explanation.
 
 **Total:** 3 comparison tables with 10 asymmetries annotated (8 "by design", 2 "undocumented").
+
+## [2026-04-18] validation | Cross-page inference Batch 4: Re-validation — 20 issues re-tested
+
+Re-tested the same 20 open gastown issues against the wiki with 6 investigation workflows, 26 detail tables, and 7 comparison tables. Phase 8: 9 full (45%). Cross-page: 10 full (50%).
+
+One issue improved: #3652 (witness/refinery Start() no agent beads) moved from partial to full — the lifecycle comparison table at polecat-lifecycle.md explicitly annotates the agent bead creation asymmetry.
+
+Remaining partials: 4 failure-mode-gap, 4 detail-gap, 1 cross-page-inference. Investigation workflows provide excellent navigation but the remaining gaps are at the specific-failure-mode and parameter-value levels, not the cross-page synthesis level.
+
+Pages created: `gastown/drift/validation-cross-page.md`. Pages updated: `index.md`.
