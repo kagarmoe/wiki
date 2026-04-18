@@ -4,10 +4,14 @@ type: command
 status: verified
 topic: gastown
 created: 2026-04-11
-updated: 2026-04-17
+updated: 2026-04-18
 sources:
   - /home/kimberly/repos/gastown/internal/cmd/mq.go
+  - /home/kimberly/repos/gastown/internal/cmd/mq_integration.go
+  - /home/kimberly/repos/gastown/internal/cmd/mq_list.go
   - /home/kimberly/repos/gastown/internal/cmd/mq_next.go
+  - /home/kimberly/repos/gastown/internal/cmd/mq_status.go
+  - /home/kimberly/repos/gastown/internal/cmd/mq_submit.go
   - /home/kimberly/repos/gastown/internal/cmd/root.go
 tags: [command, work, merge-queue, refinery, integration-branch]
 phase3_audited: 2026-04-15
@@ -17,6 +21,7 @@ phase3_findings_post_release: false
 phase5_audience: agent
 phase8_audited: 2026-04-17
 phase8_findings: [partial-completion, silent-suppression]
+detail_depth: {params: 2, data_flow: 2, errors: 1, side_effects: 2}
 ---
 
 # gt mq

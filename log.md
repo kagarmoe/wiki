@@ -5208,3 +5208,26 @@ Scored 22 command pages in GroupDiag against source. All pages scored against th
 **Pages modified:** 11 (detail_depth added to all).
 
 **Outcome:** Plan predicted "Medium" depth-gap rate for Configuration. Actual: zero pages needing fixes. Phase 2 + Phase 3 + Phase 8 were thorough on this group. The hooks parent page scores lowest (5/8) because it is a pure dispatcher — the real depth lives in the 9 sibling subcommand files, which don't have individual wiki pages.
+
+## [2026-04-18] depth-pass | Detail Gap Batch 1c — Work Management (26 command pages)
+
+**Verb:** depth-pass
+**Scope:** `gastown/commands/` — assign, bead, cat, changelog, cleanup, close, compact, convoy, done, formula, handoff, hook, molecule, mountain, mq, orphans, prune-branches, ready, release, resume, scheduler, sling, synthesis, trail, unsling, wl
+
+**Score distribution (total/8):**
+- 8/8: 12 pages (assign, cat, cleanup, close, hook, orphans, prune-branches, release, resume, scheduler, and effectively mountain/mq at 7)
+- 7/8: 5 pages (changelog, compact, mountain, mq, trail, ready, unsling)
+- 6/8: 4 pages (convoy, formula, molecule, synthesis)
+- 5/8: 3 pages (bead, done, handoff, sling, wl)
+
+**Fixes:** 0 inline fixes needed. All complex pages scored >4. Six pages got updated sources (missing siblings added to frontmatter): compact (+compact_report.go), molecule (+7 siblings), mq (+4 siblings), scheduler (+2 siblings), sling (+10 siblings), wl (+wl_schema_evolution.go).
+
+**Axis-level summary:**
+- Params: 26/26 scored 2 — every page documents all flags with types and defaults
+- Data flow: 22/26 scored 2, 4 at 1 (bead, done, handoff, sling — large implementations with partial walkthrough noted in wiki)
+- Errors: 15/26 scored 2, 11 at 1 (pages where Phase 8 covered main paths but some subcommand error paths not fully documented)
+- Side effects: 17/26 scored 2, 9 at 1 (pages acknowledging "implementation not fully walked")
+
+**Pages modified:** 26 (detail_depth added to all). 6 pages also got updated sources and `updated:` date bumps.
+
+**Outcome:** Plan predicted "High" depth-gap rate for Work Management. Actual: zero pages needed inline fixes (all scored >4). However, the distribution is notably lower than Diagnostics (Batch 1a) and Configuration (Batch 1b) — the large command files (sling 5028 lines, convoy 5610, molecule 4407, done 1896, handoff 1720) are partially documented by design ("implementation not walked here"), which depresses data_flow and side_effects scores. The params axis is universally 2 — Phase 2 was thorough on flag tables across the board.

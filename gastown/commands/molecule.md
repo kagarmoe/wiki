@@ -4,12 +4,19 @@ type: command
 status: verified
 topic: gastown
 created: 2026-04-11
-updated: 2026-04-17
+updated: 2026-04-18
 sources:
   - /home/kimberly/repos/gastown/internal/cmd/molecule.go
+  - /home/kimberly/repos/gastown/internal/cmd/molecule_attach.go
+  - /home/kimberly/repos/gastown/internal/cmd/molecule_attach_from_mail.go
   - /home/kimberly/repos/gastown/internal/cmd/molecule_await_event.go
   - /home/kimberly/repos/gastown/internal/cmd/molecule_await_signal.go
+  - /home/kimberly/repos/gastown/internal/cmd/molecule_dag.go
+  - /home/kimberly/repos/gastown/internal/cmd/molecule_dep.go
   - /home/kimberly/repos/gastown/internal/cmd/molecule_emit_event.go
+  - /home/kimberly/repos/gastown/internal/cmd/molecule_lifecycle.go
+  - /home/kimberly/repos/gastown/internal/cmd/molecule_status.go
+  - /home/kimberly/repos/gastown/internal/cmd/molecule_step.go
   - /home/kimberly/repos/gastown/internal/cmd/root.go
 tags: [command, work, molecule, polecat-safe, hook, dag, agent-workflow]
 phase3_audited: 2026-04-15
@@ -19,6 +26,7 @@ phase3_findings_post_release: false
 phase5_audience: agent
 phase8_audited: 2026-04-17
 phase8_findings: [none]
+detail_depth: {params: 2, data_flow: 2, errors: 1, side_effects: 1}
 ---
 
 # gt molecule

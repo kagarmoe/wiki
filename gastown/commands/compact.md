@@ -4,9 +4,10 @@ type: command
 status: verified
 topic: gastown
 created: 2026-04-11
-updated: 2026-04-17
+updated: 2026-04-18
 sources:
   - /home/kimberly/repos/gastown/internal/cmd/compact.go
+  - /home/kimberly/repos/gastown/internal/cmd/compact_report.go
   - /home/kimberly/repos/gastown/internal/cmd/root.go
 tags: [command, work, wisp, ttl, bd-wrapper, compaction]
 phase3_audited: 2026-04-15
@@ -16,6 +17,7 @@ phase3_findings_post_release: false
 phase5_audience: dev
 phase8_audited: 2026-04-17
 phase8_findings: [silent-suppression]
+detail_depth: {params: 2, data_flow: 2, errors: 1, side_effects: 2}
 ---
 
 # gt compact

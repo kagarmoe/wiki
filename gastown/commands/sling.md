@@ -4,9 +4,19 @@ type: command
 status: verified
 topic: gastown
 created: 2026-04-11
-updated: 2026-04-17
+updated: 2026-04-18
 sources:
   - /home/kimberly/repos/gastown/internal/cmd/sling.go
+  - /home/kimberly/repos/gastown/internal/cmd/sling_batch.go
+  - /home/kimberly/repos/gastown/internal/cmd/sling_convoy.go
+  - /home/kimberly/repos/gastown/internal/cmd/sling_dispatch.go
+  - /home/kimberly/repos/gastown/internal/cmd/sling_dog.go
+  - /home/kimberly/repos/gastown/internal/cmd/sling_formula.go
+  - /home/kimberly/repos/gastown/internal/cmd/sling_helpers.go
+  - /home/kimberly/repos/gastown/internal/cmd/sling_idempotency.go
+  - /home/kimberly/repos/gastown/internal/cmd/sling_schedule.go
+  - /home/kimberly/repos/gastown/internal/cmd/sling_target.go
+  - /home/kimberly/repos/gastown/internal/cmd/sling_validate.go
   - /home/kimberly/repos/gastown/internal/cmd/root.go
 tags: [command, work, sling, polecat-safe, dispatch, formula, polecat, crew, mayor, hook]
 phase3_audited: 2026-04-15
@@ -18,6 +28,7 @@ phase4_findings: [none]
 phase5_audience: agent
 phase8_audited: 2026-04-17
 phase8_findings: [partial-completion, silent-suppression]
+detail_depth: {params: 2, data_flow: 1, errors: 2, side_effects: 1}
 ---
 
 # gt sling

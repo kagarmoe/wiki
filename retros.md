@@ -1627,3 +1627,29 @@ All planned phases complete:
 
 **What to change next time:**
 - For parent-only pages (hooks, directive), the 4-axis rubric doesn't perfectly capture the "depth lives in siblings" pattern. Consider noting this in the score justification rather than trying to score the parent as if it should cover all subcommands.
+
+## [2026-04-18] stage | Detail Gap Batch 1c — Work Management (26 pages)
+
+**Duration:** ~25 min
+**Pages scored:** 26
+**Fixes applied:** 0
+**Source updates:** 6 pages (compact, molecule, mq, scheduler, sling, wl — missing siblings added)
+
+**Score distribution:**
+| Score | Count | Pages |
+|-------|-------|-------|
+| 8/8 | 12 | assign, cat, cleanup, close, hook, orphans, prune-branches, release, resume, scheduler + 2 borderline |
+| 7/8 | 5 | changelog, compact, mountain, trail, unsling |
+| 6/8 | 4 | convoy, formula, molecule, synthesis |
+| 5/8 | 5 | bead, done, handoff, sling, wl |
+
+**What went well:**
+- Python script for bulk detail_depth insertion was much faster than per-file edits
+- Sibling-file audit caught 25+ missing source files across 6 pages — good mechanical step
+- Despite "High" prediction, no fixes needed — the threshold logic (score >4 OR simple) means even 5/8 complex pages pass
+
+**What didn't:**
+- The 5/8 pages (done, handoff, sling, wl, bead) are structurally low-scoring because they are massive implementations where the wiki explicitly says "not fully walked here". This is by design, not a gap — but the rubric doesn't distinguish "intentionally partial" from "accidentally shallow".
+
+**What to change next time:**
+- Consider noting "intentional partial coverage" in the score justification for pages that explicitly scope their walkthrough

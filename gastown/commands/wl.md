@@ -4,7 +4,7 @@ type: command
 status: verified
 topic: gastown
 created: 2026-04-11
-updated: 2026-04-17
+updated: 2026-04-18
 sources:
   - /home/kimberly/repos/gastown/internal/cmd/wl.go
   - /home/kimberly/repos/gastown/internal/cmd/wl_browse.go
@@ -16,6 +16,7 @@ sources:
   - /home/kimberly/repos/gastown/internal/cmd/wl_show.go
   - /home/kimberly/repos/gastown/internal/cmd/wl_stamp.go
   - /home/kimberly/repos/gastown/internal/cmd/wl_stamps.go
+  - /home/kimberly/repos/gastown/internal/cmd/wl_schema_evolution.go
   - /home/kimberly/repos/gastown/internal/cmd/wl_sync.go
   - /home/kimberly/repos/gastown/internal/wasteland/
   - /home/kimberly/repos/gastown/internal/doltserver/
@@ -27,6 +28,7 @@ phase3_findings_post_release: false
 phase5_audience: agent
 phase8_audited: 2026-04-17
 phase8_findings: [none]
+detail_depth: {params: 2, data_flow: 1, errors: 1, side_effects: 1}
 ---
 
 # gt wl

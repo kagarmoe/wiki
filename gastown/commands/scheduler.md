@@ -4,9 +4,11 @@ type: command
 status: verified
 topic: gastown
 created: 2026-04-11
-updated: 2026-04-17
+updated: 2026-04-18
 sources:
   - /home/kimberly/repos/gastown/internal/cmd/scheduler.go
+  - /home/kimberly/repos/gastown/internal/cmd/scheduler_convoy.go
+  - /home/kimberly/repos/gastown/internal/cmd/scheduler_epic.go
   - /home/kimberly/repos/gastown/internal/scheduler/capacity/
 tags: [command, work, scheduler, dispatch, capacity, polecat, daemon]
 phase3_audited: 2026-04-15
@@ -18,6 +20,7 @@ phase4_findings: [none]
 phase5_audience: agent
 phase8_audited: 2026-04-17
 phase8_findings: [none]
+detail_depth: {params: 2, data_flow: 2, errors: 2, side_effects: 2}
 ---
 
 # gt scheduler
