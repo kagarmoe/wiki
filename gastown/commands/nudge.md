@@ -214,6 +214,26 @@ Mode and priority are validated eagerly at `nudge.go:356-361`.
 For diagnostic workflows involving this command, see
 [Investigating: message delivery](../workflows/investigations/message-delivery.md).
 
+### `GT_PANE_ID` staleness risk
+
+Nudge delivery targets a specific tmux pane identified by the
+`GT_PANE_ID` environment variable, which is set **once** at session
+creation time via `tmux.GetPaneID` + `tmux.SetEnvironment`
+(see [session](../packages/session.md) `lifecycle.go:281-284`).
+This value is never refreshed during the session's lifetime.
+
+If a session is stopped and restarted (or if tmux reassigns pane IDs
+internally), the stored `GT_PANE_ID` becomes stale. The ZFC liveness
+check at `tmux.go:1984-2000` reads `GT_PANE_ID` first and falls back
+to scanning all panes only for legacy sessions that lack the variable.
+A stale `GT_PANE_ID` causes nudge delivery to target a non-existent
+or wrong pane, leading to silent delivery failure (issue #3563).
+
+The staleness window is: from session restart to the next time a
+fresh `GT_PANE_ID` is set. All agent managers (daemon `lifecycle.go:586`,
+crew `manager.go:847`, deacon `manager.go:150`, `cmd/deacon.go:553`)
+set `GT_PANE_ID` at startup but none refresh it afterward.
+
 ## Notes / open questions
 
 - **The 1.5K-line file.** `runNudge` is the tip of a long tail

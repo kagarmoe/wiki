@@ -392,6 +392,24 @@ is the caller's responsibility.
 
 ## Failure modes
 
+### Dead code: HandlePolecatDone and HandlePolecatDoneFromBead
+
+`HandlePolecatDone` (`handlers.go:118`) and `HandlePolecatDoneFromBead`
+(`handlers.go:182`) are defined as public functions but **have no
+production call sites**. A grep for `witness.HandlePolecatDone` and
+`witness.HandlePolecatDoneFromBead` across the codebase returns zero
+matches outside `handlers_test.go`. The production completion path
+uses `DiscoverCompletions` (`handlers.go:1700`) instead, which sweeps
+agent beads for `exit_type` fields rather than relying on
+POLECAT_DONE mail dispatch. The `protocol/witness_handlers.go:112`
+`HandlePolecatDone` is a separate function on `DefaultWitnessHandler`
+— part of the protocol layer, not this package.
+
+These functions appear to be vestiges of an earlier mail-driven
+completion model that was superseded by the bead-sweep approach.
+They are tested (5 test cases in `handlers_test.go`) but never
+invoked from production code.
+
 ### Silent suppression (what errors are swallowed?)
 - **Session lifecycle cleanup:** Like other agent runtime packages,
   this package uses `_ =` for tmux session teardown, lock release,

@@ -425,6 +425,31 @@ daemon owns long-lived resources (Dolt server, beads stores, OTel
 exporters) that require ordered teardown. The Deacon and Boot are
 Claude sessions with no persistent resources beyond their tmux pane.
 
+### 10. Legacy tmux socket cleanup on upgrade
+
+When upgrading Gas Town across versions that changed the tmux socket
+naming convention (e.g., v0.12.1 default socket to v1.0.0 path-hashed
+`gt-<hash>` socket), sessions on the old socket survive and can cause
+dual-agent issues (issue #3570).
+
+`gt down` Phase 4c (`down.go:348-370`) explicitly cleans up legacy
+socket sessions: it creates a tmux instance pointed at the old
+basename socket and kills any `gt-*` sessions found there. The cleanup
+reports how many sessions were cleaned (or would be cleaned in
+`--dry-run`). See the `legacySocketTmux` interface and
+`newLegacyTmux` at `down.go:799-821`.
+
+**Check:**
+
+```bash
+# Look for sessions on the old default socket
+tmux list-sessions 2>/dev/null | grep "^gt-"
+```
+
+If legacy sessions exist after upgrade, `gt down --all` will clean
+them via Phase 4c. For the per-town socket naming mechanism and
+`SetDefaultSocket`, see [tmux](../../packages/tmux.md).
+
 ## Related investigation workflows
 
 - [Investigating: agent lifecycle](agent-lifecycle.md) -- agent

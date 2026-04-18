@@ -609,6 +609,30 @@ For diagnostic workflows involving this entity, see
 | `DefaultReadTimeoutMs` | 300000 (5 min) | `doltserver.go:143-146` |
 | `DefaultWriteTimeoutMs` | 300000 (5 min) | `doltserver.go:149-156` |
 
+### MySQL session variables and connection limits
+
+The Dolt server's `config.yaml` (written by `writeServerConfig` at
+`doltserver.go:1266-1319`) configures these connection-management
+parameters:
+
+| Variable | Default value | Purpose | Source |
+|---|---|---|---|
+| `max_connections` | 1000 | Maximum concurrent MySQL connections. Written as `max_connections: <N>` in config.yaml when non-default (`doltserver.go:1286`). | `DefaultMaxConnections` at `doltserver.go:141` |
+| `read_timeout` | 300000ms (5 min) | Server-side timeout for reading a complete client request. Prevents CLOSE_WAIT accumulation from abandoned connections. | `DefaultReadTimeoutMs` at `doltserver.go:143-149` |
+| `write_timeout` | 300000ms (5 min) | Server-side timeout for writing a response. Detects dead connections during long queries (e.g., compactor GC). | `DefaultWriteTimeoutMs` at `doltserver.go:151-156` |
+
+**Connection exhaustion symptoms:** When active connections approach
+`DefaultMaxConnections` (1000), agents receive "too many connections"
+errors. `GetActiveConnectionCount` at `doltserver.go:3312-3364`
+monitors usage, and `drainConnectionsBeforeStop` at
+`doltserver.go:1746-1781` reduces the connection storm during server
+restart. The read/write timeouts are the primary defense against
+CLOSE_WAIT accumulation from crashed agent connections — without them,
+abandoned connections would persist for Dolt's default 8 hours.
+
+See [Investigating: data-plane failures](../workflows/investigations/data-plane.md)
+for the diagnostic workflow covering connection exhaustion.
+
 ### Port resolution priority
 
 | Priority | Source | Code |

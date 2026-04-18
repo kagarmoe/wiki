@@ -156,6 +156,18 @@ session inherits the new name after rename.
   up the handoff automatically (`crew.go:169-180`). `restart`
   (or `rs`) does the same kill-and-restart without the handoff
   mail (`crew.go:203-208`).
+- **`gt crew start` creates a tmux session** via
+  `t.NewSessionWithCommandAndEnv` (`crew/manager.go:841`), which
+  creates a detached tmux session with the Claude startup command
+  and pre-set environment variables (including `GT_ROLE`). This is
+  the crew-specific equivalent of the shared
+  [`session.StartSession`](../packages/session.md) entry point at
+  `lifecycle.go:144-310` that other agent types use. A failure at
+  this stage (e.g., tmux not running, session name collision) leaves
+  the crew workspace created but no agent running — the "detached-pty"
+  failure mode where the process spawns outside tmux. See
+  [agent-lifecycle](../workflows/investigations/agent-lifecycle.md)
+  Step 9 for diagnostic steps.
 - **`gt crew start --resume`** (`crew.go:301-305, 403-404`) uses
   cobra's `NoOptDefVal = "last"` trick — `--resume` with no value
   resumes the most recent session; `--resume <id>` resumes a

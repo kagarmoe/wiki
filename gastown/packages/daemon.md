@@ -200,6 +200,25 @@ can be skipped if the system is under load, and every "ensure" step is
 a check-then-restart pattern that does nothing if the agent is already
 healthy.
 
+### Wisp config polling and the "no wisp config" warning
+
+During each heartbeat, the daemon calls `isRigOperational(rigName)` at
+`daemon.go:1836` before attempting to restart agents for a rig. This
+function creates a `wisp.NewConfig(townRoot, rigName)` and reads the
+wisp config file to check whether the rig is parked or docked. If the
+config file does not exist (`os.IsNotExist` at `daemon.go:1840`), the
+daemon emits:
+
+```
+Warning: no wisp config for <rigName> - parked state may have been lost
+```
+
+This warning fires **every heartbeat cycle** (default 3 minutes) for
+every rig that has no wisp config file, which causes log spam when
+rigs are legitimately unconfigured (issue #3554). The function
+continues past the warning and checks the wisp layer's `status` field
+for `"parked"` or `"docked"` values (`daemon.go:1844-1848`).
+
 ## The maintenance tickers
 
 Alongside the heartbeat timer, `Daemon.Run` creates ~10 independent

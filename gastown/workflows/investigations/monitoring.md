@@ -216,6 +216,17 @@ templates are embedded at build time, rendering failures indicate
 either a corrupt binary or a data shape mismatch between the fetcher
 and the template's expected `ConvoyData` struct.
 
+**e. Non-Claude agents not detected (pi, omp):**
+The dashboard's session discovery uses the same `GT_PROCESS_NAMES`-
+based detection as `IsAgentAlive` (see
+[Step 4](#4-agent-listing-issues) above). Non-Claude agents (pi, omp,
+Gemini, Codex) may not match the expected process name patterns if
+their process names differ from the default `GT_PROCESS_NAMES` set.
+The [web](../../packages/web.md) fetcher builds `WorkerRow` and
+`SessionRow` data from tmux session state; sessions whose agent
+process doesn't match the detection patterns will appear as dead or
+be omitted entirely (issue #3614).
+
 ### 8. Feed event stream issues
 
 `runFeed` at `feed.go:110-160` dispatches to TUI, plain, or

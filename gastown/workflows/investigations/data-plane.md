@@ -231,6 +231,38 @@ cat ~/gt/daemon/restart_state.json  # Per-agent backoff counters
   `gt up` starts both the daemon and Dolt. See
   [daemon](../../packages/daemon.md) ## Lifecycle.
 
+### 10. Connection exhaustion and `wait_timeout` tuning
+
+**Symptom:** Agents receive "too many connections" errors, queries
+hang, or the Dolt server becomes progressively slower under concurrent
+load.
+
+**Check:** `doltserver.GetActiveConnectionCount` at
+`doltserver.go:3312-3364` returns the current connection count vs
+`DefaultMaxConnections` (1000). The health threshold is 80% of
+max_connections.
+
+```bash
+gt dolt sql "SHOW PROCESSLIST"  # See active connections
+gt dolt status                   # Health metrics include connection count
+```
+
+**Root cause:** Abandoned connections from crashed agents accumulate in
+CLOSE_WAIT state. Without server-side timeouts, these persist for
+Dolt's default 8 hours. The `DefaultReadTimeoutMs` and
+`DefaultWriteTimeoutMs` (both 5 minutes, `doltserver.go:137-156`)
+are the primary mitigation: they cause the server to close idle
+connections within 5 minutes of the client dying.
+
+**Death spiral pattern:** Under concurrent agent load, connection
+exhaustion blocks new agent operations, which causes agents to time
+out and crash, which creates more abandoned connections. The daemon's
+`drainConnectionsBeforeStop` at `doltserver.go:1746-1781` reduces
+the connection storm during server restart.
+
+See [doltserver](../../packages/doltserver.md) ## MySQL session
+variables and connection limits for the full configuration reference.
+
 ## Connection management comparison: beads, doltserver, mail
 
 Cross-entity comparison of how the three data-plane packages acquire

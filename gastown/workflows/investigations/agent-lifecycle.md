@@ -203,6 +203,15 @@ Parked/docked rigs refuse agent starts.
 **Check:** `gt rig status <rig>` — is the rig parked or docked?
 `gt rig unpark <rig>` or `gt rig undock <rig>` to restore.
 
+**d. Agent bead creation asymmetry:**
+Note that witness `Manager.Start` does **not** create an agent bead.
+Only polecat `SessionManager.Start` calls `createAgentBeadWithRetry`
+(`polecat/manager.go:308-326`) during startup. Witnesses, refineries,
+and crew members do not have agent beads — they rely on tmux session
+existence for liveness. See the
+[polecat lifecycle comparison table](../../workflows/polecat-lifecycle.md)
+(row: "Creates agent bead") for the full asymmetry.
+
 -> Continue to [Step 3](#3-session-creation-failures) for session
 creation failures.
 
@@ -240,6 +249,12 @@ the merge loop in-process.
 a warning + nil at the CLI level (`refinery.go:313-317`).
 
 **c. Rig parked or docked:** Same guard as witness. Check rig status.
+
+**d. Agent bead creation asymmetry:**
+Like the witness, refinery `Manager.Start` does **not** create an
+agent bead during startup. See Step 5d above and the
+[polecat lifecycle comparison table](../../workflows/polecat-lifecycle.md)
+for the full contrast.
 
 -> Continue to [Step 3](#3-session-creation-failures) for session
 creation failures.

@@ -240,7 +240,16 @@ pre-plan informal entry and this section will be left as-is.
 ### Subprocess invocations
 | Called binary | Command | Flags | Flag source | `file:line` |
 |---|---|---|---|---|
+| `bd` | `create` | `--json --title=<title> --labels=gt:merge-request --priority=<N> --description=<desc> --ephemeral --actor=<actor>` | runtime (branch + bead data) | `done.go:1047` (via [`beads.Create`](../packages/beads.md)) |
 | `gh` | `pr create` | `--base <defaultBranch> --head <branch> --title <title> --body <body>` | runtime (git branch + bead data) | `done.go:819` |
+
+**Note on `bd create` flags:** The `beads.Create` Go API
+(`beads.go:1193-1249`) shells out to `bd create --json` with the
+flags listed above. It does **not** pass a `--rig` flag — rig routing
+is handled via the `BEADS_DIR` environment variable set at
+`beads.go:426-430`. Issue #3661 (`bd` only has `--repo` flag, not
+`--rig`) is about a different code path in the `bd` CLI itself, not
+this `gt done` invocation.
 
 ## Notes / open questions
 
