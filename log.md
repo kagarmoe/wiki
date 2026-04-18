@@ -5437,3 +5437,13 @@ Scored 22 command pages in GroupDiag against source. All pages scored against th
 **Score distribution (19 synthesis):** 4/4: 19 pages (100%).
 **Weakest axis:** errors (avg 1.46/2.00). Consistent with Phase 8's finding that failure-mode coverage is the primary remaining gap. Side_effects (1.59) is second weakest.
 **Drift index:** Section 11 added to `gastown/drift/README.md`.
+
+## [2026-04-17] decision | Schema: add page type 'investigation' for diagnostic workflows
+
+New page type `investigation` for symptom-based diagnostic decision trees. Distinct from `workflow` (which describes happy-path flows like polecat-lifecycle). Investigation pages start from a symptom and walk the reader through entity pages in diagnostic order.
+
+Lives at `gastown/workflows/investigations/`. Frontmatter uses `type: investigation` with `tags: [investigation, <domain>, diagnostic]`.
+
+Added to the writing-entity-pages skill page-type list under "Meta."
+
+→ [.claude/skills/writing-entity-pages/SKILL.md](.claude/skills/writing-entity-pages/SKILL.md)

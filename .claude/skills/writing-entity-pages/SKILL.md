@@ -94,6 +94,7 @@ Frontmatter is required from day one so Dataview queries work across the whole w
 **Meta (investigation artifacts):**
 - `experiment` — captured runs, build attempts, test results
 - `drift` — cross-entity drift themes (when docs are broadly wrong)
+- `investigation` — symptom-based diagnostic decision trees (distinct from `workflow` which describes happy-path flows)
 - `decision` — design or process decisions made during investigation
 - `note` — freeform synthesis filed back from queries
 
