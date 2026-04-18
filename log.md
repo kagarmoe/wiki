@@ -5647,3 +5647,13 @@ Tables added: 6 Subprocess invocations tables, 3 Environment variables set table
 **pages with no outgoing calls (section omitted):** namepool (1 page)
 
 Tables added: 6 Subprocess invocations tables, 1 Environment variables set table, 4 Config file writes tables.
+
+## [2026-04-14] sweep | Outgoing calls 1h: Ungrouped (15 pages)
+
+**verb:** sweep
+**scope:** `gastown/commands/` — Ungrouped (15 pages)
+**sources read:** 22 source files across agent-log, commit, cycle, forget, health, krc, memories, nudge-poller, proxy-subcmds, remember, show, status-line, tap, town, warrant
+**pages touched:** commit, remember, health, tap, warrant (5 pages with outgoing calls)
+**pages with no outgoing calls (section omitted):** agent-log, cycle, forget, krc, memories, nudge-poller, proxy-subcmds, show, status-line, town (10 pages)
+
+Tables added: 4 Subprocess invocations tables, 1 Config file writes table.

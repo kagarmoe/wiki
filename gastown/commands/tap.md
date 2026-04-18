@@ -188,6 +188,16 @@ Registered from sibling files via `init()`:
 
 No failure modes discovered. Guard system for controlling which commands agents can run. Read-only policy evaluation that returns allow/deny. Guard checks are pure functions; no state mutations.
 
+## Outgoing calls
+
+### Subprocess invocations
+| Called binary | Command | Flags | Flag source | `file:line` |
+|---|---|---|---|---|
+| `git` | `remote get-url` | `origin` | hardcoded (check maintainer origin) | `tap_guard.go:144` |
+| `git` | `rev-parse` | `-C <cloneDir> --abbrev-ref HEAD` | runtime (polecat clone dir) | `tap_polecat_stop.go:90` |
+| `git` | `rev-list` | `-C <cloneDir> --count origin/main..HEAD` | runtime (polecat clone dir) | `tap_polecat_stop.go:101` |
+| `gt` | `done` | — | hardcoded (auto-submit pending work) | `tap_polecat_stop.go:124` |
+
 ## Notes / open questions
 
 - **Parent-only in this file.** `tap.go` defines only the parent

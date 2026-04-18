@@ -125,6 +125,13 @@ Agent: gastown/crew/jack  →  Name: gastown/crew/jack
 
 No failure modes discovered. Thin wrapper over `git commit` with branch-check enforcement. All errors propagated. Single `exec.Command` invocation.
 
+## Outgoing calls
+
+### Subprocess invocations
+| Called binary | Command | Flags | Flag source | `file:line` |
+|---|---|---|---|---|
+| `git` | `commit` | `<args>...` | runtime (passthrough from user) | `commit.go:110` |
+
 ## Notes / open questions
 
 - **Group mismatch with `ungrouped` batch inventory.** The plan had

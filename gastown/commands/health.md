@@ -156,6 +156,13 @@ on `report.Server.Running`).
 
 No failure modes discovered. Read-only health check aggregator. Queries system state (daemon, dolt, tmux, agents) and reports. No state mutations. Errors per-check are surfaced in the output.
 
+## Outgoing calls
+
+### Subprocess invocations
+| Called binary | Command | Flags | Flag source | `file:line` |
+|---|---|---|---|---|
+| `git` | `log` | `-C <archiveDir> -1 --format=%ci` | runtime (JSONL archive path) | `health.go:294` |
+
 ## Notes / open questions
 
 - **Ungrouped but diagnostic.** `health` is beads-exempt and obviously

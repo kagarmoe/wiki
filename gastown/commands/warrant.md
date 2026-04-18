@@ -232,6 +232,14 @@ Maps target paths to tmux session names via five cases:
 
 No failure modes discovered. `warrant.go` creates, lists, shows, and executes death warrants for agent sessions. Warrant creation writes a JSON file; execution kills sessions. All errors propagated. Warrant files are idempotent (re-execution skips already-executed warrants).
 
+## Outgoing calls
+
+### Config file writes
+| Target | Operation | Value | Purpose | `file:line` |
+|---|---|---|---|---|
+| warrant file (JSON) | `os.WriteFile` | serialized warrant data | file death warrant for agent | `warrant.go:202` |
+| warrant file (JSON) | `os.WriteFile` | updated warrant data | update warrant execution state | `warrant.go:365` |
+
 ## Notes / open questions
 
 - **Location drift in the help text.** → promoted to `## Drift`.

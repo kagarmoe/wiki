@@ -161,6 +161,16 @@ Four helpers at `remember.go:194-231`:
 
 No failure modes discovered. Stores a memory entry in beads. Single bead write with error propagation.
 
+## Outgoing calls
+
+### Subprocess invocations
+| Called binary | Command | Flags | Flag source | `file:line` |
+|---|---|---|---|---|
+| `bd` | `kv set` | `<key> <value>` | runtime (user input) | `remember.go:196` |
+| `bd` | `kv get` | `<key>` | runtime (user input) | `remember.go:203` |
+| `bd` | `kv clear` | `<key>` | runtime (user input) | `remember.go:213` |
+| `bd` | `kv list` | `--json` | hardcoded | `remember.go:220` |
+
 ## Notes / open questions
 
 - **The five-type closed set is defined exactly once**, in this file.
