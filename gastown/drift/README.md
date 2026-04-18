@@ -25,6 +25,7 @@ Consolidated index of findings from Phase 3 (Drift audit, Batches 1-14), Phase 4
 - **Section 10** records Phase 8 failure-mode analysis results.
 - **Section 11** records the Detail Gap depth assessment across all 212 entity pages.
 - **Section 12** records the Cross-Page Inference phase: investigation workflows, detail tables, comparison tables, and revalidation results.
+- **Section 13** records the Outgoing Calls sweep: 52 pages received `## Outgoing calls` sections documenting subprocess invocations, SQL mutations, env vars, and file writes.
 
 **Plan:** [../../.claude/plans/2026-04-14-phase3-drift.md](../../.claude/plans/2026-04-14-phase3-drift.md) (gitignored).
 
@@ -509,3 +510,29 @@ The `errors` axis scored lowest across the wiki (average 1.46/2.00). This is con
 - Improvement: +1 full (+5pp)
 - Investigation workflows solved navigation; comparison tables solved asymmetry detection
 - Remaining gaps: failure-mode-specific and parameter-level, requiring entity-page edits not more synthesis
+
+## Section 13: Outgoing Calls Sweep
+
+Mechanically added `## Outgoing calls` sections to all code-grounded entity pages. Sections document subprocess invocations (`exec.Command`), SQL/config mutations, environment variables set, and file writes, with exact flags/values and `file:line` references.
+
+### Coverage
+
+| Category | Total pages | With calls | Skipped (no calls) | Skipped (synthesis) |
+|---|---|---|---|---|
+| Packages (high-value) | 30 | 25 | 5 (crew, dog, github, protocol, wisp) | 0 |
+| Packages (thin) | 37 | 23 | 14 (activity, agent, agent-provider, agentlog, cli, constants, hookutil, mq, runtime, state, style, suggest, workspace, doctor) | 0 |
+| Binaries | 3 | 1 (gt-proxy-server) | 2 (gt, gt-proxy-client) | 0 |
+| Files | 12 | 3 (docker-entrypoint, makefile, dockerfile) | 9 | 0 |
+| Roles | 8 | 0 | 0 | 8 (synthesis) |
+| Concepts | 7 | 0 | 0 | 7 (synthesis) |
+| Workflows | 8 | 0 | 0 | 8 (synthesis) |
+| Plugins | 2 | 0 | 0 | 2 (synthesis) |
+| Inventory | 5 | 0 | 0 | 5 (not entity) |
+| Drift | 5 | 0 | 0 | 5 (not entity) |
+| **Total** | **117** | **52** | **30** | **35** |
+
+### Methodology
+- grep source for `exec.Command`, `exec.CommandContext`, `os.Setenv`, `SET @@`/`INSERT`/`UPDATE`/`DELETE`, `WriteFile`/`os.Create`/`os.OpenFile`
+- Documented in structured tables with exact flags/values + `file:line`
+- Pages with no outgoing calls: section omitted (absence = "no outgoing calls")
+- Merged with existing Detail tables where they overlapped (6 package pages)

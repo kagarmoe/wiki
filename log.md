@@ -5657,3 +5657,23 @@ Tables added: 6 Subprocess invocations tables, 1 Environment variables set table
 **pages with no outgoing calls (section omitted):** agent-log, cycle, forget, krc, memories, nudge-poller, proxy-subcmds, show, status-line, town (10 pages)
 
 Tables added: 4 Subprocess invocations tables, 1 Config file writes table.
+
+## [2026-04-18] sweep | Outgoing calls 2: Packages (48 pages) + Binaries/Files (4 pages)
+
+**verb:** sweep
+**scope:** `gastown/packages/` (67 pages), `gastown/binaries/` (3 pages), `gastown/files/` (12 pages)
+**pages with outgoing calls added:** 52 pages total
+- High-value packages (25): beads, daemon, doltserver, polecat, tmux, session, config, convoy, deacon, formula, git, hooks, krc, mail, mayor, nudge, plugin, quota, reaper, refinery, rig, web, witness, wasteland, acp
+- Thin packages (23): boot, channelevents, checkpoint, connection, deps, estop, events, feed, health, keepalive, lock, proxy, scheduler, shell, telemetry, templates, testutil, townlog, tui, ui, util, version, wrappers
+- Binaries (1): gt-proxy-server
+- Files (3): docker-entrypoint, makefile, dockerfile
+
+**pages skipped (no outgoing calls):** 30 pages
+- Packages: activity, agent, agent-provider, agentlog, cli, constants, crew, dog, github, hookutil, mq, protocol, runtime, state, style, suggest, wisp, workspace
+- Binaries: gt, gt-proxy-client
+- Files: claude-dir, docker-compose, dockerfile-e2e, flake-nix, golangci-yml, go-mod, goreleaser-yml, opencode-dir, templates-agents
+
+**synthesis pages skipped:** 35 (roles 8, concepts 7, workflows 8, plugins 2, inventory 5, drift 5)
+
+**drift index updated:** Section 13 added with coverage summary and methodology.
+**bead:** wiki-088 (close pending)
