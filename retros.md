@@ -1830,3 +1830,26 @@ All planned phases complete:
 
 **Observation:**
 - Five sub-batches (37 pages), still zero fixes. Moving to the final and largest sub-batch (30 pages).
+
+## [2026-04-18] stage | Detail Gap Batch 2f — Supporting packages
+
+**Sub-batch:** 2f (30 pages: acp, hooks, krc, protocol, quota, testutil, wasteland, web, agentlog, constants, feed, git, github, shell, suggest, townlog, activity, estop, hookutil, scheduler, state, templates, tui, wrappers, agent, agent-provider, boot, checkpoint, connection, proxy)
+**Duration:** ~15 min
+**Pages assessed:** 30
+**Fixes applied:** 0
+
+**What went well:**
+- Largest sub-batch completed efficiently — most supporting packages are thin and well-documented
+- Sibling-file audit confirmed source coverage for all 30 pages
+
+**Batch 2 (packages/) summary:**
+- 67 pages scored across 6 sub-batches (2a-2f)
+- 0 pages needed inline fixes
+- 0 source updates needed
+- Average score: ~6.3/8
+- Score distribution: 5/8 (3 pages), 6/8 (40 pages), 7/8 (17 pages), 8/8 (7 pages)
+- Phase 2 + Phase 3 + Phase 8 were thorough on packages/
+- Plan predicted "High" gap rates for Data, Runtime, and Long-running — all refuted
+
+**Key finding:**
+- The depth-gap pass across Batch 1 (111 commands) and Batch 2 (67 packages) = 178 pages with ZERO inline fixes. The wiki's interface-level documentation is consistently above the fix threshold of 4. The systematic weakness (errors axis at 1/8 on most pages) is a structural property of how Phase 2 wrote pages — it documented exported functions and their parameters but not every individual error return. Phase 8 added failure modes sections to many pages, raising the floor further.

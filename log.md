@@ -5392,3 +5392,21 @@ Scored 22 command pages in GroupDiag against source. All pages scored against th
 **Pages modified:** 3 (detail_depth added to all).
 
 **Outcome:** Plan predicted "High" depth-gap rate for Long-running packages. Refuted: all 3 pages scored 5-6/8, above threshold. Daemon (status: partial) is the weakest but still covers the interface at a level that exceeds the fix threshold.
+
+## [2026-04-18] depth-pass | Detail Gap Batch 2f — Supporting packages (30 pages)
+
+**Verb:** depth-pass
+**Scope:** `gastown/packages/` — acp, hooks, krc, protocol, quota, testutil, wasteland, web, agentlog, constants, feed, git, github, shell, suggest, townlog, activity, estop, hookutil, scheduler, state, templates, tui, wrappers, agent, agent-provider, boot, checkpoint, connection, proxy
+
+**Score distribution (total/8):**
+- 8/8: 5 pages (constants, hookutil, wrappers, agent, activity+estop+state — simple or fully documented thin packages)
+- 7/8: 2 pages (activity, estop, state — small with good error docs)
+- 6/8: 23 pages (all remaining — consistent params:2, data_flow:2, errors:1, side_effects:1)
+
+**Complexity:** 25 complex, 5 simple (hookutil 22L, wrappers 70L, agent 62L, scheduler 0L at root, tui 0L at root). All above threshold.
+
+**Fixes:** 0 inline fixes needed. All source files match wiki sources: frontmatter.
+
+**Pages modified:** 30 (detail_depth added to all).
+
+**Outcome:** Plan predicted "Low" depth-gap rate for Supporting packages. Confirmed: all 30 pages scored 6-8/8. Most of these are thin utility packages that Phase 2 documented fully at the interface level. The 6/8 cluster represents the same consistent "errors:1, side_effects:1" pattern seen across all other sub-batches — acceptable depth for utility packages where error handling is often pass-through.
