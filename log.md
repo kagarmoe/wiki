@@ -5340,3 +5340,21 @@ Scored 22 command pages in GroupDiag against source. All pages scored against th
 **Pages modified:** 8 (detail_depth added to all).
 
 **Outcome:** Plan predicted "High" depth-gap rate for Data layer. Refuted: all 8 pages scored 5-8/8, well above the fix threshold of 4. Phase 2 was more thorough on these packages than expected — even `beads` (28 files, status: partial) documents the central type, hybrid subprocess/SDK pattern, and domain shapes at interface level. The "partial" status reflects breadth incompleteness (not all 28 files covered in equal depth), not depth gaps.
+
+## [2026-04-18] depth-pass | Detail Gap Batch 2c — Runtime packages (13 pages)
+
+**Verb:** depth-pass
+**Scope:** `gastown/packages/` — mayor, polecat, crew, dog, deacon, refinery, witness, reaper, wisp, convoy, rig, formula, plugin
+
+**Score distribution (total/8):**
+- 7/8: 4 pages (mayor, reaper, wisp, polecat-adjusted)
+- 6/8: 8 pages (crew, dog, deacon, refinery, witness, convoy, rig, formula, plugin)
+- 5/8: 1 page (polecat — params:1 due to 4368-line surface area with status:partial)
+
+**Complexity:** 13/13 complex. All above threshold (lowest: 5/8).
+
+**Fixes:** 0 inline fixes needed. All source files match wiki `sources:` frontmatter.
+
+**Pages modified:** 13 (detail_depth added to all).
+
+**Outcome:** Plan predicted "High" depth-gap rate for Runtime packages. Refuted again: all 13 pages scored 5-7/8. These agent-runtime packages have consistent interface-level documentation with heavy file:line citation density. The errors axis is the universal weak spot (1/8 on 12 of 13 pages), but Phase 8 already covered failure modes. The runtime packages cluster at 6/8 — a characteristic "good but not exhaustive" pattern where params and data_flow are fully documented but error returns and side effects could be deeper.

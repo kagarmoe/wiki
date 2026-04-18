@@ -1785,3 +1785,21 @@ All planned phases complete:
 
 **Observation:**
 - Two sub-batches in, zero fixes. The pattern from Batch 1 (commands) continues into Batch 2 (packages). Phase 2 + Phase 3 + Phase 8 left very little at the interface level undocumented.
+
+## [2026-04-18] stage | Detail Gap Batch 2c — Runtime packages
+
+**Sub-batch:** 2c (13 pages: mayor, polecat, crew, dog, deacon, refinery, witness, reaper, wisp, convoy, rig, formula, plugin)
+**Duration:** ~15 min
+**Pages assessed:** 13
+**Fixes applied:** 0
+
+**What went well:**
+- All 13 source directories confirmed matching wiki sources: frontmatter
+- Consistent scoring pattern across runtime packages — mostly 6/8 with params and data_flow both at 2
+
+**What surprised:**
+- Plan predicted "High" gap rate; actual is zero fixes for the third consecutive sub-batch
+- Runtime packages have a very uniform quality profile: all cluster at 6/8 with the same errors:1 + side_effects:1 pattern
+
+**Pattern emerging:**
+- Three sub-batches (30 pages), zero fixes. The depth-gap pass is confirming that Phase 2 + Phase 3 + Phase 8 produced interface-level documentation that is above the fix threshold everywhere. The remaining axis weakness (errors at 1/8) is structural — Phase 8 documented failure modes but not every individual error return. This is acceptable per the plan.

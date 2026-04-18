@@ -13,6 +13,7 @@ phase4_audited: 2026-04-16
 phase4_findings: [incomplete]
 phase8_audited: 2026-04-17
 phase8_findings: [partial-completion, silent-suppression]
+detail_depth: {params: 1, data_flow: 2, errors: 1, side_effects: 1}
 sources:
   - /home/kimberly/repos/gastown/internal/polecat/manager.go
   - /home/kimberly/repos/gastown/internal/polecat/session_manager.go  # full read Phase 6
