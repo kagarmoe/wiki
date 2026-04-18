@@ -218,6 +218,13 @@ agentOverride, rigName)`.
 - **`attach` runtime restart warnings:** Multiple `style.PrintWarning` calls during pane respawn (`mayor.go:272`, `:278`). These are visible to the user but don't block attach. **Present** — intentional warn-and-continue.
 - **`ensureMayorInfra` daemon.json env leak:** `mayor.go:411-415` calls `os.Setenv` for daemon config env vars. These leak into the current process environment and any child processes. **Absent** — not cleaned up after use; may affect subsequent commands in the same process.
 
+## Outgoing calls
+
+### Environment variables set
+| Variable | Value source | Consumed by | `file:line` |
+|---|---|---|---|
+| daemon config vars (dynamic) | `daemon.LoadPatrolConfig().Env` map | Dolt, bd, gt subprocesses | `mayor.go:413` |
+
 ## Notes / open questions
 
 - **`gt mayor attach` does much more than attach.** It silently

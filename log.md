@@ -5607,3 +5607,13 @@ Tables added: 2 Subprocess invocations tables, 2 Config file writes tables.
 **pages with no outgoing calls (section omitted):** cleanup, prune-branches, release, unsling (4 pages)
 
 Tables added: 22 Subprocess invocations tables, 2 SQL/config mutations tables, 3 Environment variables set tables, 4 Config file writes tables.
+
+## [2026-04-14] sweep | Outgoing calls 1d: Agent Management (12 pages)
+
+**verb:** sweep
+**scope:** `gastown/commands/` — Agent Management group (12 pages)
+**sources read:** 19 source files across agents, boot, callbacks, deacon, dog, mayor, polecat, refinery, role, session, signal, witness
+**pages touched:** agents, deacon, dog, mayor, polecat, signal (6 pages with outgoing calls)
+**pages with no outgoing calls (section omitted):** boot, callbacks, refinery, role, session, witness (6 pages)
+
+Tables added: 5 Subprocess invocations tables, 1 Environment variables set table, 1 Config file writes table.

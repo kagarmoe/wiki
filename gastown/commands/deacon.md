@@ -267,6 +267,14 @@ force-kill history, cooldowns.
 
 - [Investigating: daemon infrastructure](../workflows/investigations/daemon-infrastructure.md) — Steps 6-7 cover Deacon liveness and start failures.
 
+## Outgoing calls
+
+### Subprocess invocations
+| Called binary | Command | Flags | Flag source | `file:line` |
+|---|---|---|---|---|
+| `bd` | `show` | `<beadID> --json` | runtime (agent bead update time) | `deacon.go:1138` |
+| `gt` | `mail send` | `<to> -s <subject> -m <body>` | runtime (deacon notifications) | `deacon.go:1162` |
+
 ## Notes / open questions
 
 - **Largest command file in the batch.** 1644 lines, 15 subcommands,

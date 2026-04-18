@@ -178,6 +178,13 @@ None.
 
 No failure modes discovered. `signal stop` is a pure read-check-respond command: it checks mail and hooked beads in parallel, then outputs a JSON response. All error paths fail-safe to `{"decision":"approve"}` (let the agent stop rather than crash). The stop-state file prevents infinite notification loops. JSON marshal failure at `signal_stop.go:263-266` falls back to a hardcoded approve string. This is correct defensive design for a hook command.
 
+## Outgoing calls
+
+### Config file writes
+| Target | Operation | Value | Purpose | `file:line` |
+|---|---|---|---|---|
+| stop-state file | `os.WriteFile` | JSON state data | persist stop condition to prevent notification loops | `signal_stop.go:243` |
+
 ## Notes / open questions
 
 - **`detectSender` and `buildAgentBeadID` are shared helpers** used

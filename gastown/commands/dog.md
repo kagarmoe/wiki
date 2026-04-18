@@ -234,6 +234,13 @@ Parent-level flags: none. Each subcommand has its own flags:
 
 No failure modes discovered. The `dog.go` command layer is a thin CRUD wrapper over `dog.Manager` — add, remove, list, call, done, clear, status, dispatch, and health-check operations all propagate errors from the manager. State mutations (add/remove/dispatch) are single-step operations delegated to the `internal/dog` package. No multi-step sequences with partial-completion risk at the command level.
 
+## Outgoing calls
+
+### Subprocess invocations
+| Called binary | Command | Flags | Flag source | `file:line` |
+|---|---|---|---|---|
+| `gt` | `escalate` | `--severity medium <msg>` | runtime (escalation message) | `dog.go:1214` |
+
 ## Notes / open questions
 
 - **Dogs are invisible to `gt agents`.** Because `AgentType` in

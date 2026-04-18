@@ -573,6 +573,19 @@ set to `idle` via `mgr.SetAgentState(name, "idle")`
 
 - [Investigating: agent lifecycle](../workflows/investigations/agent-lifecycle.md) — Step 2 covers polecat start failures; Steps 3-4 cover session creation and post-start failures; Step 11 covers zombie/hung detection.
 
+## Outgoing calls
+
+### Subprocess invocations
+| Called binary | Command | Flags | Flag source | `file:line` |
+|---|---|---|---|---|
+| `git` | `status` | `--porcelain` | hardcoded (check uncommitted) | `polecat.go:870` |
+| `git` | `log` | `origin/main..HEAD --oneline` | hardcoded (check unpushed) | `polecat.go:895` |
+| `git` | `log` | `origin/master..HEAD --oneline` | hardcoded (fallback ref) | `polecat.go:901` |
+| `git` | `diff` | `<mainRef> HEAD --quiet` | runtime (content diff check) | `polecat.go:917` |
+| `bd` | `list` / `update` / `create` | various | runtime (identity management) | `polecat_identity.go:812` |
+| `git` | `log` | `--name-only --pretty=format: --diff-filter=ACMR -100` | hardcoded (file change stats) | `polecat_identity.go:877` |
+| `git` | `rev-parse` | `-C <clonePath> --git-dir` | runtime (validate worktree) | `polecat_spawn.go:500` |
+
 ## Notes / open questions
 
 - **Phase 3 wiki-stale fix (2026-04-15).** The Phase 2 page body said

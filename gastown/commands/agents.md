@@ -205,6 +205,15 @@ No failure modes discovered. `agents.go` is a read-only display command: it list
 
 - [Investigating: monitoring](../workflows/investigations/monitoring.md) — Steps 4-5 cover agent listing issues and identity collisions.
 
+## Outgoing calls
+
+### Subprocess invocations
+| Called binary | Command | Flags | Flag source | `file:line` |
+|---|---|---|---|---|
+| `tmux` | `display-menu` | `<menuArgs>...` | runtime (agent list + actions) | `agents.go:532` |
+| `bd` | `update` | `<agentBead> --status=<status> --set-labels=<labels>` | runtime (state change) | `agent_state.go:222` |
+| `bd` | `show` | `<agentBead> --json` | runtime (read state) | `agent_state.go:275` |
+
 ## Notes / open questions
 
 - **Phase 3 wiki-stale fix (2026-04-15).** The Phase 2 page body said
