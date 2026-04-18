@@ -156,6 +156,13 @@ Defined at `start.go:134-142`:
 - **Agent shutdown notification best-effort:** `start.go:610`, `:619` send Escape and shutdown messages with `_ = t.SendKeysRaw(...)` and `_ = t.SendKeys(...)`. Agents may not receive clean-shutdown signals. **Absent** — no warning.
 - **Branch cleanup:** `start.go:901` uses `_ = mayorGit.DeleteBranch(branchName, true)`. Stale branches persist silently. **Absent** — no warning for failed cleanup.
 
+## Outgoing calls
+
+### Environment variables set
+| Variable | Value source | Consumed by | `file:line` |
+|---|---|---|---|
+| `GT_COST_TIER` | `--cost-tier` flag value | agent cost tracking | `start.go:190` |
+
 ## Notes / open questions
 
 - **Why two boot commands?** `gt start` predates `gt up`. Observable

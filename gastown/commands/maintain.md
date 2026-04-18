@@ -172,6 +172,14 @@ databases flattened, databases gc'd.
 
 No failure modes discovered. `maintain.go` runs dolt-server-level maintenance (gc, compaction). Delegates to `doltserver` package methods that propagate all errors.
 
+## Outgoing calls
+
+### Subprocess invocations
+| Called binary | Command | Flags | Flag source | `file:line` |
+|---|---|---|---|---|
+| `dolt` | `backup` | — (cwd=db dir) | runtime (list backup remotes) | `maintain.go:257` |
+| `dolt` | `backup sync` | `<backupName>` (cwd=db dir) | runtime (db name + backup name) | `maintain.go:280` |
+
 ## Notes / open questions
 
 - **`flattenGetRowCounts` is referenced** at

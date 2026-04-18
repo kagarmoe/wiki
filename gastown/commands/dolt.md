@@ -295,6 +295,22 @@ See also: [gastown/drift/README.md](../drift/README.md)
 
 No failure modes discovered. `dolt.go` wraps `doltserver` package operations (start/stop/cleanup/status/migrate). All error paths propagated. The `flatten` and `rebase` subcommands operate on Dolt databases with error checking throughout.
 
+## Outgoing calls
+
+### Subprocess invocations
+| Called binary | Command | Flags | Flag source | `file:line` |
+|---|---|---|---|---|
+| `tail` | `-f` | `<logFile>` | runtime (dolt log path) | `dolt.go:721` |
+| `tail` | `-n` | `<N> <logFile>` | runtime (log lines + path) | `dolt.go:728` |
+| `dolt` | `sql` | `--host <host> --port <port> --user <user> --no-tls` | runtime (server config) | `dolt.go:794` |
+| `dolt` | `sql` | — | runtime (embedded mode, cwd=db dir) | `dolt.go:820` |
+| `bd` | `list` | `--limit 5` | hardcoded (validate restored state) | `dolt.go:1369` |
+
+### SQL / config mutations
+| Target | Statement / key | Value | Purpose | `file:line` |
+|---|---|---|---|---|
+| Dolt (rebase) | `UPDATE dolt_rebase SET action = 'squash' WHERE rebase_order > N AND rebase_order <= M` | runtime (order range) | mark old commits for squash | `dolt_rebase.go:266` |
+
 ## Notes / open questions
 
 - **`recover`'s 30s daemon cadence**: where in `internal/daemon` is the

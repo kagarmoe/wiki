@@ -5627,3 +5627,13 @@ Tables added: 5 Subprocess invocations tables, 1 Environment variables set table
 **pages with no outgoing calls (section omitted):** broadcast, dnd, escalate, notify, nudge, peek (6 pages)
 
 Tables added: 1 Subprocess invocations table.
+
+## [2026-04-14] sweep | Outgoing calls 1f: Services (11 pages)
+
+**verb:** sweep
+**scope:** `gastown/commands/` — Services group (11 pages)
+**sources read:** 14 source files across daemon, dolt, down, estop, maintain, quota, reaper, shutdown, start, thaw, up
+**pages touched:** daemon, dolt, down, maintain, start, up (6 pages with outgoing calls)
+**pages with no outgoing calls (section omitted):** estop, quota, reaper, shutdown, thaw (5 pages)
+
+Tables added: 6 Subprocess invocations tables, 3 Environment variables set tables, 1 SQL/config mutations table, 1 Config file writes table.

@@ -181,6 +181,21 @@ Defined at `up.go:148-158`:
 
 - [Investigating: daemon infrastructure](../workflows/investigations/daemon-infrastructure.md) — Step 3 covers `gt up` daemon startup grace timing; Step 9 covers partial completion.
 
+## Outgoing calls
+
+### Subprocess invocations
+| Called binary | Command | Flags | Flag source | `file:line` |
+|---|---|---|---|---|
+| `gt` | `daemon run` | — | hardcoded (start daemon) | `up.go:541` |
+
+### Environment variables set
+| Variable | Value source | Consumed by | `file:line` |
+|---|---|---|---|
+| daemon config vars (dynamic) | `daemon.LoadPatrolConfig().Env` map | Dolt, bd, gt subprocesses | `up.go:180` |
+| `GT_DOLT_PORT` | `doltserver.DefaultConfig().Port` | bd, gt subprocesses | `up.go:332` |
+| `BEADS_DOLT_PORT` | same as `GT_DOLT_PORT` | bd subprocess | `up.go:333` |
+| `BEADS_DOLT_SERVER_HOST` | `doltserver.DefaultConfig().Host` | bd subprocess | `up.go:335` |
+
 ## Notes / open questions
 
 - **`ensureDaemon` does not wait as long as `daemon start`.** The

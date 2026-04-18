@@ -149,6 +149,21 @@ No failure modes discovered. All subcommands are thin wrappers: `start` spawns a
 
 - [Investigating: daemon infrastructure](../workflows/investigations/daemon-infrastructure.md) — Steps 1-4 cover daemon start failures, lock contention, shutdown sentinel issues, and health checks.
 
+## Outgoing calls
+
+### Subprocess invocations
+| Called binary | Command | Flags | Flag source | `file:line` |
+|---|---|---|---|---|
+| `gt` | `daemon run` | — | hardcoded (self-exec for detach) | `daemon.go:191` |
+| `tail` | `-f` | `<logFile>` | runtime (daemon log path) | `daemon.go:352` |
+| `tail` | `-n` | `<N> <logFile>` | runtime (log lines + path) | `daemon.go:359` |
+
+### Environment variables set
+| Variable | Value source | Consumed by | `file:line` |
+|---|---|---|---|
+| identity vars (cleared) | `agentconfig.IdentityEnvVars` | prevent misattribution | `daemon.go:377` |
+| `BD_ACTOR` | hardcoded `"daemon"` | bd subprocess identity | `daemon.go:379` |
+
 ## Notes / open questions
 
 - **`signalDaemonReload`** is referenced from `clear-backoff`

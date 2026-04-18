@@ -227,6 +227,20 @@ See also: [gastown/drift/README.md](../drift/README.md)
 
 - [Investigating: daemon infrastructure](../workflows/investigations/daemon-infrastructure.md) — Step 8 covers shutdown failures including sentinel persistence and imposter respawn.
 
+## Outgoing calls
+
+### Subprocess invocations
+| Called binary | Command | Flags | Flag source | `file:line` |
+|---|---|---|---|---|
+| `ps` | `-eo pid,comm,args` | — | hardcoded (find orphan claude processes) | `down.go:756` |
+| `ps` | `-eo pid,args` | — | hardcoded (find orphan dolt servers) | `down.go:936,1017` |
+| `lsof` | `-p <pid> -Fn -d cwd` | runtime (PID from ps) | `down.go:1041` |
+
+### Config file writes
+| Target | Operation | Value | Purpose | `file:line` |
+|---|---|---|---|---|
+| shutdown sentinel file | `os.WriteFile` | current PID | prevent daemon restart during teardown | `down.go:125` |
+
 ## Notes / open questions
 
 - **Lock file is never removed** — comment at `down.go:114-120`
