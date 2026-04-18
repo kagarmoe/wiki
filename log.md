@@ -5107,3 +5107,25 @@ Phase 8 failure-mode analysis across 34 pages in 6 categories.
 - makefile: ICU detection failure produces no error — build proceeds to cryptic Go linker error
 
 → gastown/binaries/{gt,gt-proxy-client,gt-proxy-server}.md, gastown/files/{claude-dir,docker-compose,docker-entrypoint,dockerfile-e2e,dockerfile,flake-nix,golangci-yml,go-mod,goreleaser-yml,makefile,opencode-dir,templates-agents}.md, gastown/roles/{crew,deacon,dog,mayor,polecat,reaper,refinery,witness}.md, gastown/concepts/{convoy,directive,formula,identity,molecule,rig,wisp}.md, gastown/workflows/{convoy-launch,polecat-lifecycle}.md, gastown/plugins/{dolt-snapshots,README}.md
+
+## [2026-04-17] lint | Phase 8 Batch 4 — 20-issue validation retest (regression test)
+
+Re-scored the same 20 open gastown issues from validation rounds 1-4
+against the current wiki with Phase 8 failure mode sections.
+
+**Original:** 7 full (35%), 12 partial (60%), 1 miss (5%).
+**Retest:**   9 full (45%), 10 partial (50%), 1 miss (5%).
+**Delta:** +2 full (+10 ppt). Target of 60% full NOT met.
+
+**Improved (partial → full):**
+- #3658 polecat remove zombies — zombie detection doc at `polecat.go:474-493` + remove's limited cleanup scope now diagnosable
+- #3604 refinery stall — failure mode section directly documents "failed merge leaves partial state"
+
+**Remaining gap types (10 partials):**
+- 4 failure-mode-gap: #3570, #3563, #3554, #3537 — Phase 8 found different failure modes than the issues report
+- 4 detail-gap: #3661, #3651, #3623, #3614 — wiki covers the right area but misses the specific parameter/flag/filter
+- 2 cross-page-inference: #3653, #3652 — information exists across pages but asymmetry not synthesized
+
+**Shortest path to 60% target (3 more fulls):** annotate HandlePolecatDone as dead code (#3653), note witness/refinery Start() lacks agent bead creation (#3652), document GT_PANE_ID staleness across restarts (#3563).
+
+→ gastown/drift/validation-retest.md, index.md

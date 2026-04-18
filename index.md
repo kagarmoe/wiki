@@ -147,6 +147,7 @@ Multi-step flows:
 - [Drift index](gastown/drift/README.md) — consolidated index of ~83 findings: drift (wrong), gaps (missing), coverage decisions; Phase 6 implementation summary
 - [Gap findings](gastown/drift/gaps.md) — systematic code-to-wiki gap enumeration (Batch 14): 6 missing packages, 4 subcommand gaps, 9 deliberate exclusions
 - [Upstream correction drafts](gastown/drift/corrections.md) — 61 correction drafts grouped by meta-pattern for PR batching (Phase 6 Batch 3)
+- [Phase 8 validation retest](gastown/drift/validation-retest.md) — 20-issue regression test: original 7 full (35%) improved to 9 full (45%)
 
 ### Inventory
 
