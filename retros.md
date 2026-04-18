@@ -1767,3 +1767,21 @@ All planned phases complete:
 
 **Recommendation for next sub-batches:**
 - 2b (Data layer) and 2c (Runtime) are predicted "High" gap rate — expect more fixes there since Phase 2 acknowledged `status: partial` on several data-layer packages.
+
+## [2026-04-18] stage | Detail Gap Batch 2b — Data layer packages
+
+**Sub-batch:** 2b (8 pages: beads, channelevents, doltserver, events, lock, mail, mq, nudge)
+**Duration:** ~15 min
+**Pages assessed:** 8
+**Fixes applied:** 0
+
+**What went well:**
+- Sibling-file audit confirmed all sources: frontmatter complete on every page including beads (28/28 files)
+- Even `status: partial` pages (beads, doltserver) scored above threshold — partial status reflects breadth not depth
+
+**What surprised:**
+- Plan predicted "High" gap rate for data layer; actual is zero fixes needed. Phase 2's data-layer coverage was better than self-assessed.
+- The lock package scored a perfect 8/8 — its error sentinels, flock primitives, and platform shims are fully documented
+
+**Observation:**
+- Two sub-batches in, zero fixes. The pattern from Batch 1 (commands) continues into Batch 2 (packages). Phase 2 + Phase 3 + Phase 8 left very little at the interface level undocumented.

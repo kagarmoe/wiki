@@ -5321,3 +5321,22 @@ Scored 22 command pages in GroupDiag against source. All pages scored against th
 **Pages modified:** 9 (detail_depth added to all).
 
 **Outcome:** Plan predicted "Low" depth-gap rate for Platform. Confirmed: all 9 pages scored 6-8/8. Phase 2 was thorough on these foundational packages — they were the first batch written and received the most attention. The errors axis (mostly 1/8) is the weakest across the board, but Phase 8 already addressed failure modes on most of these pages.
+
+## [2026-04-18] depth-pass | Detail Gap Batch 2b — Data layer packages (8 pages)
+
+**Verb:** depth-pass
+**Scope:** `gastown/packages/` — beads, channelevents, doltserver, events, lock, mail, mq, nudge
+
+**Score distribution (total/8):**
+- 8/8: 1 page (lock)
+- 7/8: 4 pages (channelevents, events, mq, nudge)
+- 6/8: 2 pages (doltserver, mail)
+- 5/8: 1 page (beads — params:1 due to 28-file surface area; interface-level coverage is above threshold)
+
+**Complexity:** 6 complex, 2 simple (channelevents, mq). All above threshold (lowest: 5/8).
+
+**Fixes:** 0 inline fixes needed. All source files match wiki `sources:` frontmatter (beads: 28/28, doltserver: 9/9, mail: 7/7, etc.).
+
+**Pages modified:** 8 (detail_depth added to all).
+
+**Outcome:** Plan predicted "High" depth-gap rate for Data layer. Refuted: all 8 pages scored 5-8/8, well above the fix threshold of 4. Phase 2 was more thorough on these packages than expected — even `beads` (28 files, status: partial) documents the central type, hybrid subprocess/SDK pattern, and domain shapes at interface level. The "partial" status reflects breadth incompleteness (not all 28 files covered in equal depth), not depth gaps.
