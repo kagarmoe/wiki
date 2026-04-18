@@ -1653,3 +1653,24 @@ All planned phases complete:
 
 **What to change next time:**
 - Consider noting "intentional partial coverage" in the score justification for pages that explicitly scope their walkthrough
+
+## [2026-04-18] stage | Detail Gap Batch 1d — Agent Management (12 pages)
+
+**Duration:** ~10 min
+**Pages scored:** 12
+**Fixes applied:** 0
+
+**Score distribution:**
+| Score | Count | Pages |
+|-------|-------|-------|
+| 8/8 | 7 | agents, boot, dog, polecat, role, signal, witness |
+| 7/8 | 4 | callbacks, mayor, refinery, session |
+| 6/8 | 1 | deacon (errors:1, side_effects:1) |
+
+**What went well:**
+- Agent Management pages are consistently high-quality — polecat.md at 638 lines with 107 citations is exemplary
+- Sibling-file audit was clean (no missing sources)
+- Python bulk-insert continues to be the right tool for this volume
+
+**What to change next time:**
+- Nothing — this batch went smoothly

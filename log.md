@@ -5231,3 +5231,19 @@ Scored 22 command pages in GroupDiag against source. All pages scored against th
 **Pages modified:** 26 (detail_depth added to all). 6 pages also got updated sources and `updated:` date bumps.
 
 **Outcome:** Plan predicted "High" depth-gap rate for Work Management. Actual: zero pages needed inline fixes (all scored >4). However, the distribution is notably lower than Diagnostics (Batch 1a) and Configuration (Batch 1b) — the large command files (sling 5028 lines, convoy 5610, molecule 4407, done 1896, handoff 1720) are partially documented by design ("implementation not walked here"), which depresses data_flow and side_effects scores. The params axis is universally 2 — Phase 2 was thorough on flag tables across the board.
+
+## [2026-04-18] depth-pass | Detail Gap Batch 1d — Agent Management (12 command pages)
+
+**Verb:** depth-pass
+**Scope:** `gastown/commands/` — agents, boot, callbacks, deacon, dog, mayor, polecat, refinery, role, session, signal, witness
+
+**Score distribution (total/8):**
+- 8/8: 7 pages (agents, boot, dog, polecat, role, signal, witness)
+- 7/8: 4 pages (callbacks, mayor, refinery, session)
+- 6/8: 1 page (deacon — errors:1, side_effects:1 for 1644-line source)
+
+**Fixes:** 0 inline fixes needed. All scored >4.
+
+**Pages modified:** 12 (detail_depth added to all). No source updates needed — sibling file audit clean.
+
+**Outcome:** Plan predicted "High" depth-gap rate for Agent Management. Actual: zero fixes needed. polecat.md is the standout page at 638 wiki lines with 107 source citations — the most thoroughly documented command page in the wiki.
