@@ -4,7 +4,7 @@ type: package
 status: verified
 topic: gastown
 created: 2026-04-11
-updated: 2026-04-15
+updated: 2026-04-17
 sources:
   - /home/kimberly/repos/gastown/internal/workspace/find.go
 tags: [package, platform-service, workspace, discovery, filesystem]
@@ -12,6 +12,8 @@ phase3_audited: 2026-04-15
 phase3_findings: [none]
 phase3_severities: []
 phase3_findings_post_release: false
+phase8_audited: 2026-04-17
+phase8_findings: [precondition]
 ---
 
 # internal/workspace
@@ -122,6 +124,21 @@ filesystem.
   resolved `townRoot` as the base for PID tracking and session name
   generation.
 - [go-packages inventory](../inventory/go-packages.md).
+
+## Failure modes
+
+### Precondition violations (what does it assume?)
+- **`MustGetTownName` panics on config error:** `find.go:188-194` calls
+  `panic(fmt.Sprintf(...))` when `GetTownName` returns an error. If
+  `mayor/town.json` is corrupt or unreadable, this crashes the process
+  with no recovery path. **Absent** — callers that use `MustGetTownName`
+  have no opportunity to handle the error; a corrupted `town.json` takes
+  down the entire `gt` process rather than producing a user-facing error.
+- **`Find` walks to filesystem root:** `find.go:42-62` walks upward
+  without depth limit. On deeply nested mounts or unusual filesystem
+  layouts, this traverses the entire path to `/`. **Present** — the loop
+  terminates when `parent == current` (root reached), so it cannot
+  infinite-loop, but there is no timeout or depth cap.
 
 ## Notes / open questions
 

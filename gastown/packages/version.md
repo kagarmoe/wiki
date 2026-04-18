@@ -4,7 +4,7 @@ type: package
 status: verified
 topic: gastown
 created: 2026-04-11
-updated: 2026-04-15
+updated: 2026-04-17
 sources:
   - /home/kimberly/repos/gastown/internal/version/stale.go
 tags: [package, platform-service, version, git, build]
@@ -12,6 +12,8 @@ phase3_audited: 2026-04-15
 phase3_findings: [none]
 phase3_severities: []
 phase3_findings_post_release: false
+phase8_audited: 2026-04-17
+phase8_findings: [precondition, silent-suppression]
 ---
 
 # internal/version
@@ -121,6 +123,38 @@ Source: `/home/kimberly/repos/gastown/internal/version/stale.go`.
   by every git subprocess in this file.
 - [go-mod](../files/go-mod.md) — dependency context.
 - [go-packages inventory](../inventory/go-packages.md).
+
+## Failure modes
+
+### Precondition violations (what does it assume?)
+- **Git available on PATH:** `CheckStaleBinary` shells out to `git
+  rev-parse HEAD` at `stale.go:86-89` and `GetRepoRoot` tries `git
+  rev-parse --show-toplevel` at `stale.go:189-191`. If `git` is not
+  installed (container image without git, minimal Windows install), these
+  fail. **Present** — errors are captured in `StaleBinaryInfo.Error`
+  and propagated cleanly; callers degrade to "cannot determine
+  staleness."
+- **`repoDir` is a valid git repo:** `CheckStaleBinary` passes
+  `repoDir` directly to `git` commands without checking `isGitRepo`
+  first. The `git rev-parse HEAD` at `stale.go:86` will fail with an
+  opaque git error if the directory doesn't exist or isn't a repo.
+  **Present** — the error is wrapped and stored in
+  `StaleBinaryInfo.Error`.
+
+### Silent suppression (what errors are swallowed?)
+- **Branch detection failure:** `git symbolic-ref --short HEAD` at
+  `stale.go:98-104` — if the error return is non-nil (detached HEAD,
+  shallow clone), `OnMainBranch` silently defaults to `false`. The
+  branch output is discarded with `if branchOutput, err :=
+  branchCmd.Output(); err == nil`. **Absent** — no log or warning
+  when branch detection fails; `OnMainBranch=false` causes auto-rebuild
+  to be suppressed on what might actually be `main`, silently degrading
+  the stale-rebuild feature for detached-HEAD checkouts.
+- **Commits-behind count failure:** `git rev-list --count` at
+  `stale.go:139-146` — if the count command fails or the output can't
+  be parsed, `CommitsBehind` silently stays 0 with no error propagated.
+  **Absent** — user sees "stale" but with zero commits behind, which
+  is misleading.
 
 ## Notes / open questions
 

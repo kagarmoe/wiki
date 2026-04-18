@@ -4,7 +4,7 @@ type: package
 status: verified
 topic: gastown
 created: 2026-04-11
-updated: 2026-04-15
+updated: 2026-04-17
 sources:
   - /home/kimberly/repos/gastown/internal/telemetry/telemetry.go
   - /home/kimberly/repos/gastown/internal/telemetry/recorder.go
@@ -14,6 +14,8 @@ phase3_audited: 2026-04-15
 phase3_findings: [drift]
 phase3_severities: [wrong]
 phase3_findings_post_release: false
+phase8_audited: 2026-04-17
+phase8_findings: [silent-suppression]
 ---
 
 # internal/telemetry
@@ -354,6 +356,23 @@ controlling surface here.
 - **Severity:** `wrong`
 - **Fix tier:** `docs` — the otel-architecture.md implementation status table should mark these as ✅ Main and update the metric count.
 - **Release position:** `in-release`
+
+## Failure modes
+
+### Silent suppression (what errors are swallowed?)
+- **`SetProcessOTELAttrs` discards Setenv errors:**
+  `subprocess.go:65-71` uses `_ = os.Setenv(...)` for
+  `OTEL_RESOURCE_ATTRIBUTES`, `BD_OTEL_METRICS_URL`, and
+  `BD_OTEL_LOGS_URL`. If any of these fail (theoretically possible on
+  some platforms with env-size limits), child subprocesses silently
+  run without telemetry propagation. **Absent** — no log or fallback;
+  bd subprocess metrics silently disappear from the waterfall.
+- **Init idempotency silently discards service name:** `telemetry.go:99-103`
+  documents that subsequent `Init` calls return the first-caller's
+  provider and silently ignore the new `serviceName` and
+  `serviceVersion`. **Present** — explicitly documented in the
+  function's doc comment, and in practice each process calls `Init`
+  once, so this is informational rather than a bug.
 
 ## Notes / open questions
 

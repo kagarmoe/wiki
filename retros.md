@@ -1403,3 +1403,23 @@ All planned phases complete:
 
 **Follow-ups filed:**
 - none — lessons are purely informational
+
+## [2026-04-17 12:00] stage | 8.2.a — packages/ Platform Services
+
+**Actor:** wiki-curator subagent
+**Unit:** 9 pages audited (cli, config, session, style, telemetry, ui, util, version, workspace)
+**Duration:** one dispatch
+
+**What went well:**
+- Thin packages (cli, style) correctly fast-pathed to [none]
+- Session package yielded 5 absent silent-suppression findings — all the `_ = t.SetEnvironment(...)` calls in StartSession are a real predicted bug surface
+- Version package's branch-detection suppression is a genuine hidden failure mode
+
+**What didn't:**
+- Config package is very large (loader.go ~92KB) but error handling is consistently present — no findings despite significant reading time
+
+**What to change next time:**
+- For large packages with consistent error handling (config), check 2-3 key exported functions then fast-path to [none] rather than reading all files
+
+**Follow-ups filed:**
+- none — lessons are purely informational

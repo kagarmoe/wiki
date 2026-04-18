@@ -4,7 +4,7 @@ type: package
 status: verified
 topic: gastown
 created: 2026-04-11
-updated: 2026-04-16
+updated: 2026-04-17
 sources:
   - /home/kimberly/repos/gastown/internal/session/identity.go
   - /home/kimberly/repos/gastown/internal/session/lifecycle.go
@@ -24,6 +24,8 @@ phase3_severities: []
 phase3_findings_post_release: false
 phase4_audited: 2026-04-16
 phase4_findings: [none]
+phase8_audited: 2026-04-17
+phase8_findings: [silent-suppression, partial-completion]
 ---
 
 # internal/session
@@ -364,6 +366,61 @@ result, err := session.StartSession(t, session.SessionConfig{
   [gt done](../commands/done.md), [gt kill](../commands/kill.md) —
   prominent user-facing consumers.
 - [go-packages inventory](../inventory/go-packages.md).
+
+## Failure modes
+
+### Partial completion (what doesn't it clean up?)
+- **Session created but post-startup steps fail:** `StartSession` at
+  `lifecycle.go:200-201` creates the tmux session, then runs steps
+  5-14 (env vars, theme, wait-for-agent, respawn hook, PID tracking,
+  agent logging). Most post-creation failures are silently swallowed
+  (see below), but if `WaitFatal` is true and `WaitForCommand` fails
+  at `lifecycle.go:237-241`, the session is killed and an error is
+  returned. However, steps 5-7 (`SetEnvironment`, `SetRemainOnExit`,
+  `ConfigureGasTownSession`) have already fired and their side effects
+  (tmux server state) are cleaned up by the kill. **Present** — the
+  kill at `lifecycle.go:239` handles this case.
+- **Agent-log watcher orphan on crash:** `ActivateAgentLogging` at
+  `agent_logging_unix.go:31-82` spawns a detached process with
+  `Setsid`. If the parent `gt` process crashes without calling
+  `DeactivateAgentLogging`, the watcher persists until a future session
+  start for the same `sessionID` kills it via the PID file at
+  `agent_logging_unix.go:39`. **Present** — the PID file mechanism
+  handles restart, but a crash of an entirely different session name
+  leaves the watcher orphaned until the next `gt` process with the
+  same session ID starts.
+
+### Silent suppression (what errors are swallowed?)
+- **tmux SetEnvironment failures:** `lifecycle.go:222-227` calls
+  `t.SetEnvironment` for every env var and discards the error with
+  `_ = t.SetEnvironment(...)`. If tmux rejects an env var (e.g., the
+  session died between creation and env-set), the session runs with
+  missing environment. **Absent** — no log or warning. The agent may
+  start without `GT_ROLE`, `GT_RIG`, or `GT_RUN`, causing silent
+  failures in downstream code that reads those vars.
+- **Remain-on-exit failure:** `lifecycle.go:208` — `_ =
+  t.SetRemainOnExit(cfg.SessionID, true)`. If this fails, the session
+  dies on exit instead of remaining for inspection. **Absent** — no
+  warning that crash-debugging capability was lost.
+- **Theme application failure:** `lifecycle.go:232` — `_ =
+  t.ConfigureGasTownSession(...)`. **Absent** — cosmetic, but no
+  indication the theme was not applied.
+- **PID tracking failure:** `lifecycle.go:288` — `_ =
+  TrackSessionPID(...)`. **Absent** — if PID tracking fails, orphan
+  cleanup in `KillTrackedPIDs` will miss this session's processes.
+  The doc comment at `pidtrack.go:44` says callers should treat this
+  as non-fatal, but there is no log message.
+- **GT_PANE_ID capture failure:** `lifecycle.go:282-284` — if
+  `GetPaneID` fails, the pane ID env var is not set, and liveness
+  checks fall back to the slower scanning path. **Absent** — no log.
+
+### Cross-platform concerns
+- **Windows agent logging is a no-op:**
+  `agent_logging_windows.go` returns nil for `ActivateAgentLogging`
+  and is a no-op for `DeactivateAgentLogging`. Windows agents get no
+  conversation log streaming to VictoriaLogs even when
+  `GT_LOG_AGENT_OUTPUT=true`. **Untested** — the stub exists but the
+  feature is architecturally absent on Windows.
 
 ## Notes / open questions
 

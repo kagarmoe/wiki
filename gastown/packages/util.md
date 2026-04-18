@@ -4,7 +4,7 @@ type: package
 status: verified
 topic: gastown
 created: 2026-04-11
-updated: 2026-04-16
+updated: 2026-04-17
 sources:
   - /home/kimberly/repos/gastown/internal/util/atomic.go
   - /home/kimberly/repos/gastown/internal/util/exec.go
@@ -22,6 +22,8 @@ phase3_severities: [incomplete]
 phase3_findings_post_release: false
 phase4_audited: 2026-04-16
 phase4_findings: [none]
+phase8_audited: 2026-04-17
+phase8_findings: [precondition, cross-platform]
 ---
 
 # internal/util
@@ -246,6 +248,38 @@ results. The ps-tree/syscall.Kill approach is Unix-only.
 - [internal/config](config.md) — uses atomic writes for every JSON
   config save.
 - [go-packages inventory](../inventory/go-packages.md).
+
+## Failure modes
+
+### Precondition violations (what does it assume?)
+- **Atomic rename cross-device:** `AtomicWriteFile` at
+  `atomic.go:88-91` uses `os.Rename(tmpName, path)`. On POSIX, rename
+  is atomic only within the same filesystem. If `path` and the temp
+  file are on different mount points (e.g., `/tmp` vs. a network
+  mount), `os.Rename` fails with `EXDEV`. **Present** — the error is
+  returned and the temp file is cleaned up, but the error message is
+  Go's raw `"invalid cross-device link"` with no explanation of what
+  happened.
+- **`getProcessCwd` requires proc or lsof:** `orphan.go:270-298` —
+  on hardened Linux kernels (`kernel.yama.ptrace_scope=1`),
+  `readlink(/proc/<pid>/cwd)` fails for non-descendant processes. The
+  fallback is `lsof`, which may not be installed on minimal images.
+  **Present** — if both methods fail, `""` is returned and the caller
+  safely does not kill the process (fail-safe).
+
+### Cross-platform concerns
+- **Windows orphan/zombie cleanup is a no-op:**
+  `orphan_windows.go` stubs all cleanup functions to return empty
+  results. Windows users get no orphan detection or cleanup via
+  `gt doctor` or the daemon patrol. **Untested** — the stubs exist
+  but the feature is architecturally absent on Windows.
+- **`SetProcessGroup` cancel hook is Unix-only:**
+  `exec_unix.go:12-20` installs `cmd.Cancel` with
+  `syscall.Kill(-pid, SIGKILL)` for process-group cleanup.
+  `exec_windows.go:14-20` sets `CREATE_NEW_PROCESS_GROUP` but does
+  not install a cancel hook, so context cancellation on Windows does
+  not kill the process tree. **Untested** — the Windows shim exists
+  but diverges in behavior.
 
 ## Notes / open questions
 

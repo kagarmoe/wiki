@@ -4919,3 +4919,36 @@ Plus two optional sub-sections:
 As expected for leaf commands: read-only viewers (agent-log, health, memories, show, status-line), single-operation mutators (commit, forget, remember), pure policy evaluators (tap), and session utilities (cycle, town, nudge-poller). No multi-step sequences with partial-completion risk.
 
 → gastown/commands/{agent-log,commit,cycle,forget,health,krc,memories,nudge-poller,proxy-subcmds,remember,show,status-line,tap,town,warrant}.md
+
+## [2026-04-17] drift-found | Phase 8 Batch 2a (Failure modes: packages/ Platform Services — 9 pages)
+
+**Scope:** Failure mode analysis across 9 platform service package pages.
+
+**Pages audited:**
+- [cli](gastown/packages/cli.md) — `phase8_findings: [none]`
+- [config](gastown/packages/config.md) — `phase8_findings: [none]`
+- [session](gastown/packages/session.md) — `phase8_findings: [silent-suppression, partial-completion]`
+- [style](gastown/packages/style.md) — `phase8_findings: [none]`
+- [telemetry](gastown/packages/telemetry.md) — `phase8_findings: [silent-suppression]`
+- [ui](gastown/packages/ui.md) — `phase8_findings: [none]`
+- [util](gastown/packages/util.md) — `phase8_findings: [precondition, cross-platform]`
+- [version](gastown/packages/version.md) — `phase8_findings: [precondition, silent-suppression]`
+- [workspace](gastown/packages/workspace.md) — `phase8_findings: [precondition]`
+
+**Sources read:**
+- Read all source files for cli, style, ui, version, workspace (single-file packages)
+- Read lifecycle.go, startup.go, registry.go, stale.go, pidtrack.go, agent_logging_unix.go for session
+- Read telemetry.go, recorder.go, subprocess.go for telemetry
+- Read atomic.go, exec.go, exec_unix.go, exec_windows.go, orphan.go, path.go, url.go for util
+- Read loader.go for config
+
+**Findings summary:**
+- 4 pages with failure modes (session, telemetry, util, version)
+- 5 pages with [none] (cli, config, style, ui, workspace has 1 finding)
+- Correction: workspace has 1 finding — 5 pages with findings, 4 with [none]
+- Highest-value absent findings:
+  - session: 5 silent suppressions in StartSession — tmux SetEnvironment errors discarded, agent may run without GT_ROLE/GT_RIG/GT_RUN
+  - version: branch detection failure silently defaults OnMainBranch=false, suppressing auto-rebuild on detached-HEAD checkouts
+  - util: Windows orphan cleanup is a complete no-op
+
+→ gastown/packages/{cli,config,session,style,telemetry,ui,util,version,workspace}.md
