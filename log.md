@@ -5706,3 +5706,21 @@ identified across 10 source pages. All 9 partial issues from grep-based
 scoring remain partial under navigation (genuine content gaps, not
 navigation failures). Pages: `gastown/drift/validation-navigation.md`.
 Index updated.
+
+## [2026-04-18] validation | Navigation re-validation — 20 issues retested after 10 link fixes
+
+Re-tested the same 20 issues via link-following after all 10 missing
+links from the prior navigation validation were fixed (commit `df4de7b`).
+Prior navigation: 9 full (45%). After fixes: **13 full (65%)**. Nine
+partials upgraded to full: #3661 (bd create flags in done.md), #3653
+(dead-code annotation in witness.md), #3652 (bead creation asymmetry in
+agent-lifecycle Steps 5d/7d), #3623 (connection exhaustion Step 10 in
+data-plane + doltserver config), #3614 (non-Claude detection Step 7e in
+monitoring), #3570 (legacy socket Step 10 in daemon-infrastructure),
+#3563 (GT_PANE_ID staleness in nudge.md), #3554 (wisp config polling in
+daemon.md), #3537 (tmux session creation in crew.md). Remaining: 6
+partial (#3651 install instructions -- needs npm-package entity page), 1
+miss (#3665 feature request). Navigation score (65%) now exceeds the
+grep-based score (50%) because the fixes added both content and links.
+Full progression: 35% -> 45% -> 50% -> 50% -> 45% -> **65%**. Pages:
+`gastown/drift/validation-navigation-retest.md`. Index updated.

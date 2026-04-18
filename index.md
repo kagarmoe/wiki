@@ -160,6 +160,7 @@ Investigation workflows (Cross-page inference Batches 1a-1c):
 - [Cross-page inference validation](gastown/drift/validation-cross-page.md) — 20-issue re-validation after investigation workflows + comparison tables: Phase 8 9 full (45%) improved to 10 full (50%)
 - [Final validation](gastown/drift/validation-final.md) — 20-issue re-validation after outgoing-calls sweep (111 pages): score held at 10 full (50%); analysis of why remaining gaps are outside subprocess-argument level
 - [Link-navigation validation](gastown/drift/validation-navigation.md) — 20-issue re-validation using link-following only (no grep): grep-based 10 full (50%) vs navigation-based 9 full (45%); 1 downgrade, 10 missing links identified
+- [Navigation re-validation](gastown/drift/validation-navigation-retest.md) — 20-issue retest after 10 missing-link fixes: navigation 9 full (45%) improved to 13 full (65%); 9 partials upgraded; exceeds grep-based score
 
 ### Inventory
 
