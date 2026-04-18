@@ -17,6 +17,8 @@ phase3_findings_post_release: false
 phase4_audited: 2026-04-16
 phase4_findings: [none]
 phase5_audience: agent
+phase8_audited: 2026-04-17
+phase8_findings: [none]
 ---
 
 # gt dnd
@@ -118,6 +120,10 @@ API. Consumers:
 - [status](status.md) — agent status view; worth cross-checking
   whether it surfaces the current DND level.
 - [config](config.md) — root for agent-level config toggles.
+
+## Failure modes
+
+No failure modes discovered. `dnd.go` is a simple toggle over `beads.UpdateAgentNotificationLevel`. Single bead write per invocation. Error on missing agent bead defaults to `NotifyNormal` (line 80). All error paths propagated via Cobra.
 
 ## Notes / open questions
 

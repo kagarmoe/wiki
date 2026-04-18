@@ -1326,3 +1326,22 @@ All planned phases complete:
 
 **Follow-ups filed:**
 - none — lessons are purely informational
+
+## [2026-04-17 20:15] stage | 8.1.e — Failure modes: commands/ Communication
+
+**Actor:** wiki-curator subagent
+**Unit:** 7 pages audited (broadcast, dnd, escalate, mail, notify, nudge, peek)
+**Duration:** one dispatch
+
+**What went well:**
+- Communication commands split cleanly: nudge (complex delivery chain, real findings) vs simple state toggles (dnd, notify — correctly [none])
+- `watchAndDeliver` drain-then-fail-delivery is a genuine absent finding — nudge consumed but never delivered
+
+**What didn't:**
+- Nothing significant; communication commands are well-designed with explicit fallback chains
+
+**What to change next time:**
+- For multi-mode delivery systems (like nudge's wait-idle→queue→immediate chain), trace each fallback path for partial-completion gaps
+
+**Follow-ups filed:**
+- none — lessons are purely informational

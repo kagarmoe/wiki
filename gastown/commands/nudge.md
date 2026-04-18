@@ -17,6 +17,8 @@ phase3_findings_post_release: false
 phase4_audited: 2026-04-16
 phase4_findings: [none]
 phase5_audience: agent
+phase8_audited: 2026-04-17
+phase8_findings: [silent-suppression]
 ---
 
 # gt nudge
@@ -196,6 +198,15 @@ Mode and priority are validated eagerly at `nudge.go:356-361`.
   machinery was introduced to prevent crash loops from nudges-
   into-handoffs-into-respawn cycles.
 - [callbacks](callbacks.md) — overlapping messaging primitive.
+
+## Failure modes
+
+### Silent suppression
+
+- **Queue fallback on wait-idle timeout:** `deliverNudge` at `nudge.go:241-257` falls back from wait-idle → queue → immediate. If queue write fails (line 245), it prints a warning to stderr and delivers immediately. The immediate delivery is destructive (interrupts active work) but better than losing the message. **Present** — explicit fallback chain with warning, documented in code comments.
+- **Nudge poller start failure:** `nudge.go:216-218` attempts `nudge.StartPoller` and prints a stderr warning if it fails. Without a poller, queued nudges for non-Claude agents sit undelivered indefinitely. **Absent** — no escalation or retry; the caller may not see the stderr warning if they're an agent.
+- **`watchAndDeliver` delivery failure:** `nudge.go:325-327` prints stderr warning if `NudgeSessionWithOpts` fails during idle-watcher delivery, but the nudge has already been atomically drained from the queue (line 320). If delivery fails, the nudge is lost. **Absent** — nudge consumed from queue but not delivered; no re-enqueue.
+- **Event feed discard in `--if-fresh` skip:** When `--if-fresh` causes a silent skip (`nudge.go:375-377`, returns nil), no event is logged. **Present** — intentional; skip means "don't send", so no event needed.
 
 ## Notes / open questions
 

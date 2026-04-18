@@ -4851,3 +4851,27 @@ Plus two optional sub-sections:
 - `callbacks`: message archive failure allows double-processing with no idempotency guard
 
 → gastown/commands/{agents,boot,callbacks,deacon,dog,mayor,polecat,refinery,role,session,signal,witness}.md
+
+## [2026-04-17] drift-found | Phase 8 Batch 1e (Failure modes: commands/ Communication — 7 pages)
+
+- Read error paths in `broadcast.go`, `dnd.go`, `escalate.go`, `escalate_impl.go`, `mail.go`, `mail_send.go`, `notify.go`, `nudge.go`, `peek.go`
+- Pages audited: [broadcast](gastown/commands/broadcast.md), [dnd](gastown/commands/dnd.md), [escalate](gastown/commands/escalate.md), [mail](gastown/commands/mail.md), [notify](gastown/commands/notify.md), [nudge](gastown/commands/nudge.md), [peek](gastown/commands/peek.md)
+- [broadcast](gastown/commands/broadcast.md) — `phase8_findings: [none]`
+- [dnd](gastown/commands/dnd.md) — `phase8_findings: [none]`
+- [escalate](gastown/commands/escalate.md) — `phase8_findings: [silent-suppression]`
+- [mail](gastown/commands/mail.md) — `phase8_findings: [silent-suppression]`
+- [notify](gastown/commands/notify.md) — `phase8_findings: [none]`
+- [nudge](gastown/commands/nudge.md) — `phase8_findings: [silent-suppression]`
+- [peek](gastown/commands/peek.md) — `phase8_findings: [none]`
+
+**Findings summary:**
+- 3 pages with failure modes (3 silent-suppression)
+- 4 pages with [none] (broadcast, dnd, notify, peek)
+
+**Notable absent findings (predicted bug surfaces):**
+- `nudge`: `watchAndDeliver` atomically drains queue then fails on delivery — nudge consumed but never delivered, no re-enqueue
+- `nudge`: nudge poller start failure silently drops, leaving queued nudges undelivered for non-Claude agents
+- `mail`: event feed fire-and-forget — mail audit trail silently incomplete
+- `escalate`: all escalation lifecycle events (sent, acked, closed, re-escalated) silently lose feed writes
+
+→ gastown/commands/{broadcast,dnd,escalate,mail,notify,nudge,peek}.md

@@ -17,6 +17,8 @@ phase3_findings_post_release: false
 phase4_audited: 2026-04-16
 phase4_findings: [none]
 phase5_audience: agent
+phase8_audited: 2026-04-17
+phase8_findings: [silent-suppression]
 ---
 
 # gt escalate
@@ -161,6 +163,13 @@ Subcommand flags (`escalate.go:149-163`):
   `gt escalate -s HIGH "Dolt: ..."` as the canonical escalation
   path for dolt trouble (escalations are stored as beads with the
   `gt:escalation` label, regardless of the subject).
+
+## Failure modes
+
+### Silent suppression
+
+- **Event feed fire-and-forget across all subcommands:** `escalate_impl.go:173`, `:333`, `:362`, `:484` all discard `events.LogFeed` errors. Escalation audit trail (sent, acked, closed, re-escalated) may be incomplete. **Absent** — no indication of missing audit events.
+- **HTTP response body close:** `escalate_impl.go:774`, `:798` defer `_ = resp.Body.Close()`. Standard Go pattern; close error is harmless. **Present** — correct.
 
 ## Notes / open questions
 

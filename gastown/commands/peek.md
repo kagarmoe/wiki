@@ -13,6 +13,8 @@ phase3_findings: [none]
 phase3_severities: []
 phase3_findings_post_release: false
 phase5_audience: agent
+phase8_audited: 2026-04-17
+phase8_findings: [none]
 ---
 
 # gt peek
@@ -144,6 +146,10 @@ supports it) or drop to `gt session capture`.
   <address>` to look at one.
 - [trail](trail.md) — another reader-side command in the
   observability family.
+
+## Failure modes
+
+No failure modes discovered. Pure read-only command — `tmux capture-pane` wrapper with no state mutations, no beads interactions, no side effects. All errors propagated.
 
 ## Notes / open questions
 

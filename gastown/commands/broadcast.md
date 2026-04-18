@@ -16,6 +16,8 @@ phase3_findings_post_release: false
 phase4_audited: 2026-04-16
 phase4_findings: [none]
 phase5_audience: agent
+phase8_audited: 2026-04-17
+phase8_findings: [none]
 ---
 
 # gt broadcast
@@ -126,6 +128,10 @@ This is the same address scheme consumed by [nudge](nudge.md) and
 - [agents](agents.md) — shares `getAgentSessions` for enumeration.
 - [notify](notify.md) — per-agent notification level gate that
   DND sits on top of.
+
+## Failure modes
+
+No failure modes discovered. `broadcast.go` iterates over agent sessions and nudges each one. Individual nudge failures are counted and reported in the summary; they don't abort the broadcast. DND checks are non-fatal (skipped with status). The command returns an error only if any nudges failed, so the caller knows. All error paths are checked and surfaced.
 
 ## Notes / open questions
 

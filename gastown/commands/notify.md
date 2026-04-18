@@ -15,6 +15,8 @@ phase3_findings: [none]
 phase3_severities: []
 phase3_findings_post_release: false
 phase5_audience: agent
+phase8_audited: 2026-04-17
+phase8_findings: [none]
 ---
 
 # gt notify
@@ -126,6 +128,10 @@ the "two-state vs three-state" note on [dnd](dnd.md).
   whether the notification level is shown there.
 - [agents](agents.md) — enumerates agents; could eventually grow
   a `gt agents --show-dnd` view.
+
+## Failure modes
+
+No failure modes discovered. Same simple bead-write pattern as `dnd.go`. Single `beads.UpdateAgentNotificationLevel` call with all errors propagated. Missing agent bead defaults to `NotifyNormal`.
 
 ## Notes / open questions
 

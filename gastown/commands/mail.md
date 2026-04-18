@@ -29,6 +29,8 @@ phase3_findings_post_release: false
 phase4_audited: 2026-04-16
 phase4_findings: [none]
 phase5_audience: agent
+phase8_audited: 2026-04-17
+phase8_findings: [silent-suppression]
 ---
 
 # gt mail
@@ -307,6 +309,15 @@ primitive.
 See also: [gastown/drift/README.md](../drift/README.md) for the consolidated corrections list.
 
 **Wiki-stale inline fix (Phase 3):** Phase 2's Subcommands table listed 17 entries (all from `mail.go`) but missed 5 subcommand groups registered by sibling-file `init()` functions (`channel`, `directory`, `group`, `hook`, `queue`). Phase 2 listed all 13 sibling files in `sources:` frontmatter but did not read their `init()` blocks for AddCommand registrations. Fixed inline above: Subcommands section now enumerates all 22 subcommands in two tables (17 from `mail.go` + 5 from siblings). **Phase 2 root cause: `phase-2-incomplete` (heuristic)** — all 5 sibling files were present at `v1.0.0` with the same registrations; Phase 2 had access to them on 2026-04-11 and listed them in `sources:` but did not verify their command registrations. Same pattern as Batch 1b (`directive`, `hooks`), Batch 1c (`molecule`, `mq`, `wl`), and Batch 1d (`agents`). See also: [gastown/drift/README.md](../drift/README.md).
+
+## Failure modes
+
+### Silent suppression
+
+- **Event feed fire-and-forget:** `mail_send.go:160` and `:213` both use `_ = events.LogFeed(...)` to log mail events. If the feed write fails, mail audit trail is incomplete. **Absent** — no indication of missing events.
+- **Thread lookup failures warn-only:** `mail_send.go:125-133` warns if the reply-to message can't be found for threading, but continues with a new thread ID. This means replies may not thread correctly, but the message still sends. **Present** — warning emitted, graceful degradation.
+- **Partial fan-out:** `mail_send.go:170-210` sends to multiple recipients and collects errors. If some sends succeed and some fail, the command reports partial success to stderr and returns the message as sent. **Present** — partial delivery is surfaced to the user.
+- **`rand.Read` error discarded:** `mail_send.go:236` uses `_, _ = rand.Read(b)` for thread ID generation. `crypto/rand.Read` only fails if the system entropy source is broken. **Present** — documented inline as acceptable.
 
 ## Notes / open questions
 
