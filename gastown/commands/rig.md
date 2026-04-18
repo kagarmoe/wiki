@@ -300,6 +300,24 @@ keybinding.
 
 - [Investigating: workspace setup](../workflows/investigations/workspace-setup.md) — Steps 3-4 cover `gt rig add` failures including clone failures and post-clone setup issues.
 
+## Outgoing calls
+
+### Subprocess invocations
+| Called binary | Command | Flags | Flag source | `file:line` |
+|---|---|---|---|---|
+| `tmux` | `display-menu` | `<menuArgs>...` | runtime (rig list + actions) | `rig.go:974` |
+| `bd` | `config get` | `issue_prefix` | runtime (detect prefix from rig) | `rig.go:1219` |
+| `git` | `branch` | `--show-current` | hardcoded (detect current branch) | `rig_dock.go:78,195` |
+| `gt` | `rig add` | `<rigName> <gitURL>` | runtime (quick-add) | `rig_quick_add.go:97` |
+| `gt` | `crew add` | `<user> --rig <rigName>` | runtime (quick-add) | `rig_quick_add.go:120` |
+| `git` | `rev-parse` | `--show-toplevel` | hardcoded (find git root) | `rig_quick_add.go:141` |
+| `git` | `remote get-url` | `origin` | hardcoded (find remote URL) | `rig_quick_add.go:151` |
+
+### Config file writes
+| Target | Operation | Value | Purpose | `file:line` |
+|---|---|---|---|---|
+| rig detect cache | `os.WriteFile` | cached rig detection lines | cache rig detection results | `rig_detect.go:167` |
+
 ## Notes / open questions
 
 - **`rig` is both a domain noun and a CLI command.** This page

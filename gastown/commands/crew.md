@@ -273,6 +273,17 @@ See [gastown/drift/README.md](../drift/README.md) for the consolidated correctio
 - [Investigating: agent lifecycle](../workflows/investigations/agent-lifecycle.md) — Step 9 covers crew start failures; Step 10 covers resume failures.
 - [Investigating: workspace setup](../workflows/investigations/workspace-setup.md) — Step 5 covers `gt crew add` failures.
 
+## Outgoing calls
+
+### Subprocess invocations
+| Called binary | Command | Flags | Flag source | `file:line` |
+|---|---|---|---|---|
+| `git` | `worktree remove` | `[--force] <crewPath>` | runtime (crew path + force flag) | `crew_lifecycle.go:93` |
+| `bd` | `delete` | `<agentBeadID> --force` | runtime (purge mode) | `crew_lifecycle.go:130` |
+| `bd` | `list` | `--assignee=<addr> --format=id` | runtime (find assigned beads) | `crew_lifecycle.go:145` |
+| `bd` | `update` | `<id> --unassign` | runtime (unassign beads) | `crew_lifecycle.go:153` |
+| `bd` | `close` | `<agentBeadID> --reason=Crew workspace removed` | runtime (default remove) | `crew_lifecycle.go:173` |
+
 ## Notes / open questions
 
 - **`crew` is both a domain noun and a CLI command.** This page

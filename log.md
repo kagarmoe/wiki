@@ -5637,3 +5637,13 @@ Tables added: 1 Subprocess invocations table.
 **pages with no outgoing calls (section omitted):** estop, quota, reaper, shutdown, thaw (5 pages)
 
 Tables added: 6 Subprocess invocations tables, 3 Environment variables set tables, 1 SQL/config mutations table, 1 Config file writes table.
+
+## [2026-04-14] sweep | Outgoing calls 1g: Workspace (7 pages)
+
+**verb:** sweep
+**scope:** `gastown/commands/` — Workspace group (7 pages)
+**sources read:** 22 source files across crew, git-init, init, install, namepool, rig, worktree
+**pages touched:** crew, git-init, init, install, rig, worktree (6 pages with outgoing calls)
+**pages with no outgoing calls (section omitted):** namepool (1 page)
+
+Tables added: 6 Subprocess invocations tables, 1 Environment variables set table, 4 Config file writes tables.

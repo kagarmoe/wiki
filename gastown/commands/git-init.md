@@ -175,6 +175,24 @@ See [gastown/drift/README.md](../drift/README.md) for the consolidated correctio
 
 No failure modes discovered. `git_init.go` runs `beads.GitInit` to initialize a beads git repo at the current path. Single operation with error propagated. No multi-step sequence.
 
+## Outgoing calls
+
+### Subprocess invocations
+| Called binary | Command | Flags | Flag source | `file:line` |
+|---|---|---|---|---|
+| `git` | `init` | — | hardcoded | `gitinit.go:241` |
+| `gh` | `repo create` | `<name> --private --source=. --remote=origin --push` | runtime (repo name) | `gitinit.go:286` |
+| `git` | `rev-parse` | `HEAD` | hardcoded (check for commits) | `gitinit.go:305` |
+| `git` | `add` | `.` | hardcoded | `gitinit.go:312` |
+| `git` | `commit` | `-m "Initial Gas Town HQ"` | hardcoded | `gitinit.go:318` |
+
+### Config file writes
+| Target | Operation | Value | Purpose | `file:line` |
+|---|---|---|---|---|
+| `.gitignore` | `os.WriteFile` | combined gitignore content | create HQ gitignore | `gitinit.go:225` |
+| `.gitignore` | `os.WriteFile` | `HQGitignore` constant | write default gitignore | `gitinit.go:233` |
+| `post-commit` hook | `os.WriteFile` | hook script content | install branch-protection hook | `gitinit.go:471` |
+
 ## Notes / open questions
 
 - **Exported helpers.** `InitGitForHarness`, `InstallBranchProtection`,

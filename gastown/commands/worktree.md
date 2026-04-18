@@ -153,6 +153,13 @@ If no worktrees exist, prints `"(none)"` and a creation hint.
 
 No failure modes discovered. `worktree.go` wraps git worktree operations (list/add/remove/repair) via the `git.Git` abstraction. All errors propagated. The repair subcommand handles broken worktree references.
 
+## Outgoing calls
+
+### Subprocess invocations
+| Called binary | Command | Flags | Flag source | `file:line` |
+|---|---|---|---|---|
+| `git` | `config` | `-C <worktreePath> <key> <value>` | runtime (set git config in worktree) | `worktree.go:206` |
+
 ## Notes / open questions
 
 - **Source rig == target rig's mayor clone.** The comment at

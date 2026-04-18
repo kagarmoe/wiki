@@ -149,6 +149,19 @@ See [gastown/drift/README.md](../drift/README.md) for the consolidated correctio
 
 No failure modes discovered. `init.go` creates a `.beads/` directory and optionally a Dolt database. Each step checks errors and propagates. The `--dolt` flag delegates to `doltserver` package.
 
+## Outgoing calls
+
+### Subprocess invocations
+| Called binary | Command | Flags | Flag source | `file:line` |
+|---|---|---|---|---|
+| `bd` | `config set` | `types.custom <customTypes>` | hardcoded (beads custom types) | `init.go:176` |
+
+### Config file writes
+| Target | Operation | Value | Purpose | `file:line` |
+|---|---|---|---|---|
+| `.gitkeep` files | `os.WriteFile` | empty | scaffold directory structure | `init.go:72` |
+| `.git/info/exclude` | `os.WriteFile` | gitignore additions | add beads excludes | `init.go:157` |
+
 ## Notes / open questions
 
 - **Who actually calls `gt init`?** The "Next steps" output at

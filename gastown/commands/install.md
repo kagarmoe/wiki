@@ -290,6 +290,32 @@ See [gastown/drift/README.md](../drift/README.md) for the consolidated correctio
 
 - [Investigating: workspace setup](../workflows/investigations/workspace-setup.md) — Step 2 covers `gt install` failures including dependency checks, port conflicts, and partial scaffolding.
 
+## Outgoing calls
+
+### Subprocess invocations
+| Called binary | Command | Flags | Flag source | `file:line` |
+|---|---|---|---|---|
+| `git` | `config` | `user.email` | hardcoded (detect email) | `install.go:222` |
+| `bd` | `config set` | `routing.mode explicit` | hardcoded | `install.go:401` |
+| `bd` | `init` | `[--dolt --dolt-port=<port>]` | runtime (dolt config) | `install.go:602` |
+| `bd` | `config set` | `beads.role maintainer` | hardcoded | `install.go:637` |
+| `bd` | `config set` | `issue_prefix hq` | hardcoded | `install.go:645` |
+| `bd` | `config set` | `allowed_prefixes hq,hq-cv` | hardcoded | `install.go:660` |
+| `bd` | `config set` | `types.custom <customTypes>` | hardcoded | `install.go:715` |
+| `bd` | `config set` | `types.custom <types>` | runtime (rig-specific types) | `install.go:806` |
+
+### Environment variables set
+| Variable | Value source | Consumed by | `file:line` |
+|---|---|---|---|
+| `GT_DOLT_PORT` | discovered Dolt port | bd subprocess | `install.go:164` |
+
+### Config file writes
+| Target | Operation | Value | Purpose | `file:line` |
+|---|---|---|---|---|
+| `CLAUDE.md` | `os.WriteFile` | generated agent instructions | create per-rig CLAUDE.md | `install.go:529` |
+| settings file | `os.WriteFile` | serialized settings | write Claude Code settings | `install.go:556` |
+| `issues.jsonl` | `os.WriteFile` | empty | initialize empty issues file | `install.go:670` |
+
 ## Notes / open questions
 
 - **Install does a lot of things a healthy fresh system already
