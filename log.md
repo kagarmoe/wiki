@@ -5274,3 +5274,17 @@ Scored 22 command pages in GroupDiag against source. All pages scored against th
 **Fixes:** 0 inline fixes needed. Sibling-file audit was clean — all pages already listed their siblings.
 
 **Pages modified:** 11 (detail_depth added to all).
+
+## [2026-04-18] depth-pass | Detail Gap Batch 1g — Workspace (7 command pages)
+
+**Verb:** depth-pass
+**Scope:** `gastown/commands/` — crew, git-init, init, install, namepool, rig, worktree
+
+**Score distribution (total/8):**
+- 8/8: 5 pages (git-init, init, install, namepool, worktree)
+- 7/8: 1 page (crew — errors:1)
+- 6/8: 1 page (rig — errors:1, side_effects:1 for 4286-line source across 8 files)
+
+**Fixes:** 0. Sibling audit clean — all pages already listed siblings.
+
+**Pages modified:** 7 (detail_depth added to all).

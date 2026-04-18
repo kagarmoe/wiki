@@ -1711,3 +1711,16 @@ All planned phases complete:
 **What went well:**
 - All sibling files already listed (Phase 3 was thorough on Services)
 - Plan predicted "High" depth-gap rate — actual was zero fixes needed
+
+## [2026-04-18] stage | Detail Gap Batch 1g — Workspace (7 pages)
+
+**Duration:** ~6 min
+**Pages scored:** 7
+**Fixes applied:** 0
+
+**Score distribution:**
+| Score | Count | Pages |
+|-------|-------|-------|
+| 8/8 | 5 | git-init, init, install, namepool, worktree |
+| 7/8 | 1 | crew |
+| 6/8 | 1 | rig |
