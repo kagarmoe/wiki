@@ -203,6 +203,10 @@ See forward-link: [../drift/README.md](../drift/README.md).
 - **Degraded triage Deacon start failure:** `runDegradedTriage` at `boot.go:317-319` prints "Failed to start Deacon" and returns an error, but the Deacon directory and runtime settings from the failed `mgr.Start` may persist. **Present** — error is propagated to caller.
 - **Lock release on triage:** `boot.go:241` defers `_ = b.ReleaseLock()` — lock release error is silently discarded. If the lock file is stuck, subsequent triage runs will fail to acquire the lock. **Absent** — no cleanup path for stuck lock files.
 
+## Troubleshooting
+
+- [Investigating: daemon infrastructure](../workflows/investigations/daemon-infrastructure.md) — Step 5 covers Boot triage cycle issues including stuck locks and status file staleness.
+
 ## Notes / open questions
 
 - **"Special dog" vs [dog.md](dog.md).** → promoted to `## Drift` as

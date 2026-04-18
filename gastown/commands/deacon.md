@@ -263,6 +263,10 @@ force-kill history, cooldowns.
 - **Startup fallback:** `deacon.go:573` runs `runtime.RunStartupFallback` with `_ =` discard. If startup dialog handling fails, the session may hang at a trust prompt. **Absent** — no error propagation; Deacon may appear stuck at startup.
 - **Warrant execution errors:** `executeWarrants` at `boot.go:335-371` reads and executes warrants during degraded triage. Parse errors and execution errors are logged with `fmt.Printf("Warning: ...")` but not propagated. **Present** — continues processing remaining warrants.
 
+## Troubleshooting
+
+- [Investigating: daemon infrastructure](../workflows/investigations/daemon-infrastructure.md) — Steps 6-7 cover Deacon liveness and start failures.
+
 ## Notes / open questions
 
 - **Largest command file in the batch.** 1644 lines, 15 subcommands,

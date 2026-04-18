@@ -1853,3 +1853,36 @@ All planned phases complete:
 
 **Key finding:**
 - The depth-gap pass across Batch 1 (111 commands) and Batch 2 (67 packages) = 178 pages with ZERO inline fixes. The wiki's interface-level documentation is consistently above the fix threshold of 4. The systematic weakness (errors axis at 1/8 on most pages) is a structural property of how Phase 2 wrote pages — it documented exported functions and their parameters but not every individual error return. Phase 8 added failure modes sections to many pages, raising the floor further.
+
+## [2026-04-18 14:00] stage | cross-page-inference.1b — agent-lifecycle + daemon-infrastructure investigation workflows
+
+**Actor:** wiki-curator subagent
+**Unit:** 2 investigation workflows, 9 entity pages modified with Troubleshooting sections
+**Duration:** one dispatch
+
+**What went well:**
+- The entity pages from prior phases had rich failure-mode sections that mapped directly into decision tree steps. The Phase 8 depth-pass findings (partial-completion, silent-suppression) were especially useful for identifying absent failure modes to highlight in the workflows.
+- The shared "is tmux alive?" prefix between agent-lifecycle and daemon-infrastructure factored cleanly. Both workflows reference each other at their shared entry point.
+- ZombieStatus taxonomy from tmux.go (SessionHealthy/SessionDead/AgentDead/AgentHung) provided a code-grounded vocabulary for Step 11 that an investigator can directly correlate to what they see.
+
+**What could be better:**
+- Some entity pages (e.g., refinery) have absent failure modes (status silently reports empty when Dolt is down) that I documented in the workflow but didn't add to the entity page's Failure modes section. The plan says "add it to the entity page first" — I should be stricter about that in future batches.
+
+**What to change:**
+- For Batch 2 (detail tables), check whether any decision tree steps reference specific values that aren't on the entity pages yet.
+
+## [2026-04-18 14:30] stage | cross-page-inference.1c — workspace-setup + monitoring investigation workflows
+
+**Actor:** wiki-curator subagent
+**Unit:** 2 investigation workflows, 6 entity pages modified with Troubleshooting sections
+**Duration:** one dispatch
+
+**What went well:**
+- Workspace-setup was the most isolated domain as predicted — no shared prefix with other workflows. The decision tree follows the natural "install -> rig add -> crew add" sequence that users encounter.
+- The monitoring workflow surfaced a useful cross-cutting insight: all four monitoring surfaces (status, agents, dashboard, feed) degrade when Dolt is down because they're beads-exempt — they MUST work without Dolt but produce incomplete data. This is by design but not obvious to operators.
+
+**What could be better:**
+- The monitoring workflow has the most steps (9) and could arguably be split into two workflows (CLI monitoring vs web monitoring). Kept as one for now since the shared data-source issues tie them together.
+
+**What to change:**
+- N/A — Batch 1 investigation workflows are complete (6 total across 1a, 1b, 1c).

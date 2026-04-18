@@ -223,6 +223,10 @@ See also: [gastown/drift/README.md](../drift/README.md)
 - **`exit-empty` configuration:** `down.go:131` uses `_ = t.SetExitEmpty(false)`. If this fails, tmux server may exit when all sessions die. **Absent** — no warning.
 - **Halt event fire-and-forget:** `down.go:464` uses `_ = events.LogFeed(events.TypeHalt, ...)`. **Absent** — audit gap.
 
+## Troubleshooting
+
+- [Investigating: daemon infrastructure](../workflows/investigations/daemon-infrastructure.md) — Step 8 covers shutdown failures including sentinel persistence and imposter respawn.
+
 ## Notes / open questions
 
 - **Lock file is never removed** — comment at `down.go:114-120`

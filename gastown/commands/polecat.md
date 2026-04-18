@@ -569,6 +569,10 @@ set to `idle` via `mgr.SetAgentState(name, "idle")`
 
 - **tmux dependency:** All polecat operations assume tmux is available. `polecat_spawn.go` creates tmux sessions for session management. On Windows, tmux is unavailable; the entire polecat/session model is inoperative. **Untested** — no Windows-specific polecat shim exists.
 
+## Troubleshooting
+
+- [Investigating: agent lifecycle](../workflows/investigations/agent-lifecycle.md) — Step 2 covers polecat start failures; Steps 3-4 cover session creation and post-start failures; Step 11 covers zombie/hung detection.
+
 ## Notes / open questions
 
 - **Phase 3 wiki-stale fix (2026-04-15).** The Phase 2 page body said

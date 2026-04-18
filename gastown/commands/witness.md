@@ -292,6 +292,10 @@ See forward-link: [../drift/README.md](../drift/README.md).
 - **`stop` session kill warning:** `witness.go:206` prints warning with `style.PrintWarning` if `KillSessionWithProcesses` fails, but continues to `mgr.Stop()`. **Present** — warning emitted, non-fatal by design.
 - **`attach` auto-start error swallowed for ErrAlreadyRunning:** `witness.go:324` swallows `ErrAlreadyRunning` during the auto-start path but propagates other errors correctly. **Present** — expected behavior.
 
+## Troubleshooting
+
+- [Investigating: agent lifecycle](../workflows/investigations/agent-lifecycle.md) — Step 5 covers witness start failures; Step 6 covers daemon auto-restart and crash-loop backoff.
+
 ## Notes / open questions
 
 - **`--foreground` is vestigial.** → promoted to `## Drift` (as

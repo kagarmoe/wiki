@@ -268,6 +268,11 @@ See [gastown/drift/README.md](../drift/README.md) for the consolidated correctio
 - **Town log events discarded:** `crew_lifecycle.go:645`, `:731` log kill events with `_ = logger.Log(...)`. If town log writes fail, crew lifecycle audit trail is incomplete. **Absent** — no indication of missing events.
 - **Capture pane errors discarded:** `crew_lifecycle.go:623`, `:713` capture pane output for shutdown notification with `output, _ = t.CapturePane(...)`. If capture fails, the shutdown notification doesn't include the last output. **Present** — non-critical; shutdown proceeds.
 
+## Troubleshooting
+
+- [Investigating: agent lifecycle](../workflows/investigations/agent-lifecycle.md) — Step 9 covers crew start failures; Step 10 covers resume failures.
+- [Investigating: workspace setup](../workflows/investigations/workspace-setup.md) — Step 5 covers `gt crew add` failures.
+
 ## Notes / open questions
 
 - **`crew` is both a domain noun and a CLI command.** This page

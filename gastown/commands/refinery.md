@@ -291,6 +291,10 @@ the shared `attachToTmuxSession` helper.
 - **`status` errors discarded:** `runRefineryStatus` at `refinery.go:374-378` discards errors from `mgr.IsRunning()`, `mgr.Status()`, and `mgr.Queue()` using `_, _ =` pattern. If Dolt is down, status silently reports "stopped" with queue length 0 rather than indicating the data is unavailable. **Absent** — no indication that data may be inaccurate vs genuinely empty.
 - **`restart` stop error selectively swallowed:** `refinery.go:546` ignores `ErrNotRunning` from stop but propagates other errors. **Present** — correct selective suppression.
 
+## Troubleshooting
+
+- [Investigating: agent lifecycle](../workflows/investigations/agent-lifecycle.md) — Step 7 covers refinery start failures; Step 8 covers the silent status-when-Dolt-down issue.
+
 ## Notes / open questions
 
 - **Engineer vs Manager vs direct `beads.New`** — three

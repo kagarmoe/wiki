@@ -177,6 +177,10 @@ Defined at `up.go:148-158`:
 - **Boot event fire-and-forget:** `up.go:426` uses `_ = events.LogFeed(...)`. **Absent** — audit gap.
 - **Env var propagation:** `up.go:330-336` sets Dolt port/host into process env for child agent inheritance. **Present** — intentional.
 
+## Troubleshooting
+
+- [Investigating: daemon infrastructure](../workflows/investigations/daemon-infrastructure.md) — Step 3 covers `gt up` daemon startup grace timing; Step 9 covers partial completion.
+
 ## Notes / open questions
 
 - **`ensureDaemon` does not wait as long as `daemon start`.** The

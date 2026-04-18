@@ -145,6 +145,10 @@ Subcommand-scoped (`daemon.go:152-165`):
 
 No failure modes discovered. All subcommands are thin wrappers: `start` spawns a detached process with proper race detection (`daemon.go:224-231`), `stop` delegates to `daemon.StopDaemon`, `status` is read-only. The `run` subcommand (foreground mode) clears identity env vars to prevent misattribution. Error paths are well-checked.
 
+## Troubleshooting
+
+- [Investigating: daemon infrastructure](../workflows/investigations/daemon-infrastructure.md) — Steps 1-4 cover daemon start failures, lock contention, shutdown sentinel issues, and health checks.
+
 ## Notes / open questions
 
 - **`signalDaemonReload`** is referenced from `clear-backoff`

@@ -122,10 +122,14 @@ Multi-step flows:
 - [convoy-launch](gastown/workflows/convoy-launch.md) — staging → launch → dispatch → merge landing
 - [polecat-lifecycle](gastown/workflows/polecat-lifecycle.md) — name allocation → work → nuke
 
-Investigation workflows (Cross-page inference Batch 1a):
+Investigation workflows (Cross-page inference Batches 1a-1c):
 
 - [Investigating: message delivery](gastown/workflows/investigations/message-delivery.md) — nudge/mail delivery diagnostic decision tree
 - [Investigating: data-plane failures](gastown/workflows/investigations/data-plane.md) — Dolt/beads connection, query, and state diagnostic decision tree
+- [Investigating: agent lifecycle](gastown/workflows/investigations/agent-lifecycle.md) — polecat/witness/refinery/crew start/stop/crash diagnostic decision tree
+- [Investigating: daemon infrastructure](gastown/workflows/investigations/daemon-infrastructure.md) — daemon/boot/deacon startup, shutdown, socket management diagnostic decision tree
+- [Investigating: workspace setup](gastown/workflows/investigations/workspace-setup.md) — install, rig add, crew add, bootstrap failure diagnostic decision tree
+- [Investigating: monitoring](gastown/workflows/investigations/monitoring.md) — dashboard, feed, status, agent visibility gap diagnostic decision tree
 
 ### Files
 

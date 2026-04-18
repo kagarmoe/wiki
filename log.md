@@ -5470,3 +5470,40 @@ Two diagnostic decision trees created at `gastown/workflows/investigations/`:
 **Missing failure modes added (1):** `mail.md` (package) had no `## Failure modes` section; added with 4 findings derived from source at `bd.go:15-22,58-118,62-64` and `router.go:1597-1675`.
 
 **Sources traced:** `nudge.go` (deliverNudge call chain), `nudge_poller.go` (poll loop), `mail_send.go` (Router.Send), `mail_check.go` (hook drain path), `router.go` (notifyRecipient), `queue.go` (Enqueue/Drain), `poller.go` (StartPoller), `tmux.go` (NudgeSession 8-step protocol), `doltserver.go` (CheckServerReachable, Start, KillImposters, health metrics), `stale_pid.go` (CleanStaleDoltServerPID), `dolt.go` (DoltServerManager), `daemon.go` (ensureDoltServerRunning, heartbeat).
+
+## [2026-04-18] ingest | Cross-page inference Batch 1b: Investigation workflows for agent-lifecycle + daemon-infrastructure
+
+**Pages created (2):**
+- `gastown/workflows/investigations/agent-lifecycle.md` — 11-step decision tree covering polecat/witness/refinery/crew start failures, session creation failures, post-start failures, zombie/hung detection, and daemon auto-restart behavior
+- `gastown/workflows/investigations/daemon-infrastructure.md` — 9-step decision tree covering daemon lock/sentinel issues, Boot triage cycle, Deacon liveness, shutdown failures, and `gt up` partial completion
+
+**Entity pages modified (9):** Added `## Troubleshooting` cross-references:
+- `gastown/commands/witness.md`
+- `gastown/commands/refinery.md`
+- `gastown/commands/crew.md`
+- `gastown/commands/daemon.md`
+- `gastown/commands/boot.md`
+- `gastown/commands/deacon.md`
+- `gastown/commands/up.md`
+- `gastown/commands/down.md`
+- `gastown/commands/polecat.md`
+
+**Sources traced:** `witness/manager.go` (Start, zombie TOCTOU), `polecat/session_manager.go` (Start, stale session detection), `refinery/manager.go` (Start), `crew/manager.go` (Start, name validation), `daemon/daemon.go` (Run, flock, heartbeat), `tmux/tmux.go` (CheckSessionHealth, ZombieStatus, IsAgentAlive), `cmd/up.go` (ensureDaemon, 5-phase parallel startup), `cmd/down.go` (6-phase shutdown, sentinel, lock), `boot/boot.go` (triage lock, status).
+
+## [2026-04-18] ingest | Cross-page inference Batch 1c: Investigation workflows for workspace-setup + monitoring
+
+**Pages created (2):**
+- `gastown/workflows/investigations/workspace-setup.md` — 7-step decision tree covering `gt install` dependency checks and scaffolding, `gt rig add` clone/config failures, `gt crew add` workspace creation, and workspace discovery edge cases
+- `gastown/workflows/investigations/monitoring.md` — 9-step decision tree covering `gt status` data accuracy, `gt agents` listing issues, `gt dashboard` startup/data issues, `gt feed` event stream issues, and cross-monitoring gaps
+
+**Entity pages modified (5):** Added `## Troubleshooting` cross-references:
+- `gastown/commands/install.md`
+- `gastown/commands/rig.md`
+- `gastown/commands/status.md`
+- `gastown/commands/agents.md`
+- `gastown/commands/dashboard.md`
+- `gastown/commands/feed.md`
+
+**Sources traced:** `cmd/install.go` (preflight checks, scaffolding sequence), `cmd/rig.go` (runRigAdd, git URL validation), `deps/beads.go` (EnsureBeads, version check), `deps/dolt.go` (CheckDolt, version constants), `workspace/find.go` (Find, FindFromCwdOrError, symlink behavior, env var fallback), `cmd/status.go` (gatherStatus, parallel bead fetch, zombie detection), `cmd/agents.go` (categorizeSession, agent type taxonomy), `cmd/dashboard.go` (ensureDoltPortEnv, setup mode), `cmd/feed.go` (source aggregation, TUI/plain/window modes), `web/handler.go` (NewDashboardMux), `web/fetcher.go` (LiveConvoyFetcher).
+
+**Index updated:** Added all 4 new investigation workflow pages to index.md.
