@@ -5556,3 +5556,7 @@ One issue improved: #3652 (witness/refinery Start() no agent beads) moved from p
 Remaining partials: 4 failure-mode-gap, 4 detail-gap, 1 cross-page-inference. Investigation workflows provide excellent navigation but the remaining gaps are at the specific-failure-mode and parameter-value levels, not the cross-page synthesis level.
 
 Pages created: `gastown/drift/validation-cross-page.md`. Pages updated: `index.md`.
+
+## [2026-04-18] decision | Cross-page inference close
+
+Closed bead wiki-2zj. Cross-page inference phase produced 6 investigation workflows (gastown/workflows/investigations/), 26 detail tables across 6 entity pages, 7 comparison tables across 3 hub pages, and 10 asymmetry annotations (8 by-design, 2 undocumented). Validation retest: Phase 8 baseline 9 full (45%), cross-page retest 10 full (50%), improvement +1 full (+5pp). Remaining gaps are failure-mode-specific and parameter-level — entity-page edits, not more synthesis. Section 12 added to gastown/drift/README.md.

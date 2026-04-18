@@ -5,7 +5,7 @@ status: complete
 topic: gastown
 created: 2026-04-15
 updated: 2026-04-18
-phase: 3-7, detail-gap
+phase: 3-7, detail-gap, cross-page-inference
 ---
 
 # Drift Index
@@ -24,6 +24,7 @@ Consolidated index of findings from Phase 3 (Drift audit, Batches 1-14), Phase 4
 - **Section 9** records Phase 7 correctness validation, ambiguity findings, and wiki lint results.
 - **Section 10** records Phase 8 failure-mode analysis results.
 - **Section 11** records the Detail Gap depth assessment across all 212 entity pages.
+- **Section 12** records the Cross-Page Inference phase: investigation workflows, detail tables, comparison tables, and revalidation results.
 
 **Plan:** [../../.claude/plans/2026-04-14-phase3-drift.md](../../.claude/plans/2026-04-14-phase3-drift.md) (gitignored).
 
@@ -492,3 +493,19 @@ The `errors` axis scored lowest across the wiki (average 1.46/2.00). This is con
 | 2f | Packages: Supporting | 30 | 5-8 | 0 |
 | 3a | Binaries + Files | 15 | 6-8 | 0 |
 | 3b | Roles + Concepts + Workflows + Plugins | 19 | 4/4 (synthesis) | 0 |
+
+## Section 12: Cross-Page Inference
+
+### Artifacts produced
+- 6 investigation workflows at gastown/workflows/investigations/
+  (message-delivery, data-plane, agent-lifecycle, daemon-infrastructure, workspace-setup, monitoring)
+- 26 detail tables across 6 entity pages
+- 7 comparison tables across 3 hub pages
+- 10 asymmetry annotations (8 by-design, 2 undocumented)
+
+### Validation
+- Phase 8 retest: 9 full (45%)
+- Cross-page retest: 10 full (50%)
+- Improvement: +1 full (+5pp)
+- Investigation workflows solved navigation; comparison tables solved asymmetry detection
+- Remaining gaps: failure-mode-specific and parameter-level, requiring entity-page edits not more synthesis

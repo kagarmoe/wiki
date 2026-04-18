@@ -1886,3 +1886,23 @@ All planned phases complete:
 
 **What to change:**
 - N/A — Batch 1 investigation workflows are complete (6 total across 1a, 1b, 1c).
+
+## [2026-04-18] phase | Cross-page inference — close
+
+**Scope:** Batches 1-5 across 5 sessions. 6 investigation workflows, 26 detail tables, 7 comparison tables, 10 asymmetry annotations, 1 revalidation pass.
+
+**What went well:**
+- Investigation workflows solved the "which pages do I even check?" navigation problem cleanly. Each workflow is a decision tree pointing operators to the right entity page for their symptom.
+- Comparison tables (lifecycle, startup/shutdown, connection management) surfaced undocumented asymmetries that single-page reading cannot detect. Two genuinely undocumented asymmetries found (witness TOCTOU detection, in-process store timeout mismatch).
+- The 5pp improvement (45% to 50% full) came from exactly the right place: issue #3652 moved to full because the lifecycle comparison table directly annotates the asymmetry it asks about.
+
+**What didn't:**
+- Diminishing returns hit quickly. Only 1 of 20 issues moved from partial to full. The remaining partials need specific parameter values, exact timeout constants, and per-flag behavior — things that live inside entity pages, not in cross-page synthesis.
+- The 60% full target from Phase 8 remains unmet. Cross-page inference was the right tool for the 2 cross-page-inference gaps but could not help the 4 failure-mode-gap or 4 detail-gap issues.
+
+**What to change next time:**
+- Future depth work should edit entity pages directly (adding specific parameter tables, error-return inventories) rather than creating more synthesis artifacts. The wiki's synthesis layer is now adequate; the gaps are at the detail level.
+- The 60% target may not be achievable without upstream code changes or significantly expanding error-path documentation on ~20 entity pages. Worth discussing with Kimberly whether that's worth the effort.
+
+**Follow-ups filed:**
+- none — remaining gaps are tracked in existing beads and the drift index
