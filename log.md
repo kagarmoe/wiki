@@ -5560,3 +5560,18 @@ Pages created: `gastown/drift/validation-cross-page.md`. Pages updated: `index.m
 ## [2026-04-18] decision | Cross-page inference close
 
 Closed bead wiki-2zj. Cross-page inference phase produced 6 investigation workflows (gastown/workflows/investigations/), 26 detail tables across 6 entity pages, 7 comparison tables across 3 hub pages, and 10 asymmetry annotations (8 by-design, 2 undocumented). Validation retest: Phase 8 baseline 9 full (45%), cross-page retest 10 full (50%), improvement +1 full (+5pp). Remaining gaps are failure-mode-specific and parameter-level — entity-page edits, not more synthesis. Section 12 added to gastown/drift/README.md.
+
+## [2026-04-18] decision | Schema: add Outgoing calls section to entity-page template
+
+New standard section `## Outgoing calls` on code-grounded entity pages. Three sub-tables:
+1. **Subprocess invocations** — every exec.Command with binary, command, flags, flag source, file:line
+2. **SQL / config mutations** — every SET/INSERT/UPDATE/config-write with target, value, purpose
+3. **Environment variables set** — every os.Setenv with variable, value source, consumer
+
+Mechanical to produce (grep patterns documented in the skill). Addresses the validation gap where the wiki documented entities at the interface level but not at the outgoing-call-parameter level — the exact depth real investigators need to trace cross-entity failures.
+
+Pages with no outgoing calls omit the section (absence = "no outgoing calls").
+
+Additive optional section — no schema version bump.
+
+→ [.claude/skills/writing-entity-pages/SKILL.md](.claude/skills/writing-entity-pages/SKILL.md)

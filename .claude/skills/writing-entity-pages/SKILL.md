@@ -260,6 +260,53 @@ These three map to common bug categories: assumption violations (e.g., hard depe
 
 **Release notes cross-references** catch drift between what a release ANNOUNCES and what the code DOES. Examples: release notes use a different package name than the code, document a flag that doesn't exist, or omit a breaking change.
 
+## Outgoing calls                   [standard on code-grounded pages]
+
+<every outgoing call the entity makes to external binaries, databases,
+ or services. This is the exact-parameter-level documentation that
+ lets an investigator trace a failure across entity boundaries.
+ Mechanical to produce: grep for exec.Command, SQL statements, HTTP
+ calls, os.Setenv in the source files.>
+
+### Subprocess invocations
+| Called binary | Command | Flags | Flag source | `file:line` |
+|---|---|---|---|---|
+| `bd` | `create` | `--type=agent --labels=gt:polecat` | hardcoded | `polecat.go:347` |
+| `bd` | `update` | `--claim --assignee=<addr>` | `detectSender()` | `polecat.go:392` |
+| `git` | `worktree add` | `<path> <branch>` | runtime args | `git.go:445` |
+
+### SQL / config mutations
+| Target | Statement / key | Value | Purpose | `file:line` |
+|---|---|---|---|---|
+| Dolt | `SET @@wait_timeout` | `28800` | idle connection TTL | `server.go:89` |
+| `settings/config.json` | `runtime.provider` | `"claude"` | agent runtime selection | `config.go:234` |
+
+### Environment variables set
+| Variable | Value source | Consumed by | `file:line` |
+|---|---|---|---|
+| `GT_PANE_ID` | tmux pane at session creation | nudge delivery | `session.go:187` |
+| `GT_TOWN_ROOT` | `workspace.FindFromCwd()` | all gt subcommands | `root.go:145` |
+| `BD_DOLT_AUTO_COMMIT` | hardcoded `"1"` | bd subprocess | `beads.go:67` |
+
+**Why this section exists:** The remaining validation gaps (bd `--rig` vs `--repo`, Dolt `wait_timeout`, dashboard agent-type filters) are all cases where the wiki documented the entity at the interface level but didn't list the exact parameters of its outgoing calls. An investigator tracing a cross-entity failure needs to see the exact flags, exact SQL, exact env vars — not "shells out to bd" or "manages connections."
+
+**Grep patterns for discovery:**
+```bash
+# Subprocess calls
+grep -rn "exec.Command\|exec.CommandContext" <source-files> | grep -v _test.go
+
+# SQL mutations
+grep -rn "SET @@\|INSERT INTO\|UPDATE.*SET\|DELETE FROM" <source-files> | grep -v _test.go
+
+# Env var mutations
+grep -rn "os.Setenv\|os.Unsetenv" <source-files> | grep -v _test.go
+
+# Config file writes
+grep -rn "json.Marshal\|json.NewEncoder\|WriteFile\|atomicWrite" <source-files> | grep -v _test.go
+```
+
+**Pages with no outgoing calls** (pure computation, no subprocess/SQL/env) get this section omitted — its absence means "this entity makes no outgoing calls," which is itself useful information.
+
 ## Notes / open questions
 
 <neutral observations that are not drift or implementation-status findings.
