@@ -7,6 +7,8 @@ created: 2026-04-11
 updated: 2026-04-16
 sources:
   - /home/kimberly/repos/gastown/internal/cmd/show.go
+  - /home/kimberly/repos/gastown/internal/cmd/show_unix.go
+  - /home/kimberly/repos/gastown/internal/cmd/show_windows.go
 tags: [command, work, beads, display, passthrough]
 phase3_audited: 2026-04-15
 phase3_findings: [none]
@@ -15,6 +17,7 @@ phase3_findings_post_release: false
 phase5_audience: agent
 phase8_audited: 2026-04-17
 phase8_findings: [none]
+detail_depth: {params: 2, data_flow: 2, errors: 2, side_effects: 2}
 ---
 
 # gt show

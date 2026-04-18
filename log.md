@@ -5288,3 +5288,18 @@ Scored 22 command pages in GroupDiag against source. All pages scored against th
 **Fixes:** 0. Sibling audit clean — all pages already listed siblings.
 
 **Pages modified:** 7 (detail_depth added to all).
+
+## [2026-04-18] depth-pass | Detail Gap Batch 1h — Ungrouped (15 command pages)
+
+**Verb:** depth-pass
+**Scope:** `gastown/commands/` — agent-log, commit, cycle, forget, health, krc, memories, nudge-poller, proxy-subcmds, remember, show, status-line, tap, town, warrant
+
+**Score distribution (total/8):**
+- 8/8: 14 pages (all except tap)
+- 7/8: 1 page (tap — errors:1)
+
+**Fixes:** 0 inline fixes needed. 2 source updates (show: +platform siblings, tap: +3 guard siblings).
+
+**Pages modified:** 15 (detail_depth added to all). 2 pages got updated sources.
+
+**Outcome:** Plan predicted "Low" depth-gap rate for Ungrouped. Confirmed: 14/15 scored perfect 8/8. These are mostly leaf commands that Phase 2 documented thoroughly.

@@ -4,10 +4,13 @@ type: command
 status: verified
 topic: gastown
 created: 2026-04-11
-updated: 2026-04-16
+updated: 2026-04-18
 sources:
   - /home/kimberly/repos/gastown/internal/cmd/tap.go
   - /home/kimberly/repos/gastown/internal/cmd/tap_guard.go
+  - /home/kimberly/repos/gastown/internal/cmd/tap_guard_bd_init.go
+  - /home/kimberly/repos/gastown/internal/cmd/tap_guard_dangerous.go
+  - /home/kimberly/repos/gastown/internal/cmd/tap_guard_mol_patrol.go
   - /home/kimberly/repos/gastown/internal/cmd/tap_list.go
   - /home/kimberly/repos/gastown/internal/cmd/tap_polecat_stop.go
 tags: [command, ungrouped, beads-exempt, hook, claude-code, policy]
@@ -18,6 +21,7 @@ phase3_findings_post_release: false
 phase5_audience: agent
 phase8_audited: 2026-04-17
 phase8_findings: [none]
+detail_depth: {params: 2, data_flow: 2, errors: 1, side_effects: 2}
 ---
 
 # gt tap

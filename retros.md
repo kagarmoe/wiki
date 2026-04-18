@@ -1724,3 +1724,27 @@ All planned phases complete:
 | 8/8 | 5 | git-init, init, install, namepool, worktree |
 | 7/8 | 1 | crew |
 | 6/8 | 1 | rig |
+
+## [2026-04-18] stage | Detail Gap Batch 1h — Ungrouped (15 pages)
+
+**Duration:** ~8 min
+**Pages scored:** 15
+**Fixes applied:** 0
+**Source updates:** 2 pages (show, tap)
+
+**Score distribution:**
+| Score | Count | Pages |
+|-------|-------|-------|
+| 8/8 | 14 | agent-log, commit, cycle, forget, health, krc, memories, nudge-poller, proxy-subcmds, remember, show, status-line, town, warrant |
+| 7/8 | 1 | tap |
+
+**What went well:**
+- Fastest batch — leaf commands are straightforward to score
+- Plan's "Low" prediction perfectly confirmed
+
+**Batch 1 (commands/) summary:**
+- 89 pages scored across 7 sub-batches (1b-1h)
+- 0 pages needed inline fixes
+- 8 source updates across 4 sub-batches
+- Average score: ~7.4/8
+- Phase 2 + Phase 3 + Phase 8 were thorough on commands/
