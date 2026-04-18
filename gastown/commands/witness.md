@@ -15,6 +15,8 @@ phase3_findings_post_release: false
 phase4_audited: 2026-04-16
 phase4_findings: [none]
 phase5_audience: agent
+phase8_audited: 2026-04-17
+phase8_findings: [partial-completion, silent-suppression]
 ---
 
 # gt witness
@@ -276,6 +278,18 @@ See forward-link: [../drift/README.md](../drift/README.md).
   directly but the broader work pipeline flows through the MQ.
 - [status.md](status.md) — town-level status includes witness
   running state.
+
+## Failure modes
+
+### Partial completion
+
+- **`restart` suppresses stop error:** `runWitnessRestart` at `witness.go:349` discards `mgr.Stop()` error with `_ = mgr.Stop()`. If stop partially completes (e.g., kills tmux but fails to update state file), the fresh `mgr.Start` may see stale state. **Absent** — no error propagation or state reconciliation between stop and start.
+- **`stop` kills session but state update fails:** `runWitnessStop` at `witness.go:191-224` kills the tmux session first (`t.KillSessionWithProcesses`), then calls `mgr.Stop()` to update the state file. If `mgr.Stop()` fails, the session is dead but the state file claims "running." **Present** — the code handles this: if `!running` and `mgr.Stop()` fails, it still reports success since the session is already gone.
+
+### Silent suppression
+
+- **`stop` session kill warning:** `witness.go:206` prints warning with `style.PrintWarning` if `KillSessionWithProcesses` fails, but continues to `mgr.Stop()`. **Present** — warning emitted, non-fatal by design.
+- **`attach` auto-start error swallowed for ErrAlreadyRunning:** `witness.go:324` swallows `ErrAlreadyRunning` during the auto-start path but propagates other errors correctly. **Present** — expected behavior.
 
 ## Notes / open questions
 

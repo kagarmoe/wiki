@@ -13,6 +13,8 @@ phase3_findings: [none]
 phase3_severities: []
 phase3_findings_post_release: false
 phase5_audience: agent
+phase8_audited: 2026-04-17
+phase8_findings: [none]
 ---
 
 # gt role
@@ -244,6 +246,10 @@ No flags on the other subcommands.
   `config.AgentEnv` are implemented in
   [internal/config](../packages/config.md); the shape of
   `<town>/roles/<role>.toml` lives there.
+
+## Failure modes
+
+No failure modes discovered. All `gt role` subcommands are pure read-only queries — they detect role from env vars / cwd, compute home directories, and print to stdout. No state mutations, no tmux interactions, no Dolt queries. All error paths return errors to Cobra.
 
 ## Notes / open questions
 

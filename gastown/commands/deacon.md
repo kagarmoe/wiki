@@ -15,6 +15,8 @@ phase3_findings_post_release: false
 phase4_audited: 2026-04-16
 phase4_findings: [none]
 phase5_audience: agent
+phase8_audited: 2026-04-17
+phase8_findings: [partial-completion, silent-suppression]
 ---
 
 # gt deacon
@@ -244,6 +246,21 @@ force-kill history, cooldowns.
 - [orphans.md](orphans.md) — adjacent orphan-cleanup primitive.
 - [dog.md](dog.md) — dogs are dispatched by the Deacon; see the
   dispatch path in `feed-stranded`.
+
+## Failure modes
+
+### Partial completion
+
+- **`start` creates directory and settings but session may fail:** `startDeaconSession` at `deacon.go:496-576` creates the deacon directory (`os.MkdirAll`), ensures runtime settings, then creates the tmux session. If `t.NewSessionWithCommand` fails (line 536), the directory and settings persist but no session exists. **Absent** — no cleanup of directory/settings on session creation failure. Not critical since the artifacts are benign, but a subsequent `start` will succeed.
+- **`stop` graceful shutdown best-effort:** `deacon.go:595` sends `C-c` with `_ = t.SendKeysRaw(...)` — the interrupt attempt is fire-and-forget. After 100ms sleep, it kills the session regardless. **Present** — the design is intentionally "try graceful, then kill."
+
+### Silent suppression
+
+- **Environment setup on start:** `deacon.go:542-549` sets environment variables on the session using `_ = t.SetEnvironment(...)`. If tmux env fails, the session runs without `GT_ROLE`, `GT_TOWN_ROOT`, etc. Agents detect these via cwd fallback. **Absent** — no warning if env setup fails; agents may use wrong role detection source.
+- **Pane ID capture:** `deacon.go:552-554` captures pane ID for ZFC liveness checks with `_ = t.SetEnvironment(...)`. If this fails, the Deacon's liveness check data is incomplete. **Absent** — silently proceeds without pane ID.
+- **Theme configuration:** `deacon.go:558-559` applies session theme with `_ = t.ConfigureGasTownSession(...)`. Non-fatal cosmetic failure. **Present** — intentional best-effort.
+- **Startup fallback:** `deacon.go:573` runs `runtime.RunStartupFallback` with `_ =` discard. If startup dialog handling fails, the session may hang at a trust prompt. **Absent** — no error propagation; Deacon may appear stuck at startup.
+- **Warrant execution errors:** `executeWarrants` at `boot.go:335-371` reads and executes warrants during degraded triage. Parse errors and execution errors are logged with `fmt.Printf("Warning: ...")` but not propagated. **Present** — continues processing remaining warrants.
 
 ## Notes / open questions
 

@@ -4822,3 +4822,32 @@ Plus two optional sub-sections:
 - `changelog`: per-rig beads query failures silently skipped; results can be incomplete with no user indication
 
 → gastown/commands/{assign,bead,cat,changelog,cleanup,close,compact,convoy,done,formula,handoff,hook,molecule,mountain,mq,orphans,prune-branches,ready,release,resume,scheduler,sling,synthesis,trail,unsling,wl}.md
+
+## [2026-04-17] drift-found | Phase 8 Batch 1d (Failure modes: commands/ Agent Management — 12 pages)
+
+- Read error paths in `agents.go`, `boot.go`, `callbacks.go`, `deacon.go`, `dog.go`, `mayor.go`, `polecat.go`, `polecat_spawn.go`, `polecat_helpers.go`, `polecat_identity.go`, `polecat_cycle.go`, `refinery.go`, `role.go`, `session.go`, `signal.go`, `signal_stop.go`, `witness.go`
+- Pages audited: [agents](gastown/commands/agents.md), [boot](gastown/commands/boot.md), [callbacks](gastown/commands/callbacks.md), [deacon](gastown/commands/deacon.md), [dog](gastown/commands/dog.md), [mayor](gastown/commands/mayor.md), [polecat](gastown/commands/polecat.md), [refinery](gastown/commands/refinery.md), [role](gastown/commands/role.md), [session](gastown/commands/session.md), [signal](gastown/commands/signal.md), [witness](gastown/commands/witness.md)
+- [agents](gastown/commands/agents.md) — `phase8_findings: [none]`
+- [boot](gastown/commands/boot.md) — `phase8_findings: [silent-suppression]`
+- [callbacks](gastown/commands/callbacks.md) — `phase8_findings: [silent-suppression]`
+- [deacon](gastown/commands/deacon.md) — `phase8_findings: [partial-completion, silent-suppression]`
+- [dog](gastown/commands/dog.md) — `phase8_findings: [none]`
+- [mayor](gastown/commands/mayor.md) — `phase8_findings: [partial-completion, silent-suppression]`
+- [polecat](gastown/commands/polecat.md) — `phase8_findings: [precondition-violation, partial-completion, silent-suppression]`
+- [refinery](gastown/commands/refinery.md) — `phase8_findings: [silent-suppression]`
+- [role](gastown/commands/role.md) — `phase8_findings: [none]`
+- [session](gastown/commands/session.md) — `phase8_findings: [silent-suppression]`
+- [signal](gastown/commands/signal.md) — `phase8_findings: [none]`
+- [witness](gastown/commands/witness.md) — `phase8_findings: [partial-completion, silent-suppression]`
+
+**Findings summary:**
+- 8 pages with failure modes (3 partial-completion, 6 silent-suppression, 1 precondition-violation)
+- 4 pages with [none] (agents, dog, role, signal)
+
+**Notable absent findings (predicted bug surfaces):**
+- `polecat`: idle polecat reuse fails mid-repair, leaving the partially-repaired polecat in indeterminate state; `StartSession` bead state not rolled back when pane dies
+- `mayor`: `attach` respawn kills pane processes then may fail on `RespawnPane`, leaving Mayor session dead; `ensureMayorInfra` leaks daemon env vars into process environment
+- `deacon`: env setup and pane ID capture silently discarded; startup fallback failure may leave Deacon stuck at trust prompt
+- `callbacks`: message archive failure allows double-processing with no idempotency guard
+
+→ gastown/commands/{agents,boot,callbacks,deacon,dog,mayor,polecat,refinery,role,session,signal,witness}.md

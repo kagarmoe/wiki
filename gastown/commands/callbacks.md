@@ -15,6 +15,8 @@ phase3_findings_post_release: false
 phase4_audited: 2026-04-16
 phase4_findings: [none]
 phase5_audience: agent
+phase8_audited: 2026-04-17
+phase8_findings: [silent-suppression]
 ---
 
 # gt callbacks
@@ -203,6 +205,14 @@ See forward-link: [../drift/README.md](../drift/README.md).
   pending.
 - `gt escalate` — adjacent escalation primitive (Sub B scope;
   cross-link pending).
+
+## Failure modes
+
+### Silent suppression
+
+- **Handled message archive failure:** `processCallback` at `callbacks.go:247-249` archives handled messages with `_ = mailbox.Delete(msg.ID)`. If deletion fails, the message stays in the inbox and will be reprocessed on the next `callbacks process` run, potentially double-processing merge completions or escalations. **Absent** — no idempotency guard; double-processing `handleMergeCompleted` could attempt to close an already-closed bead.
+- **Town log fire-and-forget:** `logCallback` at `callbacks.go:506-508` discards `_ = logger.Log(...)` error. Callback processing audit trail may be incomplete. **Absent** — silent loss of audit history.
+- **`handleMergeCompleted` bead close non-fatal:** `callbacks.go:346-349` catches `bd.Close` failure as non-fatal, which is correct (bead may be already closed). **Present** — intentional.
 
 ## Notes / open questions
 

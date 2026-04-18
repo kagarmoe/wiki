@@ -16,6 +16,8 @@ phase3_findings_post_release: false
 phase4_audited: 2026-04-16
 phase4_findings: [none]
 phase5_audience: agent
+phase8_audited: 2026-04-17
+phase8_findings: [silent-suppression]
 ---
 
 # gt boot
@@ -191,6 +193,14 @@ See forward-link: [../drift/README.md](../drift/README.md).
   adjacent daemon-tick primitives.
 - [doctor.md](doctor.md) — for diagnosing daemon/Boot interaction
   problems.
+
+## Failure modes
+
+### Silent suppression
+
+- **`spawn` saves status on error but discards save-error:** `runBootSpawn` at `boot.go:217` sets `status.Error` and calls `_ = b.SaveStatus(status)`. If the save itself fails, the spawn error is returned but the status file has stale data. **Absent** — status file may not reflect the most recent spawn failure.
+- **Degraded triage Deacon start failure:** `runDegradedTriage` at `boot.go:317-319` prints "Failed to start Deacon" and returns an error, but the Deacon directory and runtime settings from the failed `mgr.Start` may persist. **Present** — error is propagated to caller.
+- **Lock release on triage:** `boot.go:241` defers `_ = b.ReleaseLock()` — lock release error is silently discarded. If the lock file is stuck, subsequent triage runs will fail to acquire the lock. **Absent** — no cleanup path for stuck lock files.
 
 ## Notes / open questions
 

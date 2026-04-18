@@ -15,6 +15,8 @@ phase3_findings_post_release: false
 phase4_audited: 2026-04-16
 phase4_findings: [none]
 phase5_audience: agent
+phase8_audited: 2026-04-17
+phase8_findings: [none]
 ---
 
 # gt dog
@@ -226,6 +228,10 @@ Parent-level flags: none. Each subcommand has its own flags:
   Dogs execute plugins; polecats execute formulas.
 - [cat.md](cat.md) — utility helper (unrelated to cats/polecats
   despite the name).
+
+## Failure modes
+
+No failure modes discovered. The `dog.go` command layer is a thin CRUD wrapper over `dog.Manager` — add, remove, list, call, done, clear, status, dispatch, and health-check operations all propagate errors from the manager. State mutations (add/remove/dispatch) are single-step operations delegated to the `internal/dog` package. No multi-step sequences with partial-completion risk at the command level.
 
 ## Notes / open questions
 

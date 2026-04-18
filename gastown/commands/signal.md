@@ -14,6 +14,8 @@ phase3_findings: [none]
 phase3_severities: []
 phase3_findings_post_release: false
 phase5_audience: agent
+phase8_audited: 2026-04-17
+phase8_findings: [none]
 ---
 
 # gt signal
@@ -170,6 +172,10 @@ None.
 - [nudge.md](nudge.md) — alternative inbound channel (direct tmux
   send-keys); `signal stop` does not fire for nudges because
   nudges land as Claude input, not as mail or hooked beads.
+
+## Failure modes
+
+No failure modes discovered. `signal stop` is a pure read-check-respond command: it checks mail and hooked beads in parallel, then outputs a JSON response. All error paths fail-safe to `{"decision":"approve"}` (let the agent stop rather than crash). The stop-state file prevents infinite notification loops. JSON marshal failure at `signal_stop.go:263-266` falls back to a hardcoded approve string. This is correct defensive design for a hook command.
 
 ## Notes / open questions
 

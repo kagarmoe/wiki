@@ -1306,3 +1306,23 @@ All planned phases complete:
 
 **Follow-ups filed:**
 - none — lessons are informational only
+
+## [2026-04-17 20:00] stage | 8.1.d — Failure modes: commands/ Agent Management
+
+**Actor:** wiki-curator subagent
+**Unit:** 12 pages audited (agents, boot, callbacks, deacon, dog, mayor, polecat, refinery, role, session, signal, witness)
+**Duration:** one dispatch
+
+**What went well:**
+- High-priority lifecycle managers (polecat, deacon, mayor, witness) had the richest error paths and got thorough treatment
+- Several genuinely absent findings: polecat idle-reuse partial cleanup, mayor attach respawn failure, callbacks double-processing
+- Read-only commands (agents, role, signal) correctly identified as [none] without over-documenting
+
+**What didn't:**
+- The volume of source files per page is high for agent commands (17 .go files for 12 wiki pages); efficiency depends on reading all source first before editing
+
+**What to change next time:**
+- For lifecycle manager commands, always check the restart/stop/attach paths for partial-completion gaps — this is where the bugs live
+
+**Follow-ups filed:**
+- none — lessons are purely informational

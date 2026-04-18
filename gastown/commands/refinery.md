@@ -15,6 +15,8 @@ phase3_findings_post_release: false
 phase4_audited: 2026-04-16
 phase4_findings: [none]
 phase5_audience: agent
+phase8_audited: 2026-04-17
+phase8_findings: [silent-suppression]
 ---
 
 # gt refinery
@@ -280,6 +282,13 @@ the shared `attachToTmuxSession` helper.
 - [molecule.md](molecule.md) — Refinery runs molecule-based
   patrol logic similar to the Witness (not called out in this
   file but consistent with the pattern).
+
+## Failure modes
+
+### Silent suppression
+
+- **`status` errors discarded:** `runRefineryStatus` at `refinery.go:374-378` discards errors from `mgr.IsRunning()`, `mgr.Status()`, and `mgr.Queue()` using `_, _ =` pattern. If Dolt is down, status silently reports "stopped" with queue length 0 rather than indicating the data is unavailable. **Absent** — no indication that data may be inaccurate vs genuinely empty.
+- **`restart` stop error selectively swallowed:** `refinery.go:546` ignores `ErrNotRunning` from stop but propagates other errors. **Present** — correct selective suppression.
 
 ## Notes / open questions
 

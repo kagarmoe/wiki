@@ -16,6 +16,8 @@ phase3_findings_post_release: false
 phase4_audited: 2026-04-16
 phase4_findings: [none]
 phase5_audience: agent
+phase8_audited: 2026-04-17
+phase8_findings: [none]
 ---
 
 # gt agents
@@ -193,6 +195,10 @@ close duplicate sessions or remove lock files manually.
   (`agents.go:83`); polecats are hidden unless `--all` is passed.
 - `gt whoami` ([whoami.md](whoami.md)) — identity is consumed here
   via `session.ParseSessionName`.
+
+## Failure modes
+
+No failure modes discovered. `agents.go` is a read-only display command: it lists tmux sessions, categorizes them, and either prints to stdout or builds a tmux `display-menu`. The `check`/`fix` subcommands read lock files and clean stale ones — all error paths are checked and propagated. No state mutations that could leave partial artifacts.
 
 ## Notes / open questions
 

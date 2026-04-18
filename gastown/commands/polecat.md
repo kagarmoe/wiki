@@ -19,6 +19,8 @@ phase3_findings_post_release: false
 phase4_audited: 2026-04-16
 phase4_findings: [none]
 phase5_audience: agent
+phase8_audited: 2026-04-17
+phase8_findings: [precondition-violation, partial-completion, silent-suppression]
 ---
 
 # gt polecat
@@ -540,6 +542,31 @@ set to `idle` via `mgr.SetAgentState(name, "idle")`
 - [agents.md](agents.md) — `gt agents list` enumerates
   polecats using the same identity beads this command
   manages.
+
+## Failure modes
+
+### Precondition violations
+
+- **Dolt reachable before spawn:** `SpawnPolecatForSling` calls `polecatMgr.CheckDoltHealth()` and `CheckDoltServerCapacity()` (`polecat_spawn.go:91-98`) before allocating. **Present** — prevents orphaned polecats when Dolt is down.
+- **Polecat cap (25 working):** Hard-coded `defaultMaxActivePolecats = 25` at `polecat_spawn.go:107`. **Present** — refuses spawn with descriptive error.
+- **Per-rig directory cap (30):** `polecat_spawn.go:134-148` counts non-hidden dirs in `rigPolecatDir`. **Present** — prevents unbounded worktree accumulation.
+- **Respawn circuit breaker:** `witness.ShouldBlockRespawn` checked at `polecat_spawn.go:119-128`. **Present** — blocks infinite witness→deacon→sling loops.
+- **Worktree existence after creation:** `verifyWorktreeExists` at `polecat_spawn.go:283-289` checks `.git` file, gitdir ref, and `git rev-parse`. **Present** — cleans up partial state on failure via `polecatMgr.Remove(name, true)`.
+
+### Partial completion
+
+- **Idle polecat reuse fails mid-repair:** If `ReuseIdlePolecat` fails and `RepairWorktreeWithOptions` also fails (`polecat_spawn.go:190-197`), control falls through to fresh allocation. The idle polecat is left in an indeterminate state — its branch may have been partially switched. **Absent** — no cleanup of the partially-repaired idle polecat before allocating a new one.
+- **StartSession fails after agent state update:** `StartSession` at `polecat_spawn.go:323-418` updates agent state to "working" (`polecat_spawn.go:398`) and issue status to in_progress (`polecat_spawn.go:404`) before confirming the pane exists. If `getSessionPane` fails (line 410), the session is killed but the bead state remains "working"/"in_progress" with no rollback. **Absent** — Witness must detect the dead session and reset state.
+
+### Silent suppression
+
+- **Event log fire-and-forget:** `_ = events.LogFeed(...)` at `polecat_spawn.go:215` and `:298` silently discards activity-feed write errors. **Absent** — spawn events may be missing from the feed with no indication.
+- **Agent state and issue status warn-only after session start:** `SetAgentStateWithRetry` and `SetState` at `polecat_spawn.go:398-406` use `style.PrintWarning` on failure instead of propagating errors. Documented inline: "returning an error here would leave an orphaned session with no cleanup path." **Present** — intentional warn-only design with explicit rationale.
+- **Runtime readiness timeout:** `WaitForRuntimeReady` at `polecat_spawn.go:386` prints a warning if runtime doesn't become ready within 30s but continues. **Present** — warning emitted, non-fatal by design.
+
+### Cross-platform concerns
+
+- **tmux dependency:** All polecat operations assume tmux is available. `polecat_spawn.go` creates tmux sessions for session management. On Windows, tmux is unavailable; the entire polecat/session model is inoperative. **Untested** — no Windows-specific polecat shim exists.
 
 ## Notes / open questions
 

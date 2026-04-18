@@ -13,6 +13,8 @@ phase3_findings: [wiki-stale]
 phase3_severities: [wrong]
 phase3_findings_post_release: false
 phase5_audience: agent
+phase8_audited: 2026-04-17
+phase8_findings: [silent-suppression]
 ---
 
 # gt session
@@ -263,6 +265,13 @@ names don't collide.
   counts.
 - [agents.md](agents.md) — `gt agents list` enumerates the
   polecats whose sessions this command operates on.
+
+## Failure modes
+
+### Silent suppression
+
+- **Town log events discarded:** `runSessionStart` at `session.go:283-287` and `runSessionStop` at `session.go:315-325` log wake/kill events with `_ = logger.Log(...)`. If town log writes fail, session lifecycle events are lost. **Absent** — no indication of audit trail gaps.
+- **`restart` session teardown poll:** `runSessionRestart` at `session.go:528-533` polls 10 times with 200ms sleep waiting for the old session to terminate. If the session never terminates, the new `Start` may fail or create a duplicate. **Absent** — no timeout error; falls through to start attempt.
 
 ## Notes / open questions
 

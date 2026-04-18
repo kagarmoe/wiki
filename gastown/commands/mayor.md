@@ -15,6 +15,8 @@ phase3_findings_post_release: false
 phase4_audited: 2026-04-16
 phase4_findings: [none]
 phase5_audience: agent
+phase8_audited: 2026-04-17
+phase8_findings: [partial-completion, silent-suppression]
 ---
 
 # gt mayor
@@ -197,6 +199,23 @@ agentOverride, rigName)`.
 - [doctor.md](doctor.md) — general diagnostics.
 - `gt mail` / `gt nudge` — mailing addresses resolve `"mayor"` to
   this agent per `mayor.go:39` (Sub B scope; cross-link pending).
+
+## Failure modes
+
+### Precondition violations
+
+- **Dolt required for attach:** `ensureMayorInfra` at `mayor.go:409-455` treats Dolt failure as fatal (returns error) but daemon failure as non-fatal (warns and continues). **Present** — clear separation of critical vs optional dependencies. Port-conflict errors are enriched with `doltserver.PortHolder` and `FindFreePort` suggestions.
+
+### Partial completion
+
+- **`attach` respawn sequence:** `runMayorAttach` at `mayor.go:192-293` performs ACP shutdown → daemon start → Dolt start → session check → possible pane respawn. If respawn fails at line 283 (`t.RespawnPane`), the pane may have been killed (via `KillPaneProcesses` at line 277) but not restarted, leaving the Mayor session dead. **Absent** — no recovery if respawn fails after killing pane processes.
+- **`gracefullyShutdownACP` force-kills after timeout:** `mayor.go:297-334` polls for 3 seconds (30 iterations * 100ms) then `_ = process.Kill()`. If kill also fails, the ACP process survives and blocks tmux. **Absent** — no error check on `process.Kill()`.
+
+### Silent suppression
+
+- **`restart` stop error swallowed:** `mayor.go:396` ignores `ErrNotRunning` from stop but propagates other errors. **Present** — correct selective suppression.
+- **`attach` runtime restart warnings:** Multiple `style.PrintWarning` calls during pane respawn (`mayor.go:272`, `:278`). These are visible to the user but don't block attach. **Present** — intentional warn-and-continue.
+- **`ensureMayorInfra` daemon.json env leak:** `mayor.go:411-415` calls `os.Setenv` for daemon config env vars. These leak into the current process environment and any child processes. **Absent** — not cleaned up after use; may affect subsequent commands in the same process.
 
 ## Notes / open questions
 
