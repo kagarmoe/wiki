@@ -5677,3 +5677,17 @@ Tables added: 4 Subprocess invocations tables, 1 Config file writes table.
 
 **drift index updated:** Section 13 added with coverage summary and methodology.
 **bead:** wiki-088 (close pending)
+
+## [2026-04-18] validation | Final retest — 20 issues re-scored after outgoing-calls sweep
+
+Re-tested the same 20 open gastown issues against the wiki after the
+outgoing-calls sweep added `## Outgoing calls` sections to 111 entity
+pages. Score progression: 35% → 45% → 50% → 50%. No change from
+cross-page retest. The remaining 9 partials and 1 miss have root causes
+outside the subprocess-argument level (caller-provided dynamic args,
+MySQL server defaults, library constructor parameters, env var lifecycle
+absences, log emission patterns, dead code identification, external
+documentation errors, cross-page detection chains, feature requests).
+Two highest-value targets to reach 60%: dead-code annotation on
+HandlePolecatDone (#3653), GT_PANE_ID staleness note (#3563).
+Pages: `gastown/drift/validation-final.md`. Index updated.
