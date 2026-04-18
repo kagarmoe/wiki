@@ -4,7 +4,7 @@ type: file
 status: verified
 topic: gastown
 created: 2026-04-11
-updated: 2026-04-15
+updated: 2026-04-18
 sources:
   - /home/kimberly/repos/gastown/Makefile
 tags: [file, build, ldflags, makefile]
@@ -304,6 +304,18 @@ way to run" the e2e tests.
   NOT invoke `make build`; uses `buildGoModule` with its own LDFLAGS.
 - [../inventory/repo-root.md](../inventory/repo-root.md) — lists the
   Makefile in the top-level inventory.
+
+## Outgoing calls
+
+### Subprocess invocations (via make targets)
+| Called binary | Command | Flags | Make target | `file:line` |
+|---|---|---|---|---|
+| `go` | `build` | `-ldflags` (version injection) | `build` | `Makefile:35` |
+| `go` | `build` | `cmd/gt-proxy-*` | `build` | `Makefile:35` |
+| `go` | `build` | `-tags desktop` | `desktop-build` | `Makefile:40` |
+| `git` | `rev-parse HEAD` | (none) | `check-up-to-date` | `Makefile:46` |
+| `git` | `merge-base --is-ancestor` | commit checks | `check-forward-only` | `Makefile:73` |
+| `go` | `test` | `./...` | `test` | `Makefile:142` |
 
 ## Notes / open questions
 

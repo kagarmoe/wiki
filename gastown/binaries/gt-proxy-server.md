@@ -4,7 +4,7 @@ type: binary
 status: verified
 topic: gastown
 created: 2026-04-11
-updated: 2026-04-16
+updated: 2026-04-18
 sources:
   - /home/kimberly/repos/gastown/cmd/gt-proxy-server/main.go
   - /home/kimberly/repos/gastown/cmd/gt-proxy-server/config.go
@@ -302,6 +302,15 @@ is not yet mapped as a wiki entity page.
 - **`gt proxy-subcmds` discovery failure:** `discoverAllowedSubcmds()` at `main.go:158-171` — if the `gt` binary is missing or `gt proxy-subcmds` fails, silently falls back to `defaultAllowedSubcmds`. **Present** — debug-level log, non-fatal.
 - **Invalid extra SAN IPs:** `main.go:108-119` — invalid IP strings are skipped with a warning but don't prevent startup. **Present** — warning logged, server continues.
 - **Missing config file:** `config.go:64-77` — `os.IsNotExist(err)` returns an empty config without error. **Present** — intentional silent default.
+
+## Outgoing calls
+
+### Subprocess invocations
+| Called binary | Command | Flags | Flag source | `file:line` |
+|---|---|---|---|---|
+| `gt` | `proxy-subcmds` | (none) | hardcoded | `main.go:159` |
+
+Outgoing calls from the proxy server's request handlers (exec, git smart-HTTP) are documented on the [internal/proxy](../packages/proxy.md) package page.
 
 ## Notes / open questions
 

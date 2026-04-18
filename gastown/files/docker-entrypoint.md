@@ -4,7 +4,7 @@ type: file
 status: verified
 topic: gastown
 created: 2026-04-11
-updated: 2026-04-15
+updated: 2026-04-18
 sources:
   - /home/kimberly/repos/gastown/docker-entrypoint.sh
   - /home/kimberly/repos/gastown/Dockerfile
@@ -163,6 +163,19 @@ tini reaps the resulting process tree.
 ### Partial completion (what doesn't it clean up?)
 
 - **`set -e` with no trap:** `docker-entrypoint.sh:2` — the script uses `set -e` for error handling but has no `trap` for cleanup. If `git config` succeeds but `dolt config` fails (line 10-11), git identity is configured but dolt identity is not. The container exits and the partial config persists on the volume. **Absent** — no rollback of partial config.
+
+## Outgoing calls
+
+### Subprocess invocations
+| Called binary | Command | Flags | Flag source | `file:line` |
+|---|---|---|---|---|
+| `git` | `config --global` | `user.name "$GIT_USER"` | env var | `docker-entrypoint.sh:7` |
+| `git` | `config --global` | `user.email "$GIT_EMAIL"` | env var | `docker-entrypoint.sh:8` |
+| `git` | `config --global` | `credential.helper store` | hardcoded | `docker-entrypoint.sh:9` |
+| `dolt` | `config --global --add` | `user.name "$GIT_USER"` | env var | `docker-entrypoint.sh:10` |
+| `dolt` | `config --global --add` | `user.email "$GIT_EMAIL"` | env var | `docker-entrypoint.sh:11` |
+| `gt` | `install` | `/gt --git` | hardcoded | `docker-entrypoint.sh:16` |
+| `gt` | `install` | `/gt --git --force` | hardcoded | `docker-entrypoint.sh:19` |
 
 ## Notes / open questions
 

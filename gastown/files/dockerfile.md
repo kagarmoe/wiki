@@ -4,7 +4,7 @@ type: file
 status: verified
 topic: gastown
 created: 2026-04-11
-updated: 2026-04-15
+updated: 2026-04-18
 sources:
   - /home/kimberly/repos/gastown/Dockerfile
   - /home/kimberly/repos/gastown/docker-entrypoint.sh
@@ -239,6 +239,16 @@ kept running while humans / agents `docker compose exec` into it.
 ### Partial completion (what doesn't it clean up?)
 
 - **`make build` failure after apt/Go install:** If `make build` at `Dockerfile:48` fails (e.g., Go compile error), all prior RUN layers (apt packages, Go tarball, bd/dolt installs) are cached but the image is not produced. Docker layer caching makes retry cheap, but no cleanup of intermediate layers happens automatically. **Present** — standard Docker build behavior.
+
+## Outgoing calls
+
+### Subprocess invocations (via RUN directives)
+| Called binary | Command | Flags | Purpose | `file:line` |
+|---|---|---|---|---|
+| `apt-get` | `update && install` | system packages | OS dependencies | `Dockerfile:10` |
+| `curl \| bash` | beads install script | `@main` | Install bd | `Dockerfile:30` |
+| `curl \| bash` | dolt install script | `@latest` | Install dolt | `Dockerfile:31` |
+| `make` | `build` | (none) | Build gt binary | `Dockerfile:48` |
 
 ## Notes / open questions
 
