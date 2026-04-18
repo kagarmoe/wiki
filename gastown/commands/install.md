@@ -15,6 +15,8 @@ phase3_findings_post_release: false
 phase4_audited: 2026-04-16
 phase4_findings: [none]
 phase5_audience: user
+phase8_audited: 2026-04-17
+phase8_findings: [partial-completion]
 ---
 
 # gt install
@@ -276,6 +278,12 @@ None. `gt install` is a leaf command.
 - **Release position:** `in-release` — the `rigs/` directory has never existed at any release tag
 
 See [gastown/drift/README.md](../drift/README.md) for the consolidated corrections list.
+
+## Failure modes
+
+### Partial completion
+
+- **Multi-step workspace creation:** `runInstall` at `install.go:94+` creates directories, writes config files, initializes beads, sets up git, creates GitHub repos, installs shell integration, and provisions supervisors — all in sequence. If any middle step fails (e.g., `--github` repo creation fails after directories and config are written), the workspace is left in a partial state. **Absent** — no rollback of previously created directories/files. A re-run with `--force` is the recovery path.
 
 ## Notes / open questions
 

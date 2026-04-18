@@ -1364,3 +1364,22 @@ All planned phases complete:
 
 **Follow-ups filed:**
 - none — lessons are purely informational
+
+## [2026-04-17 20:45] stage | 8.1.g — Failure modes: commands/ Workspace
+
+**Actor:** wiki-curator subagent
+**Unit:** 7 pages audited (crew, git-init, init, install, namepool, rig, worktree)
+**Duration:** one dispatch
+
+**What went well:**
+- Workspace commands are mostly well-designed single-step operations; [none] stamps were quick and correct
+- Python batch approach for [none] pages is efficient
+
+**What didn't:**
+- Nothing significant
+
+**What to change next time:**
+- Continue using the python batch pattern for uniform [none] pages
+
+**Follow-ups filed:**
+- none — lessons are purely informational

@@ -15,6 +15,8 @@ phase3_findings_post_release: false
 phase4_audited: 2026-04-16
 phase4_findings: [none]
 phase5_audience: user
+phase8_audited: 2026-04-17
+phase8_findings: [none]
 ---
 
 # gt namepool
@@ -209,6 +211,10 @@ touch custom names in settings.
 - **Release position:** `in-release` — both subcommands present at v1.0.0
 
 See [gastown/drift/README.md](../drift/README.md) for the consolidated corrections list.
+
+## Failure modes
+
+No failure modes discovered. `namepool.go` is a CRUD command for managing themed name pools. List/add/remove/set-theme operations are single bead writes with error propagation. No complex multi-step sequences.
 
 ## Notes / open questions
 

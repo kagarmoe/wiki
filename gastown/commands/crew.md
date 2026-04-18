@@ -23,6 +23,8 @@ phase3_findings_post_release: false
 phase4_audited: 2026-04-16
 phase4_findings: [none]
 phase5_audience: user
+phase8_audited: 2026-04-17
+phase8_findings: [silent-suppression]
 ---
 
 # gt crew
@@ -257,6 +259,13 @@ stored in the shared `crewRig` variable).
 - **Release position:** `in-release` — all three omitted subcommands present at v1.0.0
 
 See [gastown/drift/README.md](../drift/README.md) for the consolidated corrections list.
+
+## Failure modes
+
+### Silent suppression
+
+- **Town log events discarded:** `crew_lifecycle.go:645`, `:731` log kill events with `_ = logger.Log(...)`. If town log writes fail, crew lifecycle audit trail is incomplete. **Absent** — no indication of missing events.
+- **Capture pane errors discarded:** `crew_lifecycle.go:623`, `:713` capture pane output for shutdown notification with `output, _ = t.CapturePane(...)`. If capture fails, the shutdown notification doesn't include the last output. **Present** — non-critical; shutdown proceeds.
 
 ## Notes / open questions
 

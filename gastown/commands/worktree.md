@@ -15,6 +15,8 @@ phase3_findings_post_release: false
 phase4_audited: 2026-04-16
 phase4_findings: [none]
 phase5_audience: user
+phase8_audited: 2026-04-17
+phase8_findings: [none]
 ---
 
 # gt worktree
@@ -145,6 +147,10 @@ If no worktrees exist, prints `"(none)"` and a creation hint.
 - [prune-branches.md](prune-branches.md) — general
   branch/worktree hygiene.
 - [orphans.md](orphans.md) — cleanup of stale worktrees.
+
+## Failure modes
+
+No failure modes discovered. `worktree.go` wraps git worktree operations (list/add/remove/repair) via the `git.Git` abstraction. All errors propagated. The repair subcommand handles broken worktree references.
 
 ## Notes / open questions
 

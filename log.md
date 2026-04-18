@@ -4891,3 +4891,17 @@ Plus two optional sub-sections:
 - `start`: agent shutdown notifications best-effort; agents may be killed without warning
 
 → gastown/commands/{daemon,dolt,down,estop,maintain,quota,reaper,shutdown,start,thaw,up}.md
+
+## [2026-04-17] drift-found | Phase 8 Batch 1g (Failure modes: commands/ Workspace — 7 pages)
+
+- Read error paths in `crew.go`, `crew_lifecycle.go`, `crew_add.go`, `git_init.go`, `init.go`, `install.go`, `namepool.go`, `rig.go`, `worktree.go`
+- Pages audited: [crew](gastown/commands/crew.md), [git-init](gastown/commands/git-init.md), [init](gastown/commands/init.md), [install](gastown/commands/install.md), [namepool](gastown/commands/namepool.md), [rig](gastown/commands/rig.md), [worktree](gastown/commands/worktree.md)
+- [install](gastown/commands/install.md) — `phase8_findings: [partial-completion]`
+- [rig](gastown/commands/rig.md) — `phase8_findings: [silent-suppression]`
+- [crew](gastown/commands/crew.md) — `phase8_findings: [silent-suppression]`
+- 4 pages with [none]: git-init, init, namepool, worktree
+
+**Notable absent findings:**
+- `install`: multi-step workspace creation has no rollback on mid-sequence failure; `--force` re-run is the only recovery path
+
+→ gastown/commands/{crew,git-init,init,install,namepool,rig,worktree}.md

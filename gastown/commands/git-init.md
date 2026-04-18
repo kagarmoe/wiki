@@ -13,6 +13,8 @@ phase3_findings: [cobra-drift]
 phase3_severities: [wrong]
 phase3_findings_post_release: false
 phase5_audience: user
+phase8_audited: 2026-04-17
+phase8_findings: [none]
 ---
 
 # gt git-init
@@ -167,6 +169,10 @@ re-installing.
 - **Release position:** `in-release` — `InstallPreCheckoutHook` present at v1.0.0
 
 See [gastown/drift/README.md](../drift/README.md) for the consolidated corrections list.
+
+## Failure modes
+
+No failure modes discovered. `git_init.go` runs `beads.GitInit` to initialize a beads git repo at the current path. Single operation with error propagated. No multi-step sequence.
 
 ## Notes / open questions
 

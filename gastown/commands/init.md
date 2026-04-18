@@ -16,6 +16,8 @@ phase3_findings_post_release: false
 phase4_audited: 2026-04-16
 phase4_findings: [none]
 phase5_audience: user
+phase8_audited: 2026-04-17
+phase8_findings: [none]
 ---
 
 # gt init
@@ -141,6 +143,10 @@ See also:
 **wiki-stale (inline fix applied above):** Phase 2 wiki body at step 3 repeated the Long text's incorrect 4-directory list. Fixed inline to cite the actual `rig.AgentDirs` at `internal/rig/types.go:48-54`. **Phase 2 root cause: `phase-2-incomplete` (heuristic)** — Phase 2 trusted the Long text instead of reading the `rig.AgentDirs` slice definition.
 
 See [gastown/drift/README.md](../drift/README.md) for the consolidated corrections list.
+
+## Failure modes
+
+No failure modes discovered. `init.go` creates a `.beads/` directory and optionally a Dolt database. Each step checks errors and propagates. The `--dolt` flag delegates to `doltserver` package.
 
 ## Notes / open questions
 

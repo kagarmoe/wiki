@@ -22,6 +22,8 @@ phase3_findings_post_release: false
 phase4_audited: 2026-04-16
 phase4_findings: [none]
 phase5_audience: user
+phase8_audited: 2026-04-17
+phase8_findings: [silent-suppression]
 ---
 
 # gt rig
@@ -286,6 +288,12 @@ keybinding.
   the HQ; `gt rig add` fills it with rigs.
 - [doctor.md](doctor.md) — health check.
 - [agents.md](agents.md) — cross-rig enumeration of agents.
+
+## Failure modes
+
+### Silent suppression
+
+- **Cycle binding failure:** `rig.go:1107` uses `_ = t.SetCycleBindings(sessions[0])` during rig add. If tmux binding setup fails, cycle keybindings are unavailable but the rig add succeeds. **Absent** — no warning that cycle bindings are missing.
 
 ## Notes / open questions
 
