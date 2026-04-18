@@ -4,8 +4,8 @@ type: drift
 status: complete
 topic: gastown
 created: 2026-04-15
-updated: 2026-04-17
-phase: 3-7
+updated: 2026-04-18
+phase: 3-7, detail-gap
 ---
 
 # Drift Index
@@ -22,6 +22,8 @@ Consolidated index of findings from Phase 3 (Drift audit, Batches 1-14), Phase 4
 - **Section 7** summarizes the Phase 5 audience classification across all 111 command pages.
 - **Section 8** summarizes Phase 6 implementation results: wiki-side fixes, upstream correction drafts, and remaining work.
 - **Section 9** records Phase 7 correctness validation, ambiguity findings, and wiki lint results.
+- **Section 10** records Phase 8 failure-mode analysis results.
+- **Section 11** records the Detail Gap depth assessment across all 212 entity pages.
 
 **Plan:** [../../.claude/plans/2026-04-14-phase3-drift.md](../../.claude/plans/2026-04-14-phase3-drift.md) (gitignored).
 
@@ -431,3 +433,62 @@ issues often involve SPECIFIC parameter details (flag names, config keys,
 connection timeouts) that failure-mode analysis doesn't naturally surface.
 Failure modes are about error paths; many remaining partials are about
 implementation-detail depth on the happy path.
+
+## Section 11: Detail Gap Assessment
+
+**Phase:** Detail Gap depth pass (2026-04-18)
+**Plan:** `../../.claude/plans/2026-04-17-detail-gap.md` (gitignored)
+
+### Summary
+
+Pages assessed: 212
+Pages fixed inline: 0 (all pages scored above threshold)
+
+### Score distribution (4-axis code-grounded pages: 193 pages)
+
+| Total score | Count | Percentage |
+|---:|---:|---:|
+| 5/8 | 8 | 4% |
+| 6/8 | 64 | 33% |
+| 7/8 | 42 | 22% |
+| 8/8 | 79 | 41% |
+
+### Score distribution (2-axis synthesis pages: 19 pages)
+
+| Total score | Count | Percentage |
+|---:|---:|---:|
+| 4/4 | 19 | 100% |
+
+### Per-axis averages (code-grounded pages)
+
+| Axis | Average | Interpretation |
+|---|---:|---|
+| params | 1.98 | Near-complete parameter documentation |
+| data_flow | 1.96 | Near-complete data flow documentation |
+| errors | 1.46 | Weakest axis — many pages at 1 (partial error coverage) |
+| side_effects | 1.59 | Second weakest — side effects less documented than params/flow |
+
+### Systematic weak axis: errors
+
+The `errors` axis scored lowest across the wiki (average 1.46/2.00). This is consistent with Phase 8's finding that failure-mode documentation was the primary gap. Phase 8 added failure-mode sections to complex pages, which improved coverage, but many simpler pages still document error behavior at the "lists some error conditions" level (score 1) rather than "every error return documented" (score 2). The `side_effects` axis (1.59) is the second-weakest.
+
+### Batch breakdown
+
+| Batch | Category | Pages | Score range | Fixed |
+|---|---|---:|---|---:|
+| 1a | Commands: Diagnostics | 22 | 5-8 | 0 |
+| 1b | Commands: Configuration | 11 | 5-8 | 0 |
+| 1c | Commands: Work Management | 26 | 5-8 | 0 |
+| 1d | Commands: Agent Management | 12 | 5-8 | 0 |
+| 1e | Commands: Communication | 7 | 6-8 | 0 |
+| 1f | Commands: Services | 11 | 6-8 | 0 |
+| 1g | Commands: Workspace | 7 | 5-8 | 0 |
+| 1h | Commands: Ungrouped | 15 | 5-8 | 0 |
+| 2a | Packages: Platform | 9 | 6-8 | 0 |
+| 2b | Packages: Data layer | 8 | 6-8 | 0 |
+| 2c | Packages: Runtime | 13 | 6-8 | 0 |
+| 2d | Packages: Diagnostics | 4 | 6-8 | 0 |
+| 2e | Packages: Long-running | 3 | 7-8 | 0 |
+| 2f | Packages: Supporting | 30 | 5-8 | 0 |
+| 3a | Binaries + Files | 15 | 6-8 | 0 |
+| 3b | Roles + Concepts + Workflows + Plugins | 19 | 4/4 (synthesis) | 0 |

@@ -5410,3 +5410,30 @@ Scored 22 command pages in GroupDiag against source. All pages scored against th
 **Pages modified:** 30 (detail_depth added to all).
 
 **Outcome:** Plan predicted "Low" depth-gap rate for Supporting packages. Confirmed: all 30 pages scored 6-8/8. Most of these are thin utility packages that Phase 2 documented fully at the interface level. The 6/8 cluster represents the same consistent "errors:1, side_effects:1" pattern seen across all other sub-batches — acceptable depth for utility packages where error handling is often pass-through.
+
+## [2026-04-18] depth-pass | Detail Gap Batch 3a — Code-grounded pages (15 pages)
+
+**Bead:** `wiki-4dt` (Detail gap: source-grounded depth pass)
+**Pages:** 3 binaries (gt, gt-proxy-client, gt-proxy-server) + 12 files (claude-dir, docker-compose, docker-entrypoint, dockerfile-e2e, dockerfile, flake-nix, golangci-yml, go-mod, goreleaser-yml, makefile, opencode-dir, templates-agents)
+**Rubric:** 4-axis (params, data_flow, errors, side_effects)
+**Scores:** Binaries: all 8/8. Files: 11 scored 6/8 (simple entities), makefile scored 8/8 (complex). Docker-entrypoint scored 7/8.
+**Fixes:** 0 — all above threshold.
+**Commit:** `e9dcf62`
+
+## [2026-04-18] depth-pass | Detail Gap Batch 3b — Synthesis pages (19 pages)
+
+**Bead:** `wiki-4dt` (Detail gap: source-grounded depth pass)
+**Pages:** 8 roles, 7 concepts, 2 workflows, 2 plugins
+**Rubric:** 2-axis (synthesis, relationships)
+**Scores:** All 19 scored 4/4 (maximum). Every synthesis page accurately reflects the depth of its referenced entity pages and documents entry/exit conditions + error propagation + asymmetries.
+**Fixes:** 0.
+**Commit:** `666f4f7`
+
+## [2026-04-18] depth-pass | Detail Gap close — full sweep complete (212 pages)
+
+**Bead:** `wiki-4dt` — closed.
+**Summary:** 212 pages assessed across 16 sub-batches (1a-1h, 2a-2f, 3a-3b). 0 pages required inline fixes — all scored above threshold. The wiki's depth is uniformly at or above the interface level after Phases 2-8.
+**Score distribution (193 code-grounded):** 5/8: 8 pages (4%), 6/8: 64 pages (33%), 7/8: 42 pages (22%), 8/8: 79 pages (41%).
+**Score distribution (19 synthesis):** 4/4: 19 pages (100%).
+**Weakest axis:** errors (avg 1.46/2.00). Consistent with Phase 8's finding that failure-mode coverage is the primary remaining gap. Side_effects (1.59) is second weakest.
+**Drift index:** Section 11 added to `gastown/drift/README.md`.
