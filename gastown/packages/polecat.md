@@ -4,13 +4,15 @@ type: package
 status: partial
 topic: gastown
 created: 2026-04-11
-updated: 2026-04-16
+updated: 2026-04-17
 phase3_audited: 2026-04-15
 phase3_findings: [none]
 phase3_severities: []
 phase3_findings_post_release: false
 phase4_audited: 2026-04-16
 phase4_findings: [incomplete]
+phase8_audited: 2026-04-17
+phase8_findings: [partial-completion, silent-suppression]
 sources:
   - /home/kimberly/repos/gastown/internal/polecat/manager.go
   - /home/kimberly/repos/gastown/internal/polecat/session_manager.go  # full read Phase 6
@@ -409,6 +411,27 @@ Source:
   of sling.
 - [`gt witness`](../commands/witness.md) — per-rig watchdog
   that runs the polecat lifecycle observer.
+
+## Failure modes
+
+### Partial completion (what doesn't it clean up?)
+- **Rollback cleanup after spawn failure:** `manager.go:703-716` —
+  `cleanupOnError` uses `_ =` for every cleanup step: `ResetAgentBeadForReuse`,
+  `WorktreeRemove`, `os.RemoveAll`, `namePool.Save`. If any of these fail,
+  the polecat directory, worktree, or bead may be left in an inconsistent
+  state. **Absent** — no log or error propagation from rollback. A failed
+  rollback leaves orphan resources that require manual `gt cleanup`.
+
+### Silent suppression (what errors are swallowed?)
+- **Heartbeat write failure:** `heartbeat.go:96` —
+  `_ = os.WriteFile(heartbeatFile(...), data, 0644)`. If the heartbeat
+  file cannot be written, the witness will think the polecat is dead and
+  may prematurely reclaim it. **Absent** — no warning that liveness
+  reporting is broken.
+- **Pool/polecat lock unlock failures:** `manager.go:645-685` — multiple
+  `_ = poolLock.Unlock()` and `_ = polecatLock.Unlock()` calls in error
+  paths. **Present** — these are cleanup in error paths where the lock
+  will auto-release on process exit via POSIX flock semantics.
 
 ## Notes / open questions
 

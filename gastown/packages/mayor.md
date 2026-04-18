@@ -4,13 +4,15 @@ type: package
 status: verified
 topic: gastown
 created: 2026-04-11
-updated: 2026-04-16
+updated: 2026-04-17
 phase3_audited: 2026-04-15
 phase3_findings: [none]
 phase3_severities: []
 phase3_findings_post_release: false
 phase4_audited: 2026-04-16
 phase4_findings: [none]
+phase8_audited: 2026-04-17
+phase8_findings: [silent-suppression]
 sources:
   - /home/kimberly/repos/gastown/internal/mayor/manager.go
   - /home/kimberly/repos/gastown/internal/mayor/cleanup.go
@@ -237,6 +239,20 @@ The Unix and Windows files are the two halves of the
   cleanup veto protects.
 - [`gt boot`](../commands/boot.md) — Boot triages Mayor on each
   daemon tick.
+
+## Failure modes
+
+### Silent suppression (what errors are swallowed?)
+- **Ctrl-C send failure during graceful stop:** `manager.go:343` —
+  `_ = t.SendKeysRaw(sessionID, "C-c")`. If the tmux session has
+  already died, the Ctrl-C fails silently. **Present** — the code
+  proceeds to force-kill regardless.
+
+### Cross-platform concerns
+- **Windows process cleanup:** `process_windows.go:26` —
+  `_ = windows.CloseHandle(handle)`. The Windows handle close error
+  is discarded. **Untested** — the Windows shim exists but diverges
+  from Unix process-group semantics.
 
 ## Notes / open questions
 

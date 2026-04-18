@@ -4,13 +4,15 @@ type: package
 status: verified
 topic: gastown
 created: 2026-04-11
-updated: 2026-04-16
+updated: 2026-04-17
 phase3_audited: 2026-04-15
 phase3_findings: [none]
 phase3_severities: []
 phase3_findings_post_release: false
 phase4_audited: 2026-04-16
 phase4_findings: [none]
+phase8_audited: 2026-04-17
+phase8_findings: [silent-suppression]
 sources:
   - /home/kimberly/repos/gastown/internal/deacon/manager.go
   - /home/kimberly/repos/gastown/internal/deacon/heartbeat.go
@@ -348,6 +350,16 @@ Defaults `DefaultPingTimeout = 30s`, `DefaultConsecutiveFailures
   patrol primitives.
 - [`gt boot`](../commands/boot.md) — Boot triages the Deacon on
   every daemon tick.
+
+## Failure modes
+
+### Silent suppression (what errors are swallowed?)
+- **Session lifecycle cleanup:** Like other agent runtime packages,
+  this package uses `_ =` for tmux session teardown, lock release,
+  and file cleanup operations in error paths. These are typically
+  cleanup-on-failure code where the primary error has already been
+  captured. **Present** — most suppressions are in defer/cleanup
+  contexts where POSIX semantics provide a safety net.
 
 ## Notes / open questions
 

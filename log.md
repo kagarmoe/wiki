@@ -4976,3 +4976,33 @@ As expected for leaf commands: read-only viewers (agent-log, health, memories, s
   - doltserver: stale PID file removal failure is silent — repeated failures without logging
 
 → gastown/packages/{beads,channelevents,doltserver,events,lock,mail,mq,nudge}.md
+
+## [2026-04-17] drift-found | Phase 8 Batch 2c (Failure modes: packages/ Agent Runtime — 13 pages)
+
+**Scope:** Failure mode analysis across 13 agent runtime package pages.
+
+**Pages audited:**
+- [mayor](gastown/packages/mayor.md) — `phase8_findings: [silent-suppression]`
+- [polecat](gastown/packages/polecat.md) — `phase8_findings: [partial-completion, silent-suppression]`
+- [crew](gastown/packages/crew.md) — `phase8_findings: [silent-suppression]`
+- [dog](gastown/packages/dog.md) — `phase8_findings: [silent-suppression]`
+- [deacon](gastown/packages/deacon.md) — `phase8_findings: [silent-suppression]`
+- [refinery](gastown/packages/refinery.md) — `phase8_findings: [partial-completion, silent-suppression]`
+- [witness](gastown/packages/witness.md) — `phase8_findings: [silent-suppression]`
+- [reaper](gastown/packages/reaper.md) — `phase8_findings: [partial-completion, silent-suppression]`
+- [wisp](gastown/packages/wisp.md) — `phase8_findings: [none]`
+- [convoy](gastown/packages/convoy.md) — `phase8_findings: [none]`
+- [rig](gastown/packages/rig.md) — `phase8_findings: [silent-suppression]`
+- [formula](gastown/packages/formula.md) — `phase8_findings: [none]`
+- [plugin](gastown/packages/plugin.md) — `phase8_findings: [none]`
+
+**Findings summary:**
+- 9 pages with failure modes
+- 4 pages with [none] (wisp, convoy, formula, plugin)
+- Highest-value absent findings:
+  - polecat: rollback cleanup discards all errors — failed spawn can leave orphan worktrees, beads, and directories
+  - polecat: heartbeat write failure is silent — witness may prematurely reclaim a healthy polecat
+  - reaper: SET autocommit errors discarded 6 times — subsequent SQL may behave unexpectedly
+  - refinery: 164 silent suppressions with no aggregate cleanup-failure logging
+
+→ gastown/packages/{mayor,polecat,crew,dog,deacon,refinery,witness,reaper,wisp,convoy,rig,formula,plugin}.md

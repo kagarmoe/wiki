@@ -4,13 +4,15 @@ type: package
 status: verified
 topic: gastown
 created: 2026-04-11
-updated: 2026-04-16
+updated: 2026-04-17
 phase3_audited: 2026-04-15
 phase3_findings: [none]
 phase3_severities: []
 phase3_findings_post_release: false
 phase4_audited: 2026-04-16
 phase4_findings: [none]
+phase8_audited: 2026-04-17
+phase8_findings: [partial-completion, silent-suppression]
 sources:
   - /home/kimberly/repos/gastown/internal/refinery/manager.go
   - /home/kimberly/repos/gastown/internal/refinery/engineer.go
@@ -355,6 +357,25 @@ culprit(s).
 - [`polecat` package](polecat.md) — where work originates.
 - [`mayor` package](mayor.md) — escalation target for exhausted
   retries.
+
+## Failure modes
+
+### Partial completion (what doesn't it clean up?)
+- **Failed merge leaves partial state:** The refinery's merge
+  workflow involves multiple git operations (checkout, merge, push).
+  With 164 silent error suppressions across the package, many
+  intermediate cleanup steps discard errors. The most critical:
+  merge state files and branch references may persist after a
+  failed batch merge, requiring manual cleanup.
+
+### Silent suppression (what errors are swallowed?)
+- **Extensive `_ =` pattern across merge operations:** The refinery
+  has 164 instances of `_ =` across 5 non-test files. Most are
+  cleanup operations (removing temp files, closing connections)
+  where failure is non-fatal. However, the volume means that
+  silent failures in the merge pipeline may accumulate without
+  any diagnostic trail. **Absent** — no aggregate logging of
+  cleanup failures across a merge batch.
 
 ## Notes / open questions
 

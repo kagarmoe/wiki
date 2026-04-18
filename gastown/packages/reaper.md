@@ -4,13 +4,15 @@ type: package
 status: verified
 topic: gastown
 created: 2026-04-11
-updated: 2026-04-16
+updated: 2026-04-17
 phase3_audited: 2026-04-15
 phase3_findings: [none]
 phase3_severities: []
 phase3_findings_post_release: false
 phase4_audited: 2026-04-16
 phase4_findings: [none]
+phase8_audited: 2026-04-17
+phase8_findings: [partial-completion, silent-suppression]
 sources:
   - /home/kimberly/repos/gastown/internal/reaper/reaper.go
 tags: [package, services, reaper, cleanup, dolt, wisps, beads, ttl]
@@ -228,6 +230,24 @@ a connection pool of its own, and never touches the filesystem.
   reaper talks to.
 - [`internal/beads`](beads.md) — bead semantics (wisps, agent
   beads, priorities).
+
+## Failure modes
+
+### Silent suppression (what errors are swallowed?)
+- **SET autocommit errors discarded:** `reaper.go:345,489,557,666,820,908`
+  — six instances of `_, _ = db.ExecContext(ctx, "SET @@autocommit = 1")`
+  where both the result and error are discarded. If the Dolt server is
+  in a bad state, the reaper proceeds with autocommit off, which could
+  cause implicit transactions to accumulate. **Absent** — no log that
+  autocommit restoration failed; subsequent SQL operations may behave
+  unexpectedly.
+
+### Partial completion (what doesn't it clean up?)
+- **TTL cleanup across multiple tables:** The reaper cleans up wisps
+  and expired beads across multiple Dolt databases. If the Dolt
+  connection drops mid-cleanup, some databases may be cleaned while
+  others are not. **Present** — errors are returned from the top-level
+  functions and callers can retry.
 
 ## Notes / open questions
 

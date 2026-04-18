@@ -1442,3 +1442,23 @@ All planned phases complete:
 
 **Follow-ups filed:**
 - none — lessons are purely informational
+
+## [2026-04-17 13:00] stage | 8.2.c — packages/ Agent Runtime
+
+**Actor:** wiki-curator subagent
+**Unit:** 13 pages audited (mayor, polecat, crew, dog, deacon, refinery, witness, reaper, wisp, convoy, rig, formula, plugin)
+**Duration:** one dispatch
+
+**What went well:**
+- polecat rollback cleanup is a genuine high-value absent finding — the `cleanupOnError` closure discards all errors
+- Counting `_ =` instances per package before reading was an effective triage method
+
+**What didn't:**
+- Many agent packages share the same "session lifecycle cleanup" pattern — findings are structurally similar
+- refinery has 164 suppressions but reading all of them for specific line citations would be excessive
+
+**What to change next time:**
+- For agent packages with shared lifecycle patterns, document the pattern once and reference it rather than repeating
+
+**Follow-ups filed:**
+- none — lessons are purely informational
