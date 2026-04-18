@@ -4,7 +4,7 @@ type: package
 status: partial
 topic: gastown
 created: 2026-04-11
-updated: 2026-04-16
+updated: 2026-04-17
 sources:
   - /home/kimberly/repos/gastown/internal/daemon/daemon.go
   - /home/kimberly/repos/gastown/internal/daemon/types.go
@@ -27,6 +27,8 @@ phase3_severities: []
 phase3_findings_post_release: false
 phase4_audited: 2026-04-16
 phase4_findings: [incomplete]
+phase8_audited: 2026-04-17
+phase8_findings: [silent-suppression, partial-completion]
 ---
 
 # internal/daemon
@@ -744,6 +746,29 @@ spike detection).
   heartbeat (no wiki page yet).
 - `internal/boot` — the separate boot-triage agent poked by this
   daemon each heartbeat (no wiki page yet).
+
+## Failure modes
+
+### Partial completion (what doesn't it clean up?)
+- **Daemon patrol loop partial failures:** The daemon runs many patrol
+  handlers (dolt health, compactor, lifecycle, restart tracking,
+  notification, pressure monitoring) in a single event loop.
+  Individual handler failures are logged but do not stop the loop.
+  If a handler leaves state dirty (e.g., compactor starts but does
+  not finish), the next patrol cycle encounters stale state.
+  **Present** — errors are logged per-handler, and the loop continues.
+
+### Silent suppression (what errors are swallowed?)
+- **Dolt server management:** `dolt.go` has 11 silent suppressions,
+  including connection closes and process kills during Dolt health
+  checks. **Present** — these are probe/cleanup operations where
+  failure is non-fatal.
+- **Compactor dog cleanup:** `compactor_dog.go` has 11 silent
+  suppressions for tmux session teardown and worktree cleanup.
+  **Absent** — if compactor session cleanup fails, the zombie
+  session may persist without any diagnostic trail.
+- **Lifecycle lock release:** `lifecycle.go` has 5 suppressed unlock
+  calls. **Present** — POSIX flock semantics provide a safety net.
 
 ## Notes / open questions
 

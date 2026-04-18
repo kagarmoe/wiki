@@ -1481,3 +1481,22 @@ All planned phases complete:
 
 **Follow-ups filed:**
 - none — lessons are purely informational
+
+## [2026-04-17 14:00] stage | 8.2.e — packages/ Long-running
+
+**Actor:** wiki-curator subagent
+**Unit:** 3 pages audited (daemon, tmux, runtime)
+**Duration:** one dispatch
+
+**What went well:**
+- runtime is genuinely clean (0 suppressions) — correctly fast-pathed
+- tmux cross-platform finding is significant — 6 platform shim pairs is unusual
+
+**What didn't:**
+- Nothing — clean batch
+
+**What to change next time:**
+- none
+
+**Follow-ups filed:**
+- none — lessons are purely informational

@@ -5023,3 +5023,21 @@ As expected for leaf commands: read-only viewers (agent-log, health, memories, s
 - Highest-value absent finding: doctor fix-mode actions discard errors — users see "fixed" but repair may not have taken effect
 
 → gastown/packages/{doctor,health,keepalive,deps}.md
+
+## [2026-04-17] drift-found | Phase 8 Batch 2e (Failure modes: packages/ Long-running — 3 pages)
+
+**Scope:** Failure mode analysis across 3 long-running service package pages.
+
+**Pages audited:**
+- [daemon](gastown/packages/daemon.md) — `phase8_findings: [silent-suppression, partial-completion]`
+- [tmux](gastown/packages/tmux.md) — `phase8_findings: [silent-suppression, cross-platform]`
+- [runtime](gastown/packages/runtime.md) — `phase8_findings: [none]`
+
+**Findings summary:**
+- 2 pages with failure modes (daemon, tmux)
+- 1 page with [none] (runtime)
+- Highest-value absent findings:
+  - daemon: compactor dog cleanup failures leave zombie sessions without diagnostics
+  - tmux: 6 platform shim pairs with untested Windows implementations
+
+→ gastown/packages/{daemon,tmux,runtime}.md

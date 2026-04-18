@@ -4,7 +4,7 @@ type: package
 status: verified
 topic: gastown
 created: 2026-04-11
-updated: 2026-04-16
+updated: 2026-04-17
 sources:
   - /home/kimberly/repos/gastown/internal/tmux/tmux.go
   - /home/kimberly/repos/gastown/internal/tmux/theme.go
@@ -24,6 +24,8 @@ phase3_severities: []
 phase3_findings_post_release: false
 phase4_audited: 2026-04-16
 phase4_findings: [none]
+phase8_audited: 2026-04-17
+phase8_findings: [silent-suppression, cross-platform]
 ---
 
 # internal/tmux
@@ -496,6 +498,26 @@ _ = t.NudgeSessionWithOpts(name, prompt, tmux.NudgeOpts{TownRoot: townRoot})
   [gt cleanup](../commands/cleanup.md), [gt doctor](../commands/doctor.md),
   [gt handoff](../commands/handoff.md).
 - [go-packages inventory](../inventory/go-packages.md).
+
+## Failure modes
+
+### Silent suppression (what errors are swallowed?)
+- **tmux command failures in session management:** `tmux.go` has 53
+  instances of `_ =` across session operations. Many are
+  `SetOption`, `SetEnvironment`, and `SendKeys` calls where the tmux
+  server may have already died. **Present** — most are non-fatal
+  cleanup or best-effort configuration. The critical session-creation
+  calls properly propagate errors.
+
+### Cross-platform concerns
+- **6 platform shim pairs:** flock_unix/windows,
+  process_group_unix/windows, sysproc_unix/windows,
+  descendants_stub/windows. The Windows implementations provide
+  different semantics (e.g., process group uses
+  `CREATE_NEW_PROCESS_GROUP`, descendants uses Win32 job objects).
+  **Untested** — no indication the Windows tmux integration has been
+  tested end-to-end (tmux itself is Unix-only; Windows uses WSL or
+  similar).
 
 ## Notes / open questions
 
