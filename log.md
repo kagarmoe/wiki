@@ -4952,3 +4952,27 @@ As expected for leaf commands: read-only viewers (agent-log, health, memories, s
   - util: Windows orphan cleanup is a complete no-op
 
 → gastown/packages/{cli,config,session,style,telemetry,ui,util,version,workspace}.md
+
+## [2026-04-17] drift-found | Phase 8 Batch 2b (Failure modes: packages/ Data Layer — 8 pages)
+
+**Scope:** Failure mode analysis across 8 data layer package pages.
+
+**Pages audited:**
+- [beads](gastown/packages/beads.md) — `phase8_findings: [silent-suppression, precondition]`
+- [channelevents](gastown/packages/channelevents.md) — `phase8_findings: [precondition]`
+- [doltserver](gastown/packages/doltserver.md) — `phase8_findings: [partial-completion, silent-suppression]`
+- [events](gastown/packages/events.md) — `phase8_findings: [silent-suppression]`
+- [lock](gastown/packages/lock.md) — `phase8_findings: [none]`
+- [mail](gastown/packages/mail.md) — `phase8_findings: [none]`
+- [mq](gastown/packages/mq.md) — `phase8_findings: [none]`
+- [nudge](gastown/packages/nudge.md) — `phase8_findings: [partial-completion]`
+
+**Findings summary:**
+- 4 pages with failure modes (beads, channelevents, doltserver, events, nudge — 5 actually)
+- 3 pages with [none] (lock, mail, mq)
+- Highest-value absent findings:
+  - channelevents: Emit falls back to ~/gt silently when workspace detection fails — subscribers in real town never see events
+  - events: write() returns nil when not in workspace — callers think event logged but it wasn't
+  - doltserver: stale PID file removal failure is silent — repeated failures without logging
+
+→ gastown/packages/{beads,channelevents,doltserver,events,lock,mail,mq,nudge}.md

@@ -4,7 +4,7 @@ type: package
 status: verified
 topic: gastown
 created: 2026-04-11
-updated: 2026-04-15
+updated: 2026-04-17
 sources:
   - /home/kimberly/repos/gastown/internal/events/events.go
 tags: [package, data-layer, events, activity-feed, jsonl, flock]
@@ -12,6 +12,8 @@ phase3_audited: 2026-04-15
 phase3_findings: [wiki-stale]
 phase3_severities: [incomplete]
 phase3_findings_post_release: false
+phase8_audited: 2026-04-17
+phase8_findings: [silent-suppression]
 ---
 
 # internal/events
@@ -161,6 +163,16 @@ should wait for goes through `channelevents`.
 - [go-packages inventory](../inventory/go-packages.md)
 - [go.mod](../files/go-mod.md) — `github.com/gofrs/flock` is the file-lock
   library used here.
+
+## Failure modes
+
+### Silent suppression (what errors are swallowed?)
+- **Write failure when not in a workspace:** `events.go:112-116` —
+  `write()` returns `nil` when `FindFromCwd()` fails or returns
+  empty. Events are silently dropped with no indication that the
+  activity feed is not being populated. **Absent** — callers like
+  `events.LogFeed` return nil, so commands think the event was logged
+  when it was not.
 
 ## Notes / open questions
 

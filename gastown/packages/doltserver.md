@@ -4,7 +4,7 @@ type: package
 status: partial
 topic: gastown
 created: 2026-04-11
-updated: 2026-04-16
+updated: 2026-04-17
 sources:
   - /home/kimberly/repos/gastown/internal/doltserver/doltserver.go
   - /home/kimberly/repos/gastown/internal/doltserver/dolthub.go
@@ -22,6 +22,8 @@ phase3_severities: []
 phase3_findings_post_release: false
 phase4_audited: 2026-04-16
 phase4_findings: [incomplete]
+phase8_audited: 2026-04-17
+phase8_findings: [partial-completion, silent-suppression]
 ---
 
 # internal/doltserver
@@ -551,6 +553,43 @@ _ = doltserver.Stop(townRoot)
 - [go.mod](../files/go-mod.md) — `github.com/go-sql-driver/mysql`,
   `github.com/gofrs/flock`, `gopkg.in/yaml.v3`.
 - [go-packages inventory](../inventory/go-packages.md)
+
+## Failure modes
+
+### Partial completion (what doesn't it clean up?)
+- **Stale PID file after crash:** `Start` writes a PID file at
+  `doltserver.go:~1450`. If the Dolt server crashes without
+  `Stop` being called, the PID file persists. **Present** —
+  `IsRunning` at `doltserver.go:540-558` detects stale PID files
+  (process dead) and removes them with `_ = os.Remove(config.PidFile)`.
+- **Lock file on Start failure:** If `Start` fails after acquiring
+  the flock at `doltserver.go:1334-1383`, the lock is released in
+  the defer. However, the lock file itself is never removed on
+  success. **Present** — POSIX flocks auto-release on process exit;
+  the file is a coordination artifact, not a leak.
+
+### Silent suppression (what errors are swallowed?)
+- **Connection close errors:** Multiple `_ = conn.Close()` calls
+  at `doltserver.go:535,576,598,633` discard TCP connection close
+  errors during health checks. **Present** — intentional for probe
+  connections that are immediately discarded.
+- **PID file removal on stale detection:** `doltserver.go:558` —
+  `_ = os.Remove(config.PidFile)` discards the error when removing
+  a stale PID file. **Absent** — if the PID file cannot be removed
+  (permissions, read-only mount), the stale file persists and
+  `IsRunning` will repeatedly try and fail to remove it on every call,
+  without logging the failure.
+- **Lock file removal on stale lock:** `doltserver.go:1337,1375` —
+  `_ = os.Remove(lockFile)` for corrupt or stale lock files.
+  **Absent** — same pattern as stale PID file: silent failure on
+  permission errors.
+
+### Cross-platform concerns
+- **sysproc_unix.go / sysproc_windows.go:** Platform shims for
+  `setProcessGroup` and `processIsAlive`. The Windows shim uses
+  `CREATE_NEW_PROCESS_GROUP` similar to `util.SetProcessGroup`.
+  **Untested** — no indication in the codebase that the Windows
+  Dolt server lifecycle has been tested.
 
 ## Notes / open questions
 

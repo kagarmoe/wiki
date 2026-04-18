@@ -4,7 +4,7 @@ type: package
 status: verified
 topic: gastown
 created: 2026-04-11
-updated: 2026-04-15
+updated: 2026-04-17
 sources:
   - /home/kimberly/repos/gastown/internal/channelevents/channelevents.go
 tags: [package, data-layer, events, await-event, channels, refinery, rendezvous]
@@ -12,6 +12,8 @@ phase3_audited: 2026-04-15
 phase3_findings: [none]
 phase3_severities: []
 phase3_findings_post_release: false
+phase8_audited: 2026-04-17
+phase8_findings: [precondition]
 ---
 
 # internal/channelevents
@@ -152,6 +154,17 @@ that subscriber.
 - [internal/telemetry](telemetry.md) — OTel-based event telemetry, orthogonal
   to this file-based rendezvous.
 - [go-packages inventory](../inventory/go-packages.md)
+
+## Failure modes
+
+### Precondition violations (what does it assume?)
+- **Town root fallback to ~/gt:** `Emit` at `channelevents.go:36-39`
+  — when `workspace.FindFromCwd()` fails or returns empty, the code
+  silently falls back to `$HOME/gt`. If `$HOME` is unset or the
+  directory doesn't exist, `os.MkdirAll` at line 42 will create it.
+  **Absent** — no warning that events are being written to a fallback
+  location; subscribers watching the real town's `events/` directory
+  will never see them.
 
 ## Notes / open questions
 

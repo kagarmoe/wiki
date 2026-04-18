@@ -1423,3 +1423,22 @@ All planned phases complete:
 
 **Follow-ups filed:**
 - none — lessons are purely informational
+
+## [2026-04-17 12:30] stage | 8.2.b — packages/ Data Layer
+
+**Actor:** wiki-curator subagent
+**Unit:** 8 pages audited (beads, channelevents, doltserver, events, lock, mail, mq, nudge)
+**Duration:** one dispatch
+
+**What went well:**
+- doltserver yielded cross-platform + silent suppression findings; the imposter-killing and lock recovery code has multiple `_ =` patterns worth documenting
+- nudge Drain claim/unclaim flow is well-designed but the unclaim failure path is a genuine absent finding
+
+**What didn't:**
+- mail package has robust two-phase delivery with crash-safe label ordering — no findings despite complexity
+
+**What to change next time:**
+- For packages with crash-safety design (mail), check the crash-recovery documentation matches code, then fast-path
+
+**Follow-ups filed:**
+- none — lessons are purely informational

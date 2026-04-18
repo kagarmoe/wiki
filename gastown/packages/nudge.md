@@ -4,7 +4,7 @@ type: package
 status: verified
 topic: gastown
 created: 2026-04-11
-updated: 2026-04-15
+updated: 2026-04-17
 sources:
   - /home/kimberly/repos/gastown/internal/nudge/queue.go
   - /home/kimberly/repos/gastown/internal/nudge/poller.go
@@ -17,6 +17,8 @@ phase3_audited: 2026-04-15
 phase3_findings: [none]
 phase3_severities: []
 phase3_findings_post_release: false
+phase8_audited: 2026-04-17
+phase8_findings: [partial-completion]
 ---
 
 # internal/nudge
@@ -208,6 +210,23 @@ if len(nudges) > 0 {
   so future readers don't expect cross-use.
 - [go.mod](../files/go-mod.md) — `github.com/fsnotify/fsnotify`.
 - [go-packages inventory](../inventory/go-packages.md)
+
+## Failure modes
+
+### Partial completion (what doesn't it clean up?)
+- **Drain claim file orphan on crash:** `Drain` at `queue.go:159-163`
+  atomically renames each `.json` to `.claimed` before reading. If the
+  process crashes between rename and delete, the `.claimed` file
+  persists. **Present** — the stale-claim sweep at `queue.go:175-178`
+  reclaims orphaned `.claimed` files older than 5 minutes by renaming
+  them back to `.json`, so they are redelivered on the next `Drain`.
+- **Requeue on partial Drain error:** `queue.go:241` — if
+  `os.Rename(claimPath, path)` fails during unclaim (when a nudge
+  needs to be put back), the error is swallowed with `_ =
+  os.Rename(...)` and the comment says "orphan sweep catches
+  failures." **Absent** — there is no log that the unclaim failed;
+  if the orphan sweep also fails (e.g., directory permissions
+  changed), the nudge is silently lost.
 
 ## Notes / open questions
 

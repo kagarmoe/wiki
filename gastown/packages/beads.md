@@ -4,7 +4,7 @@ type: package
 status: partial
 topic: gastown
 created: 2026-04-11
-updated: 2026-04-16
+updated: 2026-04-17
 sources:
   - /home/kimberly/repos/gastown/internal/beads/beads.go
   - /home/kimberly/repos/gastown/internal/beads/store.go
@@ -41,6 +41,8 @@ phase3_severities: [incomplete]
 phase3_findings_post_release: false
 phase4_audited: 2026-04-16
 phase4_findings: [incomplete]
+phase8_audited: 2026-04-17
+phase8_findings: [silent-suppression, precondition]
 ---
 
 # internal/beads
@@ -624,6 +626,34 @@ issue, err := b.Show("hq-cv-abc123")   // routes into hq rig automatically
   interacts with beads state transitions.
 - [gt cleanup](../commands/cleanup.md) — uses `IsProtectedBead` to decide
   what's safe to touch.
+
+## Failure modes
+
+### Precondition violations (what does it assume?)
+- **bd binary on PATH:** Every subprocess invocation in `beads.go`
+  calls `exec.LookPath("bd")` or shells out directly to `bd`.
+  `ErrNotInstalled` at `beads.go:28` is the sentinel, but many
+  internal helpers call `runBdCommand` which wraps `exec.Command`
+  without a pre-check. **Present** — `ErrNotInstalled` is surfaced
+  to callers, and the top-level `run` function checks `LookPath`
+  before executing.
+- **Store 30-second timeout:** `storeCtx()` at `store.go:78-80`
+  creates a `context.WithTimeout(30s)` for all store operations. If
+  Dolt is slow or overloaded, the operation fails with a context
+  deadline error. **Present** — the timeout is explicit and errors
+  propagate.
+
+### Silent suppression (what errors are swallowed?)
+- **Store close error:** `OpenStore` at `store.go:71-73` returns a
+  cleanup function that calls `_ = store.Close()`, discarding any
+  close error. **Absent** — if the store close fails (e.g.,
+  connection dropped), the error is silently lost. In practice
+  this is cleanup code and the main operation has already completed,
+  but a dangling connection or uncommitted transaction could leak.
+- **BdSupportsAllowStale probe error:** `beads.go:81` —
+  `_ = cmd.Run()` discards the error from the `bd --allow-stale
+  version` probe. **Present** — this is intentional capability
+  detection; failure means "not supported."
 
 ## Notes / open questions
 
