@@ -5691,3 +5691,18 @@ documentation errors, cross-page detection chains, feature requests).
 Two highest-value targets to reach 60%: dead-code annotation on
 HandlePolecatDone (#3653), GT_PANE_ID staleness note (#3563).
 Pages: `gastown/drift/validation-final.md`. Index updated.
+
+## [2026-04-18] validation | Link-navigation validation — 20 issues tested via link-following only
+
+Re-tested the same 20 open gastown issues using **link-following only**
+(no grep, no find, no search). Starting from natural entry points
+(index.md, entity pages, investigation workflows), followed markdown
+links up to 5 hops per issue. Grep-based: 10 full (50%). Navigation-
+based: 9 full (45%). One issue downgraded: #3652 (witness/refinery
+Start() no agent beads) -- content exists across witness.md, refinery.md,
+and polecat.md but the agent-lifecycle investigation workflow doesn't
+link agent bead creation as a startup precondition. 10 missing links
+identified across 10 source pages. All 9 partial issues from grep-based
+scoring remain partial under navigation (genuine content gaps, not
+navigation failures). Pages: `gastown/drift/validation-navigation.md`.
+Index updated.
