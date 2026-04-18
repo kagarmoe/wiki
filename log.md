@@ -5185,3 +5185,26 @@ Scored 22 command pages in GroupDiag against source. All pages scored against th
 **Pages modified:** 22 (detail_depth added to all). 2 pages also got updated sources and `updated:` date bumps.
 
 **Outcome:** Phase 2 was thorough on Diagnostics commands (confirmed the plan's "Low" depth-gap rate prediction). Every page documents flags with types/defaults, names structs and functions, covers error conditions, and documents side effects with file:line. No inline fixes needed.
+
+## [2026-04-18] depth-pass | Detail Gap Batch 1b — Configuration (11 command pages)
+
+**Verb:** depth-pass
+**Scope:** `gastown/commands/` — account, config, directive, disable, enable, hooks, issue, plugin, shell, theme, uninstall
+
+**Score distribution (total/8):**
+- 8/8: 9 pages (account, disable, enable, issue, plugin, shell, theme, uninstall, and effectively directive at 6)
+- 7/8: 1 page (config — errors:1 due to "not read in full" on some paths)
+- 6/8: 1 page (directive — errors:1, side_effects:1 for edit subcommand)
+- 5/8: 1 page (hooks — data_flow:1, errors:1, side_effects:1 — parent-only page; subcommand detail lives in sibling files)
+
+**Fixes:** 0 inline fixes needed. All complex pages scored >4.
+
+**Axis-level summary:**
+- Params: 11/11 scored 2 — all flags/args documented with types and defaults
+- Data flow: 10/11 scored 2, hooks:1 (parent-only; subcommand data flow in siblings)
+- Errors: 8/11 scored 2, config:1, directive:1, hooks:1 (partial coverage where Phase 8 handled main paths)
+- Side effects: 9/11 scored 2, directive:1, hooks:1 (subcommand-level writes in siblings)
+
+**Pages modified:** 11 (detail_depth added to all).
+
+**Outcome:** Plan predicted "Medium" depth-gap rate for Configuration. Actual: zero pages needing fixes. Phase 2 + Phase 3 + Phase 8 were thorough on this group. The hooks parent page scores lowest (5/8) because it is a pure dispatcher — the real depth lives in the 9 sibling subcommand files, which don't have individual wiki pages.

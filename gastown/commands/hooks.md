@@ -25,6 +25,7 @@ phase3_findings_post_release: false
 phase5_audience: user
 phase8_audited: 2026-04-17
 phase8_findings: [none]
+detail_depth: {params: 2, data_flow: 1, errors: 1, side_effects: 1}
 ---
 
 # gt hooks

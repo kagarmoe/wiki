@@ -1597,3 +1597,33 @@ All planned phases complete:
 **What to change next time:**
 - For batches predicted "Low," consider a lighter-weight pass: read wiki only, spot-check 2-3 source files to validate, and score. Full source reading is necessary only for "Medium" and "High" batches.
 - The 5 pages scoring 1 on side_effects or errors are cases where the page documents behavior but doesn't cite the exact write path or exact error condition. These are borderline 1/2 and not worth fixing given the threshold logic. Future batches with "High" predictions should prioritize these axes.
+
+## [2026-04-18] stage | Detail Gap Batch 1b — Configuration (11 pages)
+
+**Duration:** ~15 min
+**Pages scored:** 11
+**Fixes applied:** 0
+
+**Score distribution:**
+| Score | Count | Pages |
+|-------|-------|-------|
+| 8/8 | 8 | account, disable, enable, issue, plugin, shell, theme, uninstall |
+| 7/8 | 1 | config (errors:1) |
+| 6/8 | 1 | directive (errors:1, side_effects:1) |
+| 5/8 | 1 | hooks (data_flow:1, errors:1, side_effects:1 — parent-only page) |
+
+**Axis-level summary:**
+- Params: 11/11 scored 2 — every page documents all flags with types and defaults
+- Data flow: 10/11 scored 2 — hooks parent page scores 1 because subcommand data flow lives in sibling files
+- Errors: 8/11 scored 2 — 3 pages at 1 where Phase 8 covered main paths but minor gaps remain
+- Side effects: 9/11 scored 2 — directive and hooks at 1 where subcommand-level writes are in siblings
+
+**What went well:**
+- Plan predicted "Medium" depth-gap rate. Actual: zero fixes needed. Phase 2 was thorough on Configuration commands.
+- Batch reading all 11 pages first, then source verification, was efficient — avoided source reads for pages that were obviously complete.
+
+**What didn't:**
+- hooks.md scores 5/8 but this is structural — it's a pure requireSubcommand dispatcher. The real depth lives in 9 sibling files that don't have individual wiki pages. The score reflects the parent page's coverage, not the entity's overall coverage.
+
+**What to change next time:**
+- For parent-only pages (hooks, directive), the 4-axis rubric doesn't perfectly capture the "depth lives in siblings" pattern. Consider noting this in the score justification rather than trying to score the parent as if it should cover all subcommands.
