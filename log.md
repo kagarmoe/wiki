@@ -5597,3 +5597,13 @@ Tables added: 10 Subprocess invocations tables, 3 Environment variables set tabl
 **pages with no outgoing calls (section omitted):** account, config, disable, enable, issue, plugin, shell, theme, uninstall (9 pages)
 
 Tables added: 2 Subprocess invocations tables, 2 Config file writes tables.
+
+## [2026-04-14] sweep | Outgoing calls 1c: Work Management (26 pages)
+
+**verb:** sweep
+**scope:** `gastown/commands/` — Work Management group (26 pages)
+**sources read:** 60+ source files across assign, bead, cat, changelog, cleanup, close, compact, convoy, done, formula, handoff, hook, molecule, mountain, mq, orphans, prune-branches, ready, release, resume, scheduler, sling, synthesis, trail, unsling, wl
+**pages touched:** assign, bead, cat, changelog, close, compact, convoy, done, formula, handoff, hook, molecule, mountain, mq, orphans, ready, resume, scheduler, sling, synthesis, trail, wl (22 pages with outgoing calls)
+**pages with no outgoing calls (section omitted):** cleanup, prune-branches, release, unsling (4 pages)
+
+Tables added: 22 Subprocess invocations tables, 2 SQL/config mutations tables, 3 Environment variables set tables, 4 Config file writes tables.

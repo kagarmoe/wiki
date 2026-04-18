@@ -140,6 +140,17 @@ outputs, and prints:
 - **Tracking dep-add silently discarded:** `synthesis.go:605` — `_ = depCmd.Run()` discards the error from adding the convoy-tracks-synthesis dependency. If this fails, the synthesis bead exists but is disconnected from the convoy tracking graph. **Absent** — convoy status display won't show the synthesis step.
 - **Formula parse errors silently ignored:** `synthesis.go:255,258` — `f, _ = formula.ParseFile(...)` discards parse errors. If the formula file is malformed, the synthesis proceeds without formula guidance (leg naming, ordering, etc. fall back to defaults). **Absent** — synthesis runs without formula context, potentially producing unexpected structure.
 
+## Outgoing calls
+
+### Subprocess invocations
+| Called binary | Command | Flags | Flag source | `file:line` |
+|---|---|---|---|---|
+| `bd` | `show` | `<beadID> --json` | runtime (synthesis/convoy details) | `synthesis.go:327,380` |
+| `bd` | `close` | `<beadID> --reason=<reason>` | runtime (close synthesis) | `synthesis.go:357` |
+| `bd` | `create` | `--type=<type> --title=<title> ...` | runtime (create synthesis bead) | `synthesis.go:578` |
+| `bd` | `dep add` | `<parentID> <childID> --type=tracks` | runtime (convoy-tracks-synthesis) | `synthesis.go:603` |
+| `gt` | `sling` | `<beadID> <rig> ...` | runtime (dispatch synthesis) | `synthesis.go:613` |
+
 ## Notes / open questions
 
 - **Unclear at first glance, structural once read.** "Synthesis"

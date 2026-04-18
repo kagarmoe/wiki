@@ -257,6 +257,22 @@ See forward-link: [../drift/README.md](../drift/README.md).
   table now enumerates all 16 subcommands across the four files and
   explicitly notes the sibling-file registrations).
 
+## Outgoing calls
+
+### Subprocess invocations
+| Called binary | Command | Flags | Flag source | `file:line` |
+|---|---|---|---|---|
+| `git` | `log` | `--since=<since> -n50 --all` | runtime (recent commits) | `molecule_status.go:889` |
+| `bd` | `update` | `<stepID> --status=pinned --assignee=<agentID>` | runtime (pin next step) | `molecule_step.go:297` |
+| `bd` | `update` | `<stepID> --status=in_progress` | runtime (mark step active) | `molecule_step.go:376` |
+| `bd` | `update` | `<beadID> --status=open` | runtime (unpin bead) | `molecule_step.go:474` |
+| `gt` | `done` | `--status DEFERRED` | hardcoded (polecat completion) | `molecule_step.go:489` |
+| `gt` | `dog done` | `[<dogName>]` | runtime (dog completion) | `molecule_step.go:506` |
+| `bd` | `update` | `<beadID> --add-label=idle:<reason>` | runtime (signal backoff) | `molecule_await_signal.go:458` |
+| `bd` | `update` | `<beadID> --add-label=idle:<reason>` | runtime (set idle label) | `molecule_await_signal.go:494` |
+| `bd` | `update` | `<beadID> --add-label=backoff-until:<ts>` | runtime (set backoff) | `molecule_await_signal.go:530` |
+| `bd` | `update` | `<beadID> --remove-label=backoff-until:*` | runtime (clear backoff) | `molecule_await_signal.go:572` |
+
 ## Notes / open questions
 
 - **`Use = "mol"`, alias = `molecule`** — the file is named

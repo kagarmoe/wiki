@@ -175,6 +175,13 @@ See forward-link: [../drift/README.md](../drift/README.md).
 - **Nudge failure:** `assign.go:182-183` — if `--nudge` is set and the nudge subprocess fails, a warning is printed to stderr but the command exits 0. **Present** — warning emitted, but agent won't be notified.
 - **Agent hook_bead update silently ignored:** `assign.go:166-167` — `updateAgentHookBead` is called but its errors (if any) are not checked at this call site. **Absent** — predicted bug surface; stale agent bead data.
 
+## Outgoing calls
+
+### Subprocess invocations
+| Called binary | Command | Flags | Flag source | `file:line` |
+|---|---|---|---|---|
+| `gt` | `nudge` | `<agentID> -m <nudgeMsg>` | runtime (assigned agent + title) | `assign.go:180` |
+
 ## Notes / open questions
 
 - **`--force` unused** — see `## Drift` above (promoted from Phase 2

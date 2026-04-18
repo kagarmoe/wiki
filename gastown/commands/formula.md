@@ -217,6 +217,27 @@ Per-subcommand, defined in `init()` at `formula.go:161-185`:
 - **Formula file parse errors silently ignored in `formula run`:** `formula.go:633,640` — dependency-add commands via `BdCmd("dep", "add", ...)` at lines 633 and 640 discard errors with `_ = ...Run()`. If the dep-add fails, the tracking relation between convoy and synthesis or between synthesis and leg beads is missing. **Absent** — the workflow runs but convoy tracking is broken silently.
 - **Comment on synthesis failure silently ignored:** `formula.go:690` — `_ = commentCmd.Run()` discards the error from adding a comment to a step bead after a sling failure. **Absent** — audit trail gap.
 
+## Outgoing calls
+
+### Subprocess invocations
+| Called binary | Command | Flags | Flag source | `file:line` |
+|---|---|---|---|---|
+| `bd` | `create` | `--type=<type> --title=<title> ...` | runtime (step bead creation) | `formula.go:194` |
+| `bd` | `update` | `<beadID> ...` | runtime (bead metadata) | `formula.go:208` |
+| `bd` | `create` | `--type=<type> ...` | runtime (formula instantiation) | `formula.go:475` |
+| `gt` | `sling` | `<beadID> <rig> ...` | runtime (dispatch step) | `formula.go:679` |
+| `bd` | `comment` | `<beadID> --body=<msg>` | runtime (failure annotation) | `formula.go:688` |
+| `gt` | `sling` | `<beadID> <rig> ...` | runtime (auto-dispatch) | `formula.go:868` |
+| `gh` | `pr view` | `<prNumber> --json title --jq .title` | runtime (PR number) | `formula.go:977` |
+| `gh` | `pr view` | `<prNumber> --json files --jq ...` | runtime (PR file list) | `formula.go:984` |
+| `$EDITOR` (or `vi`) | `<path>` | — | `EDITOR` env var, fallback `vi` | `formula_overlay_edit.go:87` |
+
+### Config file writes
+| Target | Operation | Value | Purpose | `file:line` |
+|---|---|---|---|---|
+| formula template file | `os.WriteFile` | generated template | scaffold new formula file | `formula.go:1064` |
+| overlay file | `os.WriteFile` | initial template | create new overlay if absent | `formula_overlay_edit.go:75` |
+
 ## Notes / open questions
 
 - **`list` and `show` are pure passthroughs** — no gt-specific logic

@@ -143,6 +143,14 @@ type HookEntry struct { Type, Actor, Bead string
 - **Date parse errors on beads:** `trail.go:287` — same pattern: `time.Parse(time.RFC3339, parts[4])` error discarded. **Absent**.
 - **Config load errors suppressed:** `trail.go:129-132` — `workspace.FindFromCwd()` and `config.LoadOrCreateTownSettings()` errors are silently caught; falls back to `DefaultAgentEmailDomain`. **Present** — graceful fallback, but no warning that custom domain config was ignored.
 
+## Outgoing calls
+
+### Subprocess invocations
+| Called binary | Command | Flags | Flag source | `file:line` |
+|---|---|---|---|---|
+| `git` | `log` | `--all --oneline --since=<since> --format=<format>` | runtime (time range) | `trail.go:152` |
+| `beads` | `list` | `--limit=<limit>` | runtime (trail limit) | `trail.go:264,335` |
+
 ## Notes / open questions
 
 - **Three different data sources, one display.** git log, `beads

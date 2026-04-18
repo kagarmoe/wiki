@@ -157,6 +157,15 @@ flags. The `Long` text at `close.go:23-38` calls out `--force` and
 - **Cascade child query failure swallowed:** `close.go:155-159` — if `bd children --json` fails, a warning is printed to stderr but execution continues, potentially leaving children open when the parent closes. **Present** — warning emitted.
 - **Cascade child JSON parse failure swallowed:** `close.go:161-164` — if JSON parse of children output fails, warning printed and returned nil (no error). **Present** — warning emitted, cascade silently skipped.
 
+## Outgoing calls
+
+### Subprocess invocations
+| Called binary | Command | Flags | Flag source | `file:line` |
+|---|---|---|---|---|
+| `bd` | `close` | `<beadID> --reason=<reason>` | runtime (positional arg + `--reason` flag) | `close.go:85` |
+| `bd` | `children` | `<parentID> --json` | runtime (parent bead ID for cascade) | `close.go:148` |
+| `bd` | `close` | `<childID> --reason=<reason>` | runtime (cascade close of children) | `close.go:195` |
+
 ## Notes / open questions
 
 - **`--comment` alias doc lives only in the Long text.** Since

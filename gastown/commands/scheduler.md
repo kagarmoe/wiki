@@ -142,6 +142,13 @@ type scheduledBeadInfo struct {
 }
 ```
 
+## Outgoing calls
+
+### Subprocess invocations
+| Called binary | Command | Flags | Flag source | `file:line` |
+|---|---|---|---|---|
+| `bd` | `dep list` | `<epicID> --direction=down --type=depends_on --json` | runtime (epic dependency query) | `scheduler_epic.go:357` |
+
 ## Notes / open questions
 
 - **Scheduler ≠ cron.** Despite the name, this is a *dispatch*

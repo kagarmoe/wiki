@@ -190,6 +190,30 @@ overload (`sling.go:101-107` Long text).
 - **Field storage failure non-fatal:** `sling.go:963-965` — if `storeFieldsInBead` fails, a warning is printed but the sling continues. The polecat may lack args/formula metadata when it starts. **Present** — warning emitted.
 - **BD_DOLT_AUTO_COMMIT env manipulation not thread-safe:** `sling.go:239-247` — `os.Setenv` / `os.Unsetenv` is process-global. Concurrent sling calls in the same process could race on this env var. **Absent** — predicted bug surface under concurrent load.
 
+## Outgoing calls
+
+### Subprocess invocations
+| Called binary | Command | Flags | Flag source | `file:line` |
+|---|---|---|---|---|
+| `bd` | `update` | `<beadID> --status=open --assignee=` | runtime (unhook bead) | `sling.go:750` |
+| `bd` | `update` | `<beadID> --status=pinned --assignee=<assignee>` | runtime (restore pinned) | `sling.go:1083` |
+| `bd` | `update` | `<beadID> --status=open --assignee=` | runtime (unhook on failure) | `sling.go:1180` |
+| `bd` | `close` | `<beadID> --reason=<reason>` | runtime (batch close) | `sling_batch.go:367` |
+| `bd` | `list` | `--type=convoy --status=open --json` | hardcoded (convoy lookup) | `sling_convoy.go:71` |
+| `bd` | `show` | `<convoyID> --json` | runtime (convoy details) | `sling_convoy.go:152,237` |
+| `git` | `rev-parse` | `--show-toplevel` | hardcoded (detect clone root) | `sling_helpers.go:505` |
+| `gt` | `rig boot` | `<rigName>` | runtime (wake rig agents) | `sling_helpers.go:580` |
+
+### Environment variables set
+| Variable | Value source | Consumed by | `file:line` |
+|---|---|---|---|
+| `BD_DOLT_AUTO_COMMIT` | hardcoded `"off"` | bd subprocess (disable auto-commit) | `sling.go:240` |
+
+### Config file writes
+| Target | Operation | Value | Purpose | `file:line` |
+|---|---|---|---|---|
+| bead description log | `os.WriteFile` | updated attachment fields | persist bead metadata | `sling_helpers.go:361` |
+
 ## Notes / open questions
 
 - **THE unified dispatch command.** `sling.go:29` calls itself

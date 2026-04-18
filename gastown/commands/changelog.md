@@ -215,6 +215,13 @@ See forward-link: [../drift/README.md](../drift/README.md).
 - **Per-rig beads query failures silently skipped:** `changelog.go:157-159` — if `fetchClosedBeads` returns an error for a rig location, the `continue` drops it with no warning. A rig's entire closed-bead history is invisible if its beads database is corrupted or unreachable. **Absent** — no indication to the user that results are incomplete.
 - **ClosedAt parse errors silently skip beads:** `changelog.go:188-189` — if `time.Parse(time.RFC3339, b.ClosedAt)` fails, the bead is silently skipped with `continue`. **Absent** — beads with non-RFC3339 timestamps are invisible in the changelog.
 
+## Outgoing calls
+
+### Subprocess invocations
+| Called binary | Command | Flags | Flag source | `file:line` |
+|---|---|---|---|---|
+| `bd` | `list` | `--status=closed --all --limit=0 --json` | hardcoded | `changelog.go:169` |
+
 ## Notes / open questions
 
 - **`--week` is a no-op** — see `## Drift` above (promoted from

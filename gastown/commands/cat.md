@@ -107,6 +107,13 @@ consults a session-level prefix registry.
   `cat.go`).
 - [../binaries/gt.md](../binaries/gt.md) — root binary.
 
+## Outgoing calls
+
+### Subprocess invocations
+| Called binary | Command | Flags | Flag source | `file:line` |
+|---|---|---|---|---|
+| `bd` | `show` | `<beadID> [--json]` | runtime (positional arg + `--json` flag) | `cat.go:51` |
+
 ## Notes / open questions
 
 - **`resolveBeadDir` lives elsewhere.** The prefix-to-rig-database

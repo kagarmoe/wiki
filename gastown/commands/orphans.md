@@ -102,6 +102,18 @@ On `orphansProcsCmd` (persistent, `:172`): `--aggressive`.
 
 On `orphansProcsKillCmd` (`:169`): `-f/--force`.
 
+## Outgoing calls
+
+### Subprocess invocations
+| Called binary | Command | Flags | Flag source | `file:line` |
+|---|---|---|---|---|
+| `git` | `rev-list` | `-C <worktreePath> --count <baseRef>..HEAD` | runtime (commit count) | `orphans.go:377` |
+| `git` | `log` | `-C <worktreePath> -1 --format=%s` | runtime (last commit msg) | `orphans.go:394` |
+| `git` | `fsck` | `--unreachable --no-reflogs` | hardcoded | `orphans.go:428` |
+| `git` | `log` | `-1 --format=%at\|%an\|%s <sha>` | runtime (commit metadata) | `orphans.go:486` |
+| `git` | `gc` | `--prune=now` | hardcoded | `orphans.go:649` |
+| `ps` | `-eo pid,ppid,args` | — | hardcoded (process scan) | `orphans.go:711` |
+
 ## Notes / open questions
 
 - **Destructive `kill` is not reversible.** The inline warning

@@ -174,6 +174,30 @@ attached to individual subcommands.
 - **Convoy status errors during watch suppressed:** `convoy.go:1526-1527` — when iterating convoys in `convoy watch`, errors reading individual convoy metadata are printed to stderr and skipped via `continue`. A broken convoy is invisible in the watch display. **Present** — warning emitted but convoy is omitted.
 - **Random ID generation failure undetectable:** `convoy.go:41` — `io.ReadFull(r, b)` error is discarded with `_, _ = ...`. If the entropy source fails, the ID will be derived from zero bytes, producing predictable/colliding IDs. **Absent** — convoy ID collision predicted bug surface.
 
+## Outgoing calls
+
+### Subprocess invocations
+| Called binary | Command | Flags | Flag source | `file:line` |
+|---|---|---|---|---|
+| `bd` | `create` | `--type=convoy --title=<title> ...` | runtime (convoy spec) | `convoy.go:455` |
+| `bd` | `close` | `<convoyID> --reason=<reason>` | runtime | `convoy.go:943` |
+| `bd` | `show` | `<beadID> --json` | runtime (status checks) | `convoy.go:959,1019,1177,1711,2417,2483,2522` |
+| `bd` | `close` | `<beadID> --reason=<reason>` | runtime (leg close) | `convoy.go:1106` |
+| `gt` | `mail send` | `<addr> --subject=<subject> --body=<body>` | runtime (convoy notifications) | `convoy.go:1159,1733` |
+| `bd` | `close` | `<beadID> --reason=<reason>` | runtime (abort) | `convoy.go:1288` |
+| `gt` | `polecat remove` | `<target> --force` | runtime (cleanup) | `convoy.go:1381` |
+| `gt` | `nudge` | `<addr> -m <msg>` | runtime (agent wake) | `convoy.go:1742` |
+| `gt` | `nudge` | `mayor -m <msg>` | runtime (mayor notification) | `convoy.go:1765` |
+| `bd` | `list` | `--type=agent --status=open --json --limit=0` | hardcoded | `convoy.go:2607` |
+| `bd` | `update` | `<convoyID> --status=<status>` | runtime (stage transition) | `convoy_stage.go:729` |
+| `bd` | `show` | `<beadID> --json` | runtime (stage helpers) | `convoy_stage.go:1451` |
+| `bd` | `dep list` | `<beadID> --json` | runtime | `convoy_stage.go:1477` |
+| `bd` | `list` | `--parent=<parentID> --json` | runtime | `convoy_stage.go:1506` |
+| `gt` | `sling` | `<beadID> <rig>` | runtime (launch leg) | `convoy_launch.go:29` |
+| `bd` | `update` | `<beadID> --status=<status>` | runtime (launch status) | `convoy_launch.go:97` |
+| `bd` | `show` | `<convoyID> --json` | runtime (watch) | `convoy_watch.go:244` |
+| `bd` | `update` | `<convoyID> --description <newDesc>` | runtime (progress update) | `convoy_watch.go:284` |
+
 ## Notes / open questions
 
 - **Polecat-safe** (`convoy.go:168`): the only command in this batch

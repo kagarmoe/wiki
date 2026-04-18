@@ -167,6 +167,27 @@ type compactAction struct {
 - **Orphaned wisp_deps cleanup error collected but not fatal:** `compact.go:289-290` — the SQL DELETE for orphaned wisp dependencies appends to `result.Errors` on failure but doesn't stop compaction. **Present** — error surfaces in JSON/summary output.
 - **Rig bead TTL override silently ignored on error:** `compact.go:137-139` — `bd.Show(rigBeadID)` failure returns early with no warning, falling back to defaults. **Absent** — custom TTL overrides silently don't apply if the rig bead is unreachable.
 
+## Outgoing calls
+
+### Subprocess invocations
+| Called binary | Command | Flags | Flag source | `file:line` |
+|---|---|---|---|---|
+| `gt` | `compact` | `--json` | hardcoded (compact report) | `compact_report.go:127` |
+| `gt` | `mail send` | `mayor/ --subject=<subject> --body=<body>` | runtime (daily report) | `compact_report.go:320` |
+| `bd` | `create` | `--type=event --title=<title> --event-category=compact.report --silent` | runtime (report bead) | `compact_report.go:347` |
+| `bd` | `close` | `<beadID> --reason=daily compaction report` | runtime | `compact_report.go:356` |
+| `gt` | `mail send` | `mayor/ --subject=<subject> --body=<body>` | runtime (weekly rollup) | `compact_report.go:436` |
+| `bd` | `list` | `--type=event --json --limit=50` | hardcoded (query daily reports) | `compact_report.go:457` |
+| `bd` | `list` | `--type=event --json --limit=50` | hardcoded (query weekly) | `compact_report.go:565` |
+| `bd` | `list` | `--type=event --json --limit=0` | hardcoded (rollup query) | `compact_report.go:597` |
+| `bd` | `create` | `--type=event --title=<title> --event-category=compact.rollup --silent` | runtime (rollup bead) | `compact_report.go:651` |
+| `bd` | `close` | `<beadID> --reason=weekly compaction rollup` | runtime | `compact_report.go:660` |
+
+### SQL / config mutations
+| Target | Statement / key | Value | Purpose | `file:line` |
+|---|---|---|---|---|
+| Dolt (beads) | `DELETE FROM wisp_dependencies WHERE NOT EXISTS (...)` | — | remove orphaned wisp dependency records | `compact.go:284` |
+
 ## Notes / open questions
 
 - **`isReferenced` is defined but not consulted.** `compact.go:456-458`

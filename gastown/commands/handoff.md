@@ -184,6 +184,27 @@ commands.
 - **Auto-handoff mail failure prints to stderr but continues:** `handoff.go:407-408` — if `sendHandoffMail` fails in the auto-handoff path, a warning is printed to stderr but the cycle continues. The successor session starts with no handoff context. **Present** — warning emitted but context is lost.
 - **Session env update errors for handoff silently ignored:** `handoff.go:1005,1036` — `_ = t.SetEnvironment(...)` calls discard errors. If tmux env isn't updated, liveness detection may produce false results. **Absent** — predicted bug surface for liveness checks.
 
+## Outgoing calls
+
+### Subprocess invocations
+| Called binary | Command | Flags | Flag source | `file:line` |
+|---|---|---|---|---|
+| `gt` | `done` | `--status DEFERRED` | hardcoded | `handoff.go:157` |
+| `bd` | `show` | `<beadID> --json` | runtime (verify bead) | `handoff.go:1410` |
+| `bd` | `update` | `<beadID> --status=pinned --assignee=<agentID>` | runtime (pin bead) | `handoff.go:1429` |
+| `gt` | `hook` | — | hardcoded (verify hook state) | `handoff.go:1452` |
+| `gt` | `mail inbox` | — | hardcoded (check inbox) | `handoff.go:1461` |
+| `bd` | `ready` | — | hardcoded (check ready work) | `handoff.go:1475` |
+| `bd` | `list` | `--status=in_progress` | hardcoded (check in-progress) | `handoff.go:1489` |
+
+### Config file writes
+| Target | Operation | Value | Purpose | `file:line` |
+|---|---|---|---|---|
+| handoff marker file | `os.WriteFile` | current session name | mark handoff in progress | `handoff.go:336` |
+| handoff marker file | `os.WriteFile` | session name | mark handoff target | `handoff.go:424` |
+| handoff marker file | `os.WriteFile` | marker content | record handoff metadata | `handoff.go:541` |
+| handoff timestamp file | `os.WriteFile` | unix timestamp | record handoff completion time | `handoff.go:1708` |
+
 ## Notes / open questions
 
 - **Beads-exempt** — handoff works without `bd` installed. Rationale

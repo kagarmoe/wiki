@@ -120,6 +120,14 @@ via `hasBeadLabel(…, "mountain:skipped")` and DAG blocker analysis
 - **Mountain label added but launch fails leaves labeled convoy in staged state:** `mountain.go:214-235` — Step 4 adds the `mountain` label. If Step 5 (`transitionConvoyToOpen`) or `dispatchWave1` fails, the convoy has the mountain label but isn't open/launched. The Deacon and Witness see a mountain that never actually started. **Absent** — no rollback of the mountain label on launch failure.
 - **Cancel removes mountain label but not paused label on failure:** `mountain.go:704` — `bdRemoveLabelTown(convoyID, "mountain:paused")` is best-effort with `_ = ...`. If the mountain label removal succeeds but paused label removal fails, a stale `mountain:paused` label persists. **Present** — best-effort cleanup, minor cosmetic issue.
 
+## Outgoing calls
+
+### Subprocess invocations
+| Called binary | Command | Flags | Flag source | `file:line` |
+|---|---|---|---|---|
+| `bd` | `update` | `<beadID> --add-label=<label>` | runtime (add mountain label) | `mountain.go:278` |
+| `bd` | `update` | `<beadID> --remove-label=<label>` | runtime (remove mountain label) | `mountain.go:292` |
+
 ## Notes / open questions
 
 - **Mountain-Eater metaphor.** A "mountain" is strictly a convoy

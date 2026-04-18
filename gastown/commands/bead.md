@@ -119,6 +119,15 @@ Internal struct at `bead.go:97-107` used to deserialize `bd show
 - **`bead move` source close failure leaves duplicates:** `bead.go:196-207` — after creating the new bead, if closing the source bead fails, the code attempts to close the new bead as cleanup. But if *that* cleanup also fails, both old and new beads remain open with a manual cleanup message to stderr. **Present** — cleanup attempt exists but can fail, leaving both beads open. The error message at `bead.go:202-203` explicitly warns of the double-open state.
 - **`bead move` creates new bead via raw `exec.Command`:** `bead.go:183-189` — unlike the source show which uses `BdCmd` with routing, the create uses bare `exec.Command("bd", ...)` without explicit `Dir`. **Absent** — if cwd is not in the target prefix's rig, the new bead may be created in the wrong database.
 
+## Outgoing calls
+
+### Subprocess invocations
+| Called binary | Command | Flags | Flag source | `file:line` |
+|---|---|---|---|---|
+| `bd` | `create` | `--type=<type> --title=<title> --label <labels>...` | runtime (source bead fields) | `bead.go:183` |
+| `bd` | `close` | `<sourceID> --reason "Moved to <newID>"` | runtime (source + new bead IDs) | `bead.go:195` |
+| `bd` | `close` | `<newID> --reason "Cleanup: source bead close failed during move"` | runtime (cleanup on failure) | `bead.go:200` |
+
 ## Notes / open questions
 
 - **`runShow` lives elsewhere** — both `show` and `read` subcommands

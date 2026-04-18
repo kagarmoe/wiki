@@ -123,6 +123,13 @@ None.
 - **Wisp ID query failures swallowed:** `ready.go:389-390` — `getWispIDs` returns `nil` on any error (Dolt unavailable, wisp table missing), meaning wisps silently leak into ready output. **Absent** — user sees wisps in ready work with no indication the filter failed.
 - **Formula names read failure swallowed:** `ready.go:333-335` — `os.ReadDir` failure returns `nil` map, so formula scaffolds silently appear in ready work. **Absent** — same pattern as wisp filter.
 
+## Outgoing calls
+
+### Subprocess invocations
+| Called binary | Command | Flags | Flag source | `file:line` |
+|---|---|---|---|---|
+| `bd` | `mol wisp list` | `--json` | hardcoded | `ready.go:386` |
+
 ## Notes / open questions
 
 - **`gt ready` vs `bd ready`.** `bd ready` is per-database; this

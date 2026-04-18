@@ -75,6 +75,14 @@ None.
 
 None.
 
+## Outgoing calls
+
+### Subprocess invocations
+| Called binary | Command | Flags | Flag source | `file:line` |
+|---|---|---|---|---|
+| `gt` | `mail inbox` | `--json` | hardcoded (JSON mode) | `resume.go:40` |
+| `gt` | `mail inbox` | — | hardcoded (human mode) | `resume.go:44` |
+
 ## Notes / open questions
 
 - **Not a session resumer.** Despite the name, this doesn't restore

@@ -294,6 +294,15 @@ See forward-link: [../drift/README.md](../drift/README.md).
 - **Rigs config load failure silently creates empty config:** `mq.go:399-401` — if `config.LoadRigsConfig` fails, a fresh empty config is used. The rig lookup at line 406 may then fail with a confusing "rig not found" error rather than surfacing the root cause (config unreadable). **Absent** — root cause masked by downstream error.
 - **Rig settings load error silently defaults to delete-enabled:** `mq.go:547-549` — if `config.LoadRigSettings` fails, `deleteEnabled` stays `true` (default). A rig that configured `delete_merged_branches: false` has its setting silently ignored. **Absent** — branches deleted despite config requesting preservation.
 
+## Outgoing calls
+
+### Subprocess invocations
+| Called binary | Command | Flags | Flag source | `file:line` |
+|---|---|---|---|---|
+| `git` | `diff` | `--stat HEAD~1..HEAD` | hardcoded (verify merge) | `mq_integration.go:660` |
+| `sh` | `-c` | `<testCmd>` | runtime (rig config `TestCommand`) | `mq_integration.go:797` |
+| `gt` | `mail send` | `<manager> --subject=<subject> --body=<body>` | runtime (MR submission) | `mq_submit.go:452` |
+
 ## Notes / open questions
 
 - **`findCurrentRig` belongs in `mq.go`?** It's a general helper

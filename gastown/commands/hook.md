@@ -191,6 +191,13 @@ same `moleculeJSON` global (`hook.go:168-170`).
 - **Hook event log failure warned but non-fatal:** `hook.go:426-428` — `events.LogFeed` error prints to stderr but does not fail the command. **Present** — warning emitted.
 - **`updateAgentHookBead` errors not checked:** `hook.go:416` — the call to `updateAgentHookBead` does not check for errors at this call site. If the agent bead's hook_bead field update fails, the hook display (`gt hook show`) may show stale data. **Absent** — predicted bug surface for hook status consistency.
 
+## Outgoing calls
+
+### Subprocess invocations
+| Called binary | Command | Flags | Flag source | `file:line` |
+|---|---|---|---|---|
+| `bd` | `close` | `<beadID> --reason=<reason>` | runtime (auto-close unhooked bead) | `hook.go:320` |
+
 ## Notes / open questions
 
 - **`moleculeJSON` is shared.** The `--json` flag on `hook`,

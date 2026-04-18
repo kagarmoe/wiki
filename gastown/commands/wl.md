@@ -198,6 +198,37 @@ See forward-link: [../drift/README.md](../drift/README.md).
   11-row subcommand table; the frontmatter `sources:` list now
   enumerates all ten sibling files).
 
+## Outgoing calls
+
+### Subprocess invocations
+| Called binary | Command | Flags | Flag source | `file:line` |
+|---|---|---|---|---|
+| `dolt` | `clone` | `<remote> <cloneDir>` | runtime (wasteland remote) | `wl_browse.go:81` |
+| `dolt` | `sql` | `-q <query> -r json` | runtime (browse queries) | `wl_browse.go:101` |
+| `dolt` | `sql` | `-q <query> -r csv` | runtime (browse queries) | `wl_browse.go:147` |
+| `dolt` | `sql` | `-q <updateScript>` | runtime (claim bounty) | `wl_claim.go:105` |
+| `dolt` | `sql` | `-q <updateScript>` | runtime (mark done) | `wl_done.go:122` |
+| `dolt` | `sql` | `-q <query> -r json` | runtime (show bounty) | `wl_show.go:69` |
+| `dolt` | `clone` | `<remote> <cloneDir>` | runtime (show fallback) | `wl_show.go:114` |
+| `dolt` | `fetch` | `<remote>` | runtime (sync) | `wl_show.go:131` |
+| `dolt` | `merge` | `<remote>/main` | runtime (sync) | `wl_show.go:137` |
+| `dolt` | `sql` | `-q <query> -r csv` | runtime (show details) | `wl_show.go:168` |
+| `dolt` | `sql` | `-q <insertScript>` | runtime (create stamp) | `wl_stamp.go:309` |
+| `dolt` | `clone` | `<remote> <cloneDir>` | runtime (stamps browse) | `wl_stamps.go:144` |
+| `dolt` | `sql` | `-q <query> -r json` | runtime (stamps query) | `wl_stamps.go:168,180` |
+| `dolt` | `sql` | `-r csv -q <query>` | runtime (schema evolution) | `wl_schema_evolution.go:75` |
+| `dolt` | `fetch` | `upstream` | runtime (sync upstream) | `wl_sync.go:76` |
+| `dolt` | `diff` | `--stat HEAD upstream/main` | runtime (sync diff) | `wl_sync.go:87` |
+| `dolt` | `merge` | `upstream/main` | runtime (sync merge) | `wl_sync.go:112` |
+| `dolt` | `sql` | `-q <summaryQuery> -r csv` | runtime (sync summary) | `wl_sync.go:129` |
+
+### SQL / config mutations
+| Target | Statement / key | Value | Purpose | `file:line` |
+|---|---|---|---|---|
+| wasteland DB | `UPDATE wanted SET claimed_by=..., status='claimed'` | runtime (agent addr) | claim a bounty | `wl_claim.go:99` |
+| wasteland DB | `UPDATE wanted SET status='in_review', evidence_url=...` | runtime (evidence URL) | mark bounty done | `wl_done.go:109` |
+| wasteland DB | `INSERT INTO stamps (...)` | runtime (stamp data) | create quality stamp | `wl_stamp.go:300` |
+
 ## Notes / open questions
 
 - **`wl` ≠ worklist.** This is important for wiki readers: the

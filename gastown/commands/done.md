@@ -235,6 +235,13 @@ pre-plan informal entry and this section will be left as-is.
 - **Heartbeat state write failure ignored:** `done.go:387-388` — `polecat.TouchSessionHeartbeatWithState` errors are not checked. If heartbeat write fails, the Witness doesn't know the polecat is in the gt done flow. **Absent** — Witness falls back to timer-based inference which may be wrong.
 - **Done-intent label write failure ignored:** `done.go:376` — `setDoneIntentLabel` errors are not propagated. If this fails, the Witness crash-recovery mechanism doesn't know gt done was attempted. **Absent** — crash recovery gap.
 
+## Outgoing calls
+
+### Subprocess invocations
+| Called binary | Command | Flags | Flag source | `file:line` |
+|---|---|---|---|---|
+| `gh` | `pr create` | `--base <defaultBranch> --head <branch> --title <title> --body <body>` | runtime (git branch + bead data) | `done.go:819` |
+
 ## Notes / open questions
 
 - **1896-line command.** The bulk of the logic is a linear script
