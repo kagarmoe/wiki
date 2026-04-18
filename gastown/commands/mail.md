@@ -330,6 +330,18 @@ For diagnostic workflows involving this command, see
 [Investigating: message delivery](../workflows/investigations/message-delivery.md)
 and [Investigating: data-plane failures](../workflows/investigations/data-plane.md).
 
+## Outgoing calls
+
+### Subprocess invocations
+| Called binary | Command | Flags | Flag source | `file:line` |
+|---|---|---|---|---|
+| `bd` | `list` | `--type=channel --label=<labels> --limit=0 --json` | runtime (channel query) | `mail_channel.go:502` |
+| `bd` | `list` | `--type=mail --json --limit=0` | runtime (queue list) | `mail_queue.go:185` |
+| `bd` | `update` | `<messageID> --add-label=claimed-by:<claimant> --add-label=claimed-at:<now>` | runtime (queue claim) | `mail_queue.go:266` |
+| `bd` | `show` | `<messageID> --json` | runtime (queue message info) | `mail_queue.go:346` |
+| `bd` | `label remove` | `<messageID> <claimLabels>...` | runtime (queue release) | `mail_queue.go:428` |
+| `bd` | `list` | `--type=announce --limit=0 --json` | runtime (announce list) | `mail_announce.go:191` |
+
 ## Notes / open questions
 
 - **`mail` is in the beads-exempt preflight** so it can start

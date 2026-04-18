@@ -5617,3 +5617,13 @@ Tables added: 22 Subprocess invocations tables, 2 SQL/config mutations tables, 3
 **pages with no outgoing calls (section omitted):** boot, callbacks, refinery, role, session, witness (6 pages)
 
 Tables added: 5 Subprocess invocations tables, 1 Environment variables set table, 1 Config file writes table.
+
+## [2026-04-14] sweep | Outgoing calls 1e: Communication (7 pages)
+
+**verb:** sweep
+**scope:** `gastown/commands/` — Communication group (7 pages)
+**sources read:** 22 source files across broadcast, dnd, escalate, mail, notify, nudge, peek
+**pages touched:** mail (1 page with outgoing calls)
+**pages with no outgoing calls (section omitted):** broadcast, dnd, escalate, notify, nudge, peek (6 pages)
+
+Tables added: 1 Subprocess invocations table.
