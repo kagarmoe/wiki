@@ -16,6 +16,10 @@ sources:
   - /home/kimberly/repos/gastown/internal/cmd/mail_directory.go
   - /home/kimberly/repos/gastown/internal/cmd/mail_drain.go
   - /home/kimberly/repos/gastown/internal/cmd/mail_group.go
+  - /home/kimberly/repos/gastown/internal/cmd/mail_hook.go
+  - /home/kimberly/repos/gastown/internal/cmd/mail_identity.go
+  - /home/kimberly/repos/gastown/internal/cmd/mail_queue.go
+  - /home/kimberly/repos/gastown/internal/cmd/mail_announce.go
   - /home/kimberly/repos/gastown/internal/cmd/mail_announce.go
   - /home/kimberly/repos/gastown/internal/cmd/mail_hook.go
   - /home/kimberly/repos/gastown/internal/cmd/mail_identity.go
@@ -31,6 +35,7 @@ phase4_findings: [none]
 phase5_audience: agent
 phase8_audited: 2026-04-17
 phase8_findings: [silent-suppression]
+detail_depth: {params: 2, data_flow: 2, errors: 1, side_effects: 1}
 ---
 
 # gt mail

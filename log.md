@@ -5247,3 +5247,17 @@ Scored 22 command pages in GroupDiag against source. All pages scored against th
 **Pages modified:** 12 (detail_depth added to all). No source updates needed — sibling file audit clean.
 
 **Outcome:** Plan predicted "High" depth-gap rate for Agent Management. Actual: zero fixes needed. polecat.md is the standout page at 638 wiki lines with 107 source citations — the most thoroughly documented command page in the wiki.
+
+## [2026-04-18] depth-pass | Detail Gap Batch 1e — Communication (7 command pages)
+
+**Verb:** depth-pass
+**Scope:** `gastown/commands/` — broadcast, dnd, escalate, mail, notify, nudge, peek
+
+**Score distribution (total/8):**
+- 8/8: 5 pages (broadcast, dnd, notify, nudge, peek)
+- 7/8: 1 page (escalate — errors:1)
+- 6/8: 1 page (mail — errors:1, side_effects:1 for 4463-line source across 14 files)
+
+**Fixes:** 0 inline fixes needed. mail.md got 4 missing sibling sources added (mail_announce.go, mail_hook.go, mail_identity.go, mail_queue.go).
+
+**Pages modified:** 7 (detail_depth added to all). 1 page (mail) got updated sources.

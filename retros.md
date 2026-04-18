@@ -1674,3 +1674,24 @@ All planned phases complete:
 
 **What to change next time:**
 - Nothing — this batch went smoothly
+
+## [2026-04-18] stage | Detail Gap Batch 1e — Communication (7 pages)
+
+**Duration:** ~8 min
+**Pages scored:** 7
+**Fixes applied:** 0
+**Source updates:** 1 page (mail — 4 missing siblings)
+
+**Score distribution:**
+| Score | Count | Pages |
+|-------|-------|-------|
+| 8/8 | 5 | broadcast, dnd, notify, nudge, peek |
+| 7/8 | 1 | escalate |
+| 6/8 | 1 | mail |
+
+**What went well:**
+- Communication pages are well-documented despite mail being the largest by source lines (4463)
+- nudge.md was the worked example in the plan and scores 8/8 as expected
+
+**What to change next time:**
+- Nothing — small batch, efficient processing
